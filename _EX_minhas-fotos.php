@@ -1,9 +1,6 @@
 <?php
 //VERIFICA SE USUÁRIO TEM ACESSO A PÁGINA
-if(!isset($_SESSION['idLogado']) && (!isset($_POST['emailUsuario']))){
-    $_SESSION['resposta'] = 'negado';
-    header("Location: login"); exit;
-}
+include 'include/valida_acesso.php';
 //VERIFICA SE EXISTE O MÉTODO PASSADO VIA GET
 if (isset($_POST['idAlbum'])){
         if (isset($_POST['nomeAlbum'])){
@@ -15,7 +12,8 @@ if (isset($_POST['idAlbum'])){
         //$idAlbum = sanitizeString($idAlbum);
         //$nomeAlbum = sanitizeString($nomeAlbum);
     }else{
-        header("Location: album"); exit;
+        $_SESSION['resposta'] = 'falta_album';
+        header("Location: album_fotos"); exit;
     }
 //INCLUI AS FUNÇÕES NECESSÁRIAS
 include_once 'functions/validar.php';
@@ -26,7 +24,8 @@ include_once 'include/modal.php';
 $albumResposta = banco_album($idLogado, $idAlbum);
 // VERIFICA SE O USUÁRIO TEM PERMISÃO PARA ACESSAR O ALBUM.
 if ($albumResposta['album']!= $nomeAlbum){
-    header("Location: album.php"); exit;
+    $_SESSION['resposta'] = 'album_vazio';
+    header("Location: album_fotos"); exit;
     }
 // RETORNA OS VALORES DO BANCO DE FOTOS REFERENTE AO ALBUM SELECIONADO
 $albumImagemResposta = banco_imagem($idAlbum);

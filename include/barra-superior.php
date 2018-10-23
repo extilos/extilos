@@ -1,31 +1,47 @@
 <div id="top">
         <div class="container">
             <div class="col-md-2 offer" data-animate="fadeInDown">
-                 <img src="imagem/sistema/extilos.png" alt="extilos logo" height="40" class="">
+                 <img src="imagem/sistema/extilos_branco.png" alt="extilos logo" height="50" class="">
             </div>
             <div class="col-md-4" data-animate="fadeInDown">
-            <ul class="nav nav-pills nav-justified">
-                    <li><a href="register.html">Home</a>
-                    </li>
-                    <li><a href="register.html">Sobre</a>
-                    </li>
-                    <li><a href="contact.html">Cadastro</a>
-                    </li>
-                    <li><a href="#" data-toggle="modal" data-target="#login-modal">Login</a>
-                    </li>
-                </ul>
+                
+                    <ul class="nav nav-pills nav-justified hidden-xs">
+                        <li><a href="register.html">Home</a>
+                        </li>
+                        <li><a href="register.html">Sobre</a>
+                        </li>
+                        <li><a href="contact.html">Cadastro</a>
+                        </li>
+                        <li><a href="#" data-toggle="modal" data-target="#login-modal">Login</a>
+                        </li>
+                    </ul>
+                    <div class="navbar-collapse collapse" id="navigation">
+
+                    <ul class="nav nav-pills nav-justified visible-xs">
+                        <li><a href="register.html">Home</a>
+                        </li>
+                        <li><a href="register.html">Sobre</a>
+                        </li>
+                        <li><a href="contact.html">Cadastro</a>
+                        </li>
+                        <li><a href="#" data-toggle="modal" data-target="#login-modal">Login</a>
+                        </li>
+                    </ul>
+                    </div>
             </div>
-            <div class="col-md-6" data-animate="fadeInDown">
+            <div class="col-md-6 col-xs-9" data-animate="fadeInDown">
             	<form class="" role="search">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search">
+                            <input type="text" class="form-control" placeholder="o que procura?">
                             <span class="input-group-btn">
-
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i>Buscar</button>
-
+                                <button type="submit" class="btn btn-primary hidden-xs"><i class="fa fa-search"></i>Buscar</button>
+                                <button type="submit" class="btn btn-primary visible-xs">Buscar</button>
                             </span>
                         </div>
                     </form>
+            </div>
+            <div class="col-xs-2">
+                <button type="submit" class="btn btn-defalt visible-xs" data-toggle="collapse" data-target="#navigation">Menu</button>
             </div>
         </div>
         <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true">

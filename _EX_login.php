@@ -1,7 +1,10 @@
 <?php
 require_once 'conn/init.php';
 if(isset($_SESSION['idLogado'])){
-    header("Location: index.php"); exit;
+    if ($_SESSION['idLogado'] > 1){
+        $_SESSION['resposta'] = 'negado';
+        header("Location: index"); exit;
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -26,16 +29,18 @@ if(isset($_SESSION['idLogado'])){
     <link href="css/owl.carousel.css" rel="stylesheet">
     <link href="css/owl.theme.css" rel="stylesheet">
     <!-- theme stylesheet -->
-    <link href="css/style.blue.css" rel="stylesheet" id="theme-stylesheet">
+    <link href="css/style.default.css" rel="stylesheet" id="theme-stylesheet">
     <!-- your stylesheet with modifications -->
-    <link href="css/custom.css" rel="stylesheet">
+    <link href="css/meu.css" rel="stylesheet">
     <script src="js/respond.min.js"></script>
     <link rel="shortcut icon" href="favicon.png">
 </head>
 <body>
-    <div id="all">
+    <div id="hot">
+    <?php include 'include/barra-superior.php';?>
         <div id="content">
-            <div class="container box">
+            <div class="container">
+                <div class="col-sm-12 box">
                 <?php
                 if(isset($_SESSION['resposta'])){
                    include_once "include/resposta.php";
@@ -44,8 +49,24 @@ if(isset($_SESSION['idLogado'])){
                <div id="load" style="display: none" >
                   <p><i class="fa fa-spinner fa-spin" style="font-size:24px"></i> Verificando</p>
                </div>
-               <div class="box">
-                <h3>Login</h3>
+               <div class="col-md-8">
+                    <div class="">
+                        <h1>Bem Víndo.</h1>
+
+                        <p class="lead">eXtilos.com - Mostre a sua moda!</p>
+                        <hr>
+                        <p>Para quem tem uma loja!</p>
+                        <p>Para quem tem uma tatto!</p>
+                        <p>Para quem tem uma cabelo!</p>
+                        <p>Para quem tem uma sapatos!</p>
+                        <p>Para quem tem uma roupas acessorios!</p>
+                        <p>Para quem gosta de moda!</p>
+                        <p class="text-muted">Conheça as nossa politica e regras <a href="contact.html">AQUI</a>. Venha construir novas idéias.. blabla.</p>
+                        <hr>
+                    </div>
+                </div>
+               <div class="col-md-4 box">
+                <h3>Acesso</h3>
                 <?php
                 date_default_timezone_set('America/Sao_Paulo');
                 $hr = date(" H ");
@@ -59,7 +80,7 @@ if(isset($_SESSION['idLogado'])){
                             <p class="lead"><?php echo "$resp"; ?></p>
                             <hr>
 
-                            <form action="functions/logar.php" method="post" enctype="multipart/form-data">
+                            <form action="ajax/logar.php" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label for="email">Email</label>
                                     <input type="text" class="form-control" name="emailUsuario" id="inputEmail">
@@ -75,8 +96,11 @@ if(isset($_SESSION['idLogado'])){
                                     <label class="small">Ops! <a href="text.html">Esqueci a senha</a>.</label>
                                 </div>
                             </form>
-
-                <a href="register.php" class="btn btn-lg btn-block btn-default btn-secondary">Cadastre-se</a>
+                            <div class="text-center">
+                                <a href="cadastro_pessoal" class="btn btn-lg btn-block btn-default btn-secondary">Cadastre-se</a>
+                            </div>
+                            
+                </div>
                 </div>
                 </div>
                     <!-- /.container -->

@@ -1,6 +1,4 @@
 <?php
-ob_start();
-session_start();
 //VERIFICA SE USUÁRIO TEM ACESSO A PÁGINA
 if(!isset($_SESSION['idLogado']) && (!isset($_POST['emailUsuario']))){
    $_SESSION['respesposta'] = 'negado';
@@ -9,11 +7,10 @@ if(!isset($_SESSION['idLogado']) && (!isset($_POST['emailUsuario']))){
 }
 
 //INCLUI AS FUNÇÕES NECESSÁRIAS
-include_once 'functions/validar.php';
+include_once 'ajax/validar.php';
 include_once 'functions/functions.php';
 include_once 'functions/conexoes.php';
 include_once 'include/modal.php';
-include_once 'cadastros/caracteres-especiais.php';
 //RETORNA VALOR DO BANCO DE DADOS PARA VALIDAR SE O USUARIO QUE ESTA ACESSANDO O ALBUM TEM PERMISÃO
 if(isset($_POST['idPagina'])){
 $idPagina = $_POST['idPagina'];
@@ -154,7 +151,7 @@ if($tipoPagina > 0){
                         <form action="" method="post" id="formADM" enctype="multipart/form-data">
                             <div class="panel panel-default sidebar-menu">
                               <div class="panel-heading">
-                                <h4><i class="fa fa-users-cog"></i> Gerenciamento da página</h4>
+                                <h4><i class="fa fa-users-cog"></i> Gerenciamento da página <?php echo $idPagina ?></h4>
                                 <label for=""> Total <?php echo $quantAdm ?> usuário(s) </label>
                               </div>
                             <div class="form-group box">
@@ -191,7 +188,7 @@ if($tipoPagina > 0){
                             </div>
                             <?php } ?>
                           </div>
-                          </form>
+                      </form>
                         <hr>
                         <div class="form-group">
                          <?php if($consulta['pm_editar'] > 0){ ?>
@@ -202,7 +199,7 @@ if($tipoPagina > 0){
                             $autorizado = verifica_pg_tr($idPagina, $idTorre); //verifica se tem autorização para publicar conteúdo
                             if($autorizado['retorno'] == 'aceito'){
                               $torre = topo_torre($pagina['idTorre']);
-                              $nomePagina = palavraCurta($torre['nomeTorre']);
+                              $nomePagina = palavraCurta(10,$torre['nomeTorre']);
                               ?>
                               <div class="form-group">
                                 <div class="switch__container">
@@ -299,7 +296,7 @@ function cadastrarUser(){
   var dados = $('#formADM').serialize();
   $.ajax({
     type: "POST",
-    url: "functions/attPagina.php",
+    url: "ajax/attPagina.php",
     data: dados,
     success: function(data){
       $("#adicionaAdm").html(data);
@@ -320,7 +317,7 @@ function permitir(pagina, user){
     var tipoPagina = $("#tipoPagina").val();
   $.ajax({
     type: "POST",
-    url: "functions/buscaUsuario.php",
+    url: "ajax/buscaUsuario.php",
     data:{pagina: pagina, user: user, tipoPagina: tipoPagina },
     success: function(data){
       $("#nomeAdm").html(data);
@@ -345,7 +342,7 @@ function permisoes(){
     var adm = $("#adm").val();
     $.ajax({
       type: "POST",
-      url: "functions/buscaUsuario.php",
+      url: "ajax/buscaUsuario.php",
       data:{adm: adm, idPagina: idPagina},
       //beforeSend: function(){
         //$("#adm").css("background","#FFF url(img/spinner.gif) no-repeat 5px");
@@ -367,7 +364,7 @@ function permisoes(){
         var apresenta = $("#apresenta").val();
 
         $.ajax({
-          url:("functions/attPagina.php"),
+          url:("ajax/attPagina.php"),
           type: "POST",
           data: { idPagina: idPagina,
             apresenta: apresenta,
@@ -434,7 +431,7 @@ function permisoes(){
     var buscar = $("#search-box").val();
     $.ajax({
       type: "POST",
-      url: "functions/buscatorre.php",
+      url: "ajax/buscatorre.php",
       data:{idPagina: idPagina, keyword: buscar },
       beforeSend: function(){
         $("#search-box").css("background","#FFF url(img/spinner.gif) no-repeat 20px");
@@ -458,7 +455,7 @@ function permisoes(){
 function addTorre(idTorre){
   var idPagina = $("#idPagina").val();
   $.ajax({
-    url:("functions/paginaXtorre.php"),
+    url:("ajax/paginaXtorre.php"),
     type: "POST",
     data: { idPagina: idPagina, 
       idTorre: idTorre,
@@ -480,7 +477,7 @@ function addTorre(idTorre){
 //ADICIONA A RELAÇÃO ENTRE PÁGINA E TORRE
 function selTorre(torre,pagina){
   $.ajax({
-    url:("functions/paginaXtorre.php"),
+    url:("ajax/paginaXtorre.php"),
     type: "POST",
     data: { torre: torre, 
       pagina: pagina,

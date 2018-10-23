@@ -1,10 +1,6 @@
 <?php
 //verifica se usuario está logado para acessar a página
-if(!isset($_SESSION['idLogado']) && (!isset($_POST['emailUsuario']))){
-    $_SESSION['respesposta'] = 'negado';
-    $_SESSION['retorno'] = 'foto';
-    header("Location: login"); exit;
-} 
+include 'include/valida_acesso.php';
 //abre a conexão com banco de dados
 require_once 'conn/init.php';
 require_once 'functions/conexoes.php';
@@ -52,7 +48,8 @@ include_once 'include/modal.php';
     <link href=<?php echo $corBotao ?> rel="stylesheet" id="theme-stylesheet">
     <!-- your stylesheet with modifications -->
     <link href="css/meu.css" rel="stylesheet">
-    <script src="js/respond.min.js"></script>
+    <link href="css/bootstrap-suggest.css" rel="stylesheet">
+    
     <link rel="shortcut icon" href="favicon.png">
 </head>
 
@@ -69,6 +66,7 @@ include_once 'include/modal.php';
               <?php
               if(isset($_SESSION['resposta'])){
                 include_once 'include/resposta.php';
+                echo $_SESSION['idLogado'];
             }
             ?>
             <form action="cadastros/upload-fotos.php" method="post" enctype="multipart/form-data">
@@ -88,7 +86,7 @@ include_once 'include/modal.php';
                     </div>
                     <label for='upload_file' class="upload">Selecionar fotos</label>
                     <input type="file" id="upload_file" name="imagem[]"  multiple size="5" class="upload_file" accept="image/jpeg, image/png, image/jpg,"/>
-                    <input id='upload_file' type='file' value='' />
+                    <input id='upload_file1' type='file' value='' />
                     <span id='file-name'></span>
                     <div class="foto" id="qtde_preview"></div>
 
@@ -160,7 +158,7 @@ include_once 'include/modal.php';
                     <div class="form-group">
                         <label for="marca">Publicar na torre? </label>
                         <div class="switch__container">
-                            <p>Extilos</p>
+                            <p>Extilos</p>FAZER LOOP DAS TORRES - ESTA DANDO ERRO NAS POSTAGENS QUE NAO TEM BLOG
                             <input id="torre" class="switch switch--shadow" name="torre" type="checkbox" value="1">
                             <label for="torre"></label>
                         </div>
@@ -197,10 +195,110 @@ include_once 'include/modal.php';
 <script src="js/modernizr.js"></script>
 <script src="js/bootstrap-hover-dropdown.js"></script>
 <script src="js/owl.carousel.min.js"></script>
-<script src="js/front.js"></script>
+<script src="js/respond.min.js"></script>
 <script src="js/jquery.textcomplete.js"></script>
-<script src="script/enviar-fotos.js"></script>
+<script src="js/bootstrap-suggest.js"></script>
+<script>
+    
+// verificação de upload de imagem
+$("#upload_file").on('change', function () {
 
+  var countFiles = $(this)[0].files.length;
+
+  var imgPath = $(this)[0].value;
+  var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+  var image_holder = $("#image_preview");
+  image_holder.empty();
+            if(countFiles > 5) { // VERIFICA SE É MAIOR DO QUE 5
+                alert("Não é permitido enviar mais do que 5 arquivos.");
+                $(this).val("");
+                return false;
+            } else if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+                if (typeof (FileReader) != "undefined") {
+
+                    for (var i = 0; i < countFiles; i++) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                      $(
+                        "<img />",{
+                        "src": e.target.result,
+                        "class": "img-responsive"
+                      }).appendTo(image_holder);
+                      image_holder.show();
+                    }
+                    reader.readAsDataURL($(this)[0].files[i]);
+                        document.getElementById('qtde_preview').innerHTML = '<p>'+countFiles+' arquivo(s) selecionado(s)</p>';
+
+                    }
+
+                } else {
+                    alert("foto não suportada");
+                }
+            } else {
+                alert("Selecione uma foto");
+            }
+        });
+//teste de exibição
+
+//script para fazer consulta de # e @ no banco de dados
+            $(document).ready(function(){
+                $("#descricao").on('keyup focusout',function(e){
+                 if (e.which == 51) {
+                    var hashTag = $("#descricao").val();
+                    $.ajax({
+                        url: 'ajax/buscaTag.php',
+                        type: 'POST',
+                        data: {marcacao:hashTag},
+                        success: function(data)
+                        {
+                           // $("#resultadohashPag").html(data);
+                            var users = JSON.parse(data);
+                             var options = {
+                                data: users,
+                                map: function(user){
+                                    return{
+                                        value: user.username,
+                                        text: '<b>#'+user.username+'</b>'
+                                    }
+                                }
+                             }
+                             $("#descricao").suggest({'#': options, '': options})
+
+                        },
+                        error: function(){
+                            $("#resultadohashPag").html("Erro ao enviar...");
+                        }
+                    })
+                      }
+                  }
+
+              );
+            
+
+            });
+
+             
+
+
+//$(document).ready(function(){
+//$('#marcacao').textcomplete([
+   // { // html
+    //    mentions: 'buscaTag.php',
+    //    match: /\B@(\w*)$/,
+   //     search: function (term, callback) {
+    //        callback($.map(this.mentions, function (mention) {
+   //             return mention.indexOf(term) === 0 ? mention : null;
+    //        }));
+   //     },
+   //     index: 1,
+   //     replace: function (mention) {
+   //         return '@' + mention + ' ';
+   //     }
+ //   }
+//]);
+// });
+
+</script>
 
 </body>
 

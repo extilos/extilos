@@ -2,7 +2,7 @@
 // FUNÇÕES GERAIS DO SISTEMA
 
 // TRANSTORMA AS PALAVRAS COM @ EM LINKS PARA BUSCA DE USUÁRIOS
-    function linkHashtag($textoBanco)
+    function linkUsuario($textoBanco)
     {
 		// criando link das # no descritivo
         preg_match_all ( '/@([\w]+)/' , $textoBanco , $palavra ); //pega as palavras com @
@@ -20,18 +20,18 @@
         if(isset($palavra[$p])) // se existir palavra 
             {
         $pj= $p+1; //organiza os indices para bater certo com o texto antigo
-        $palavra[$p] = '<a href="@"><small><i class="fa fa-user"></i></small>|'.$palavra[$p].'</a>'. $separaPalavras[$pj];//inclui a palavra retirada com um link para busca e formatação agradável
+        $palavra[$p] = ' |<a href="@"><small><i class="fa fa-user"></i></small></a><b>'.$palavra[$p].'</b>'. $separaPalavras[$pj];//inclui a palavra retirada com um link para busca e formatação agradável
             }
             }
         $palavra = $arroba[0] . implode(' ', $palavra);
         // monta novamente o texto 
-        // 10 horas trabalhada nesse pedaço vai tomanocu terminei
+        // 10 horas trabalhada nesse pedaço tomanocu terminei
        
       return $palavra;
         }
 //----------------------------------------------------------------------------------------------------------------------
 // TRANSTORMA AS PALAVRAS COM # EM LINKS PARA BUSCA DE HASHTAG
-    function linkMarca($textoBanco)
+    function linkHashtag($textoBanco)
     {
         
         preg_match_all ( '/#([\w]+)/' , $textoBanco , $palavra );
@@ -49,7 +49,57 @@
         if(isset($palavra[$p]))
             {
         $pj= $p+1;
-        $palavra[$p] = '<a href="#"><small><i class="fa fa-paper-plane"></i></small>|'. $palavra[$p] .' </a>'. $separaPalavras[$pj];
+        $palavra[$p] = ' |<a href="#"><small><i class="fa fa-search"></i></small></a><b>'. $palavra[$p] .'</b>'. $separaPalavras[$pj];
+            }
+            }
+        $texto = $hashtag[0] . implode(' ', $palavra);
+      return $texto;
+        }
+// TRANSTORMA AS PALAVRAS COM & PARA CRIAR LINK DE BUSCA DE MARCA
+    function linkMarca($textoBanco)
+    {
+        
+        preg_match_all ( '/&([\w]+)/' , $textoBanco , $palavra );
+        $palavra = $palavra[0]; 
+        $hashtag = explode("&", $textoBanco);
+        $n_palavras = count($hashtag);
+        for ($k=1 ; $k<$n_palavras ; $k++)
+            {
+        $separaPalavras[$k] = preg_split('/ /', $hashtag[$k], -1);
+        unset($separaPalavras[$k][0]);
+        $separaPalavras[$k] = implode(' ', $separaPalavras[$k]);
+            }
+        for ($p=0 ; $p<=$n_palavras; $p++)
+            {
+        if(isset($palavra[$p]))
+            {
+        $pj= $p+1;
+        $palavra[$p] = '<a href="#" class="btn btn-info btn-sm"><small><i class="fa fa-tag"></i></small>| '. $palavra[$p] .'</a>'. $separaPalavras[$pj];
+            }
+            }
+        $texto = $hashtag[0] . implode(' ', $palavra);
+      return $texto;
+        }
+// TRANSTORMA AS PALAVRAS COM $ PARA CRIAR LINK DE BUSCA DE LOJA
+    function linkLoja($textoBanco)
+    {
+        
+        preg_match_all ( '/:([\w]+)/' , $textoBanco , $palavra );
+        $palavra = $palavra[0]; 
+        $hashtag = explode(":", $textoBanco);
+        $n_palavras = count($hashtag);
+        for ($k=1 ; $k<$n_palavras ; $k++)
+            {
+        $separaPalavras[$k] = preg_split('/ /', $hashtag[$k], -1);
+        unset($separaPalavras[$k][0]);
+        $separaPalavras[$k] = implode(' ', $separaPalavras[$k]);
+            }
+        for ($p=0 ; $p<=$n_palavras; $p++)
+            {
+        if(isset($palavra[$p]))
+            {
+        $pj= $p+1;
+        $palavra[$p] = '<a href="#" class="btn btn-warning btn-sm"><small><i class="fa fa-shopping-cart "></i></small>| '.$palavra[$p] .'</a><br>'. $separaPalavras[$pj];
             }
             }
         $texto = $hashtag[0] . implode(' ', $palavra);
@@ -143,7 +193,7 @@
             $what = array( 'ä','ã','à','á','â','ê','ë','è','é','ï','ì','í','ö','õ','ò','ó','ô','ü','ù','ú','û','À','Á','É','Í','Ó','Ú','ñ','Ñ','ç','Ç',' ','(',')',',',';',':','|','!','"','$','%','&','/','=','?','~','^','>','<','ª','º','#','-','[',']','$','*','+' );
 
             // matriz de saída
-            $by   = array( 'a','a','a','a','a','e','e','e','e','i','i','i','o','o','o','o','o','u','u','u','u','A','A','E','I','O','U','n','n','c','C','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_', );
+            $by   = array( 'a','a','a','a','a','e','e','e','e','i','i','i','o','o','o','o','o','u','u','u','u','a','a','e','i','o','u','n','n','ç','ç','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_', );
 
             // devolver a string
             $retorno = str_replace($what, $by, $string);

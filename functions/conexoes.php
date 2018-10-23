@@ -93,16 +93,32 @@
 		$stmt_pagina->execute();
 		return $stmt_pagina;
 	}
-//----------------------------------------------------------------------------------------------------------------------
-	//BUSCA TORRES
+//-------------------------------------------- CONSULTAS DO BANCO DAS TORRES----------------------------------------------------
+	//BUSCA TORRES PELA SETOR
 	function busca_torre ($preferencia){
 		$PDO = db_connect();
-		$sql_torre = "SELECT * FROM ext_torre WHERE setorTorre LIKE '%$preferencia%' order by RAND() LIMIT 10";
+		$sql_torre = "SELECT * FROM ext_torre WHERE setorTorre = $preferencia order by RAND() LIMIT 10";
 		$stmt_torre = $PDO->prepare($sql_torre);
 		$stmt_torre->execute();
 		return $stmt_torre;
 	}
-//----------------------------------------------------------------------------------------------------------------------
+	//BUSCA TORRES PELO ID DO USUÁRIO
+	function lista_torre ($idUsuario){
+		$PDO = db_connect();
+		$sql_torre = "SELECT * FROM ext_torre WHERE idUsuario = $idUsuario";
+		$stmt_torre = $PDO->prepare($sql_torre);
+		$stmt_torre->execute();
+		return $stmt_torre;
+	}
+	//BUSCA TORRE PELO NOME
+	function nome_torre ($nomeTorre){
+		$PDO = db_connect();
+		$sql_torre = "SELECT * FROM ext_torre WHERE nomeTorre LIKE '%$nomeTorre%'";
+		$stmt_torre = $PDO->prepare($sql_torre);
+		$stmt_torre->execute();
+		$stmt_torre = $stmt_torre->fetch(PDO::FETCH_ASSOC);
+		return $stmt_torre;
+	}
 	//TOPO TORRES
 	function topo_torre ($topoTorre){
 		$PDO = db_connect();
@@ -112,11 +128,38 @@
 		$stmt_torre = $stmt_torre->fetch(PDO::FETCH_ASSOC);
 		return $stmt_torre;
 	}
-//----------------------------------------------------------------------------------------------------------------------
+
+//-----------------------------------------------CONSULTAS NO BANCO PGxTR-------------------------------------------------
+	//VERIFICA SE EXISTE O VINCULO ENTRE A PÁGINA E A TORRE - CONFIGURAÇÃO DE PÁGINA
+	function verifica_usu_pg ($idUsuario, $idPagina){
+		$PDO = db_connect();
+		$sql_torre = $sql_pagina = "SELECT * FROM ext_permite where idPagina = $idPagina and idUsuario = $idUsuario";
+		$stmt_torre = $PDO->prepare($sql_torre);
+		$stmt_torre->execute();
+		$stmt_torre = $stmt_torre->fetch(PDO::FETCH_ASSOC);
+		if($stmt_torre > 0){
+				$pm_post = $stmt_torre['pm_post']; //Permiter postar conteúdo
+				$pm_editar = $stmt_torre['pm_editar']; //Permite editar textos da apresentação e descritivos
+				$pm_excluir = $stmt_torre['pm_excluir']; //Permite excluir conteúdos da página
+				$pm_cadastro = $stmt_torre['pm_cadastro']; //Permite cadastrar a pagina em torre ou publicidade
+				$pm_financeiro = $stmt_torre['pm_financeiro']; //Permite ter acesso ao controle financeiro da página
+		$retorno = [
+				'pm_post'=>$pm_post,
+				'pm_editar'=>$pm_editar,
+				'pm_excluir'=>$pm_excluir,
+				'pm_cadastro'=>$pm_cadastro,
+				'pm_financeiro'=>$pm_financeiro
+				];
+		}else{
+			$retorno = 'erro';
+		}
+		return $retorno;
+	}
+	//----------------------------------------------------------------------------------------------------------------------
 	//VERIFICA SE EXISTE O VINCULO ENTRE A PÁGINA E A TORRE - CONFIGURAÇÃO DE PÁGINA
 	function verifica_pg_tr ($idPagina, $idTorre){
 		$PDO = db_connect();
-		$sql_torre = "SELECT DISTINCT * FROM ext_pg_tr WHERE idPagina = $idPagina and idTorre = $idTorre";
+		$sql_torre = "SELECT DISTINCT * FROM ext_pg_tr WHERE idPagina = $idPagina and idTorre = $idTorre ";
 		$stmt_torre = $PDO->prepare($sql_torre);
 		$stmt_torre->execute();
 		$stmt_torre = $stmt_torre->fetch(PDO::FETCH_ASSOC);
@@ -143,33 +186,6 @@
 			}
 		return $retorno;
 	}
-//----------------------------------------------------------------------------------------------------------------------
-	//VERIFICA SE EXISTE O VINCULO ENTRE A PÁGINA E A TORRE - CONFIGURAÇÃO DE PÁGINA
-	function verifica_usu_pg ($idUsuario, $idPagina){
-		$PDO = db_connect();
-		$sql_torre = $sql_pagina = "SELECT * FROM ext_permite where idPagina = $idPagina and idUsuario = $idUsuario";
-		$stmt_torre = $PDO->prepare($sql_torre);
-		$stmt_torre->execute();
-		$stmt_torre = $stmt_torre->fetch(PDO::FETCH_ASSOC);
-		if($stmt_torre > 0){
-				$pm_post = $stmt_torre['pm_post']; //Permiter postar conteúdo
-				$pm_editar = $stmt_torre['pm_editar']; //Permite editar textos da apresentação e descritivos
-				$pm_excluir = $stmt_torre['pm_excluir']; //Permite excluir conteúdos da página
-				$pm_cadastro = $stmt_torre['pm_cadastro']; //Permite cadastrar a pagina em torre ou publicidade
-				$pm_financeiro = $stmt_torre['pm_financeiro']; //Permite ter acesso ao controle financeiro da página
-		$retorno = [
-				'pm_post'=>$pm_post,
-				'pm_editar'=>$pm_editar,
-				'pm_excluir'=>$pm_excluir,
-				'pm_cadastro'=>$pm_cadastro,
-				'pm_financeiro'=>$pm_financeiro
-				];
-		}else{
-			$retorno = 'erro';
-		}
-		return $retorno;
-	}
-//----------------------------------------------------------------------------------------------------------------------
 	//CONSULTA DE PÁGINA x TORRE
 	function pagina_torre ($idPagina){
 		$PDO = db_connect();
@@ -178,6 +194,94 @@
 		$stmt_torre->execute();
 		return $stmt_torre;
 	}
+	//contar os registros / RELAÇÃO ENTRE A PÁGINA E A TORRE
+	function conta_pagina_torre($idTorre){
+		try{
+		$PDO = db_connect();
+		$sql_count = "SELECT COUNT(*) AS total FROM ext_pg_tr where idTorre = $idTorre";
+		$stmt_count = $PDO->prepare($sql_count);
+		$stmt_count->execute();
+		$total = $stmt_count->fetchColumn();
+		return $total;
+	}catch (PDOException $e) {
+    echo 'Connection failed: ' . $e->getMessage();
+	}
+	}
+	function lista_blog_torre ($idTorre){
+				$PDO = db_connect();
+				$sql_inicio = "	SELECT ext_pg_tr.* , ext_paginas.*
+								FROM ext_pg_tr
+								left join ext_paginas
+								on ext_pg_tr.idPagina = ext_paginas.idPagina
+								where ext_pg_tr.idTorre = $idTorre
+								order by ext_pg_tr.idPagina desc";
+				$sql_inicio = $PDO->prepare($sql_inicio);
+				$sql_inicio->execute();
+				while ($lista = $sql_inicio->fetch(PDO::FETCH_ASSOC)):
+					$r['idPgTorre'] = $lista['idPgTorre'];
+					$r['pgAutorizado'] = $lista['pgAutorizado'];
+					$r['pgNegado'] = $lista['pgNegado'];
+					$r['pgSaiu'] = $lista['pgSaiu'];
+					$r['pgAtivar'] = $lista['pgAtivar'];
+					$r['pgSolicita'] = $lista['pgSolicita'];
+					$r['pgData'] = $lista['pgData'];
+					$r['pgPermite'] = $lista['pgPermite']; //pgPermite refere a torre que permite publicação livre sem aprovação
+					$r['dataPagina'] = $lista['dataPagina'];
+					$r['nomePagina'] = $lista['nomePagina'];
+					$r['descPagina'] = $lista['descPagina'];
+					$r['estadoPagina'] = $lista['estadoPagina'];
+					$r['cidadePagina'] = $lista['cidadePagina'];
+					$r['emailPagina'] = $lista['emailPagina'];
+					$r['tipoPagina'] = $lista['tipoPagina'];
+					$r['pgCapa'] = $lista['pgCapa'];
+					$r['idUsuario'] = $lista['idUsuario'];
+					$r['idUsuario2'] = $lista['idUsuario2'];
+					$r['idUsuario3'] = $lista['idUsuario3'];
+				    $dados_post[] = $r;
+				endwhile;
+					if (isset($dados_post)){
+						return json_encode($dados_post, JSON_PRETTY_PRINT);
+						}else{
+							return null;
+						}
+			}
+			function lista_blog ($buscaBlog, $idTorre){
+				$PDO = db_connect();
+				$sql_inicio = "	SELECT ext_pg_tr.* , ext_paginas.*
+								FROM ext_pg_tr
+								inner join ext_paginas
+								on ext_pg_tr.idPagina = ext_paginas.idPagina
+								where ext_pg_tr.idTorre = $idTorre and ext_paginas.nomePagina LIKE '%$buscaBlog%' ";
+				$sql_inicio = $PDO->prepare($sql_inicio);
+				$sql_inicio->execute();
+				while ($lista = $sql_inicio->fetch(PDO::FETCH_ASSOC)):
+					$r['pgAutorizado'] = $lista['pgAutorizado'];
+					$r['pgNegado'] = $lista['pgNegado'];
+					$r['pgSaiu'] = $lista['pgSaiu'];
+					$r['pgAtivar'] = $lista['pgAtivar'];
+					$r['pgSolicita'] = $lista['pgSolicita'];
+					$r['pgData'] = $lista['pgData'];
+					$r['pgPermite'] = $lista['pgPermite'];
+					$r['dataPagina'] = $lista['dataPagina'];
+					$r['nomePagina'] = $lista['nomePagina'];
+					$r['descPagina'] = $lista['descPagina'];
+					$r['estadoPagina'] = $lista['estadoPagina'];
+					$r['cidadePagina'] = $lista['cidadePagina'];
+					$r['emailPagina'] = $lista['emailPagina'];
+					$r['tipoPagina'] = $lista['tipoPagina'];
+					$r['pgCapa'] = $lista['pgCapa'];
+					$r['idUsuario'] = $lista['idUsuario'];
+					$r['idUsuario2'] = $lista['idUsuario2'];
+					$r['idUsuario3'] = $lista['idUsuario3'];
+				    $dados_post[] = $r;
+				endwhile;
+					if (isset($dados_post)){
+						return json_encode($dados_post, JSON_PRETTY_PRINT);
+						}else{
+							return print_r($sql_inicio->errorInfo());
+							
+						}
+			}
 //----------------------------------------------------------------------------------------------------------------------
 	//CONSULTA A TORRE DE PREFERÊNCIA DO USUÁRIO - FOLHA DE CADASTRO
 	function banco_torre($idAlbum){
@@ -187,13 +291,136 @@
 		$stmt_torre->execute();
 		return $stmt_torre;
 	}
-//----------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------CONSULTAS NO BANCO DE FANS-----------------------------------------------------
 	//FILTRO PARA APRESENTAÇÃO - PÁGINA DE INICIO
 	function pagina_inicio ($postagem){
 		$PDO = db_connect();
 		$sql_inicio = "SELECT * FROM ext_fans FROM idUsuario = $idLogado";
 		$sql_inicio = $PDO->prepare($sql_inicio);
 		$sql_inicio->execute();
+	}
+	//BUSCA FANS PELO ID DA PÁGINA
+	function busca_fans ($idPagina,$idTorre){
+		if($idPagina>0){
+				$PDO = db_connect();
+				$sql_inicio = "	SELECT ext_fans.* , ext_usuarios.*
+								FROM ext_fans
+								left join ext_usuarios
+								on ext_fans.idUsuario = ext_usuarios.idUsuario 
+								where ext_fans.idPagina = $idPagina";
+				$sql_inicio = $PDO->prepare($sql_inicio);
+				$sql_inicio->execute();
+				while ($lista = $sql_inicio->fetch(PDO::FETCH_ASSOC)):
+					$r['arrobaUsuario'] = $lista['arrobaUsuario'];
+					$r['dataSolicita'] = $lista['dataSolicita'];
+					$r['usuEstado'] = $lista['usuEstado'];
+					$r['usuCidade'] = $lista['usuCidade'];
+				    $dados_post[] = $r;
+				endwhile;
+					if (isset($dados_post)){
+						return json_encode($dados_post, JSON_PRETTY_PRINT);
+						}
+			}
+		if($idTorre>0){
+				$PDO = db_connect();
+				$sql_inicio = "	SELECT ext_fans.* , ext_usuarios.*
+								FROM ext_fans
+								left join ext_usuarios
+								on ext_fans.idUsuario = ext_usuarios.idUsuario 
+								where ext_fans.idTorre = $idTorre";
+				$sql_inicio = $PDO->prepare($sql_inicio);
+				$sql_inicio->execute();
+				while ($lista = $sql_inicio->fetch(PDO::FETCH_ASSOC)):
+					$r['arrobaUsuario'] = $lista['arrobaUsuario'];
+					$r['dataSolicita'] = $lista['dataSolicita'];
+					$r['usuEstado'] = $lista['usuEstado'];
+					$r['usuCidade'] = $lista['usuCidade'];
+				    $dados_post[] = $r;
+				endwhile;
+					if (isset($dados_post)){
+						return json_encode($dados_post, JSON_PRETTY_PRINT);
+						}
+					}
+	}
+	//BUSCA FANS PELO NICK NAME PÁGINA
+	function busca_lista_fans ($busca, $letra, $idPagina, $idTorre){
+		$PDO = db_connect();
+	if($idPagina > 0){
+		if(isset($letra)){
+		$sql_inicio = "	SELECT * 
+  						FROM ext_fans 
+  						LEFT JOIN ext_usuarios
+  						ON ext_fans.idUsuario = ext_usuarios.idUsuario
+  						WHERE idPagina = $idPagina and arrobaUsuario 
+  						LIKE '$letra%' LIMIT 50 ";
+  		}else{
+  		$sql_inicio = "	SELECT * 
+  						FROM ext_fans 
+  						LEFT JOIN ext_usuarios
+  						ON ext_fans.idUsuario = ext_usuarios.idUsuario
+  						WHERE idPagina = $idPagina and arrobaUsuario 
+  						LIKE '%$busca%' LIMIT 50 ";
+
+  		}
+  	}elseif($idTorre > 0){
+  		if(isset($letra)){
+		$sql_inicio = "	SELECT * 
+  						FROM ext_fans 
+  						LEFT JOIN ext_usuarios
+  						ON ext_fans.idUsuario = ext_usuarios.idUsuario
+  						WHERE idTorre = $idTorre and arrobaUsuario 
+  						LIKE '$letra%' LIMIT 50 ";
+  		}else{
+  		$sql_inicio = "	SELECT * 
+  						FROM ext_fans 
+  						LEFT JOIN ext_usuarios
+  						ON ext_fans.idUsuario = ext_usuarios.idUsuario
+  						WHERE idTorre = $idTorre and arrobaUsuario 
+  						LIKE '%$busca%' LIMIT 50 ";
+
+  		}
+  	}
+  	
+		$sql_inicio = $PDO->prepare($sql_inicio);
+		$sql_inicio->execute();
+				while ($lista = $sql_inicio->fetch(PDO::FETCH_ASSOC)):
+					$r['arrobaUsuario'] = $lista['arrobaUsuario'];
+					$r['dataSolicita'] = $lista['dataSolicita'];
+					$r['usuEstado'] = $lista['usuEstado'];
+					$r['usuCidade'] = $lista['usuCidade'];
+				    $dados_post[] = $r;
+				endwhile;
+					if (isset($dados_post)){
+						return json_encode($dados_post, JSON_PRETTY_PRINT);
+						}else{
+						return null;
+					}
+					}
+	//RETORNA O TOTAL DE FANS QUE A PAGINA TEM
+	function fans_total($idPagina){
+		try{
+		$PDO = db_connect();
+		$sql_count = "SELECT COUNT(*) AS total FROM ext_fans where idPagina = $idPagina";
+		$stmt_count = $PDO->prepare($sql_count);
+		$stmt_count->execute();
+		$total = $stmt_count->fetchColumn();
+		return $total;
+	}catch (PDOException $e) {
+    echo 'Connection failed: ' . $e->getMessage();
+	}
+	}
+	//RETORNA O TOTAL DE FANS QUE A TORRE TEM
+	function fans_total_torre($idTorre){
+		try{
+		$PDO = db_connect();
+		$sql_count = "SELECT COUNT(*) AS total FROM ext_fans where idTorre = $idTorre";
+		$stmt_count = $PDO->prepare($sql_count);
+		$stmt_count->execute();
+		$total = $stmt_count->fetchColumn();
+		return $total;
+	}catch (PDOException $e) {
+    echo 'Connection failed: ' . $e->getMessage();
+	}
 	}
 //----------------------------------------------------------------------------------------------------------------------
 	// CONSULTA PARA SABER SE ALBUM PERTENCE AO USUÁRIO QUE ESTA EDITANDO
@@ -271,20 +498,7 @@
     echo 'Connection failed: ' . $e->getMessage();
 	}
 	}
-//----------------------------------------------------------------------------------------------------------------------
-//contar os registros / RELAÇÃO ENTRE A PÁGINA E A TORRE
-	function conta_pagina_torre($idTorre){
-		try{
-		$PDO = db_connect();
-		$sql_count = "SELECT COUNT(*) AS total FROM ext_pg_tr where idTorre = $idTorre";
-		$stmt_count = $PDO->prepare($sql_count);
-		$stmt_count->execute();
-		$total = $stmt_count->fetchColumn();
-		return $total;
-	}catch (PDOException $e) {
-    echo 'Connection failed: ' . $e->getMessage();
-	}
-	}
+
 //----------------------------------------------------------------------------------------------------------------------
 	// BUSCA NO BANCO DE DADOS DE IMAGENS
 	function banco_inicio($idTorre, $inicio, $fim){
@@ -312,14 +526,26 @@
     echo 'Connection failed: ' . $e->getMessage();
 	}
 		}
+	function busca_blog_texto($idPagina){
+		$PDO = db_connect();
+		$sql_fotos = "SELECT * FROM ext_paginas where idPagina = $idPagina";
+		$blog = $PDO->prepare($sql_fotos);
+		$blog->execute();
+		while ($postagens = $blog->fetch(PDO::FETCH_ASSOC)):
+			$pt['pgTexto'] = $postagens['nomePagina'];
+			$nomeBlog[] = $pt;
+		endwhile;
+		return json_encode($nomeBlog, JSON_PRETTY_PRINT);
+		}
 //----------------------------------------------------------------------------------------------------------------------
 	// MONTAGEM DOS DADOS PARA EXIBIÇÃO 
 	// busca página que publicou conteúdo
 		function pg_conteudo ($idPost){
 			$PDO = db_connect();
-			$post = "SELECT id_pagina FROM ext_compartilha where id_post = $idPost ";
+			$post = "SELECT id_pagina FROM ext_compartilha where id_post = $idPost ORDER BY RAND()";
 			$result = $PDO->prepare($post);
 			$result->execute();
+			$result = $result->fetch(PDO::FETCH_ASSOC);
 			return $result;
 		}
 //----------------------------------------------------------------------------------------------------------------------
@@ -347,30 +573,178 @@
 			$post_usuario->execute();
 			$post_usuario = $post_usuario->fetch(PDO::FETCH_ASSOC);
 				if ($post_usuario['img'] > ''){
-								//dados da tabela ext_post
-								$r['postagem'] = $postagens['id_postagem'];
-								//dados da tabela img_usuarios
-								$r['idPost'] = $post_usuario['idImg'];
-								$r['idUsuario'] = $post_usuario['idUsuario'];
-				        		$r['usuEstilo'] = $post_usuario['usuEstilo'];
-				        		$r['usuTitulo'] = $post_usuario['usuTitulo'];
-				        		$r['usuMarca'] = $post_usuario['usuMarca'];
-				        		$r['usuDesc'] = $post_usuario['usuDesc'];
-				        		$r['img'] = $post_usuario['img'];
-				        		$r['img1'] = $post_usuario['img1'];
-				        		$r['img2'] = $post_usuario['img2'];
-				        		$r['img3'] = $post_usuario['img3'];
-				        		$r['img4'] = $post_usuario['img4'];
-				        		$r['publicarTorre'] = $post_usuario['publicarTorre'];
-				        		$r['nomeTorre'] = $post_usuario['nomeTorre'];
-				        		$r['precPro'] = $post_usuario['precPro'];
-				        		$r['descPro'] = $post_usuario['descPro'];
-				        		$r['formaPro'] = $post_usuario['formaPro'];
-				        		$r['infoPro'] = $post_usuario['infoPro'];
-				        		$dados_post[] = $r;
-				        	}
+						//dados da tabela ext_post
+					$r['temFoto'] = 'sim';
+					$r['postagem'] = $postagens['id_postagem'];
+					$r['dataTorre'] = $postagens['post_data'];
+						//dados da tabela img_usuarios
+					$r['idPost'] = $post_usuario['idImg'];
+					$r['idUsuario'] = $post_usuario['idUsuario'];
+				    $r['arrobaUsuario'] = $post_usuario['arrobaUsuario'];
+				    $r['usuEstilo'] = $post_usuario['usuEstilo'];
+				    $r['usuTitulo'] = $post_usuario['usuTitulo'];
+				    $r['usuMarca'] = $post_usuario['usuMarca'];
+				    $r['usuDesc'] = $post_usuario['usuDesc'];
+				    $r['img'] = $post_usuario['img'];
+				    $r['img1'] = $post_usuario['img1'];
+				    $r['img2'] = $post_usuario['img2'];
+				    $r['img3'] = $post_usuario['img3'];
+				    $r['img4'] = $post_usuario['img4'];
+				    $r['publicarTorre'] = $post_usuario['publicarTorre'];
+				    $r['estadoPost'] = $post_usuario['estadoPost'];
+				    $r['nomeTorre'] = $post_usuario['nomeTorre'];
+				    $r['precPro'] = $post_usuario['precPro'];
+				    $r['descPro'] = $post_usuario['descPro'];
+				    $r['formaPro'] = $post_usuario['formaPro'];
+				    $r['infoPro'] = $post_usuario['infoPro'];
+				    $r['dataPost'] = $post_usuario['data_post'];
+				    $dados_post[] = $r;
+				}else{
+					$r['temFoto'] = 'nao';
+					$r['postagem'] = $postagens['id_postagem'];
+					$r['dataTorre'] = $postagens['post_data'];
+						//dados da tabela img_usuarios
+					$r['idPost'] = $post_usuario['idImg'];
+					$r['idUsuario'] = $post_usuario['idUsuario'];
+				    $r['arrobaUsuario'] = $post_usuario['arrobaUsuario'];
+				    $r['usuEstilo'] = $post_usuario['usuEstilo'];
+				    $r['usuTitulo'] = $post_usuario['usuTitulo'];
+				    $r['usuMarca'] = $post_usuario['usuMarca'];
+				    $r['usuDesc'] = $post_usuario['usuDesc'];
+				    $r['publicarTorre'] = $post_usuario['publicarTorre'];
+				    $r['estadoPost'] = $post_usuario['estadoPost'];
+				    $r['nomeTorre'] = $post_usuario['nomeTorre'];
+				    $r['precPro'] = $post_usuario['precPro'];
+				    $r['descPro'] = $post_usuario['descPro'];
+				    $r['formaPro'] = $post_usuario['formaPro'];
+				    $r['infoPro'] = $post_usuario['infoPro'];
+				    $r['dataPost'] = $post_usuario['data_post'];
+				    $dados_post[] = $r;
+				}
 		endwhile;
-
-		return json_encode($dados_post, JSON_PRETTY_PRINT);
+		if(isset($dados_post)){
+			return json_encode($dados_post, JSON_PRETTY_PRINT);
+				//return $postagens;
+		}else{
+			return null;
+		}
 	}
+	//verifica as permiçoes e validações do post
+	function validar_post($id_postagem, $id_torre){
+		$PDO = db_connect();
+			$validar = "SELECT * FROM ext_post where id_postagem = $id_postagem and id_torre = $id_torre";
+			$post_usuario = $PDO->prepare($validar);
+			$post_usuario->execute();
+			$post_usuario = $post_usuario->fetch(PDO::FETCH_ASSOC);
+					$c['post_liberado'] = $post_usuario['post_liberado'];
+					$c['post_denuncia'] = $post_usuario['post_denuncia'];
+					$c['post_excluido'] = $post_usuario['post_excluido'];
+					$info_post[] = $c;
+			return json_encode($info_post, JSON_PRETTY_PRINT);
+		}
+//----------------------------------------------------------------------------------------------------------------------
+	//contar quantas comentários existem para determinado post
+	function total_comentarios($idPost, $idUsuario){
+		$PDO = db_connect();
+		$sql_count = "SELECT COUNT(*) AS total FROM ext_comentario where idPost = $idPost and idUsuario = $idUsuario ";
+		$stmt_count = $PDO->prepare($sql_count);
+		$stmt_count->execute();
+		$total_coment = $stmt_count->fetchColumn();
+		return $total_coment;
+	}
+//----------------------------------------------------------------------------------------------------------------------
+	//criar um loop com os comentários
+	function comentarios($idPost, $idUsuario){
+		$PDO = db_connect();
+		$sql = "SELECT * FROM ext_comentario where idPost = $idPost and idUsuario = $idUsuario order by idComentario desc";
+		$stmt = $PDO->prepare($sql);
+		$stmt->execute();
+		return $stmt;
+	}
+//----------------------------------------------------------------------------------------------------------------------
+	//contar quantidade de deslike existem para determinado post
+	function total_deslike($idPost){
+		$PDO = db_connect();
+		$sql_count = "SELECT COUNT(*) AS total FROM ext_curtidas where id_post = $idPost and curtir_negativo = 1";
+		$stmt_count = $PDO->prepare($sql_count);
+		$stmt_count->execute();
+		$total = $stmt_count->fetchColumn();
+		return $total;
+	}
+	//contar quantidade de like existem para determinado post
+	function total_like($idPost){
+		$PDO = db_connect();
+		$sql_count = "SELECT COUNT(*) AS total FROM ext_curtidas where id_post = $idPost and curtir_positivo = 1";
+		$stmt_count = $PDO->prepare($sql_count);
+		$stmt_count->execute();
+		$total = $stmt_count->fetchColumn();
+		return $total;
+	}
+	//pesquisa o post curtido pelo usuário
+	function curtidos($idPost, $idUsuario){
+		$PDO = db_connect();
+		$sql = "SELECT * FROM ext_curtidas where id_post = $idPost and idUsuario = $idUsuario ";
+		$stmt = $PDO->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+		return $result;
+	}
+	//pesquisa o favoritos pelo usuário
+	function favoritos($idPost, $idUsuario){
+		$PDO = db_connect();
+		$sql = "SELECT * FROM ext_favoritos where id_post = $idPost and idUsuario = $idUsuario ";
+		$stmt = $PDO->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+		return $result;
+	}
+// ------------------------------------------- CONSULTAS NO BANCO EXT_VISITAS ----------------------------------------
+	//pesquisa o post curtido pelo usuário
+	function visitas($idPost, $idUsuario){
+		$PDO = db_connect();
+		$sql = "SELECT * FROM ext_visita where idPost = $idPost and idUsuario = $idUsuario ORDER BY idVisita DESC";
+		$stmt = $PDO->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+		return $result;
+	}
+	//quantidade de visitas
+	function total_visitas_user($idPost){
+		$PDO = db_connect();
+		$sql = "SELECT  COUNT(*) AS total FROM ext_visita where idPost = $idPost and idUsuario > 1 ";
+		$stmt = $PDO->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchColumn();
+		return $result;
+	}
+	//quantidade de visitas usuários não logado
+	function total_visitas($idPost){
+		$PDO = db_connect();
+		$sql = "SELECT  COUNT(*) AS total FROM ext_visita where idPost = $idPost and idUsuario < 1 ";
+		$stmt = $PDO->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchColumn();
+		return $result;
+	}
+// ------------------------------------------- CONSULTAS NO BANCO EXT_DENUNCIAS ----------------------------------------
+	//pesquisa o post curtido pelo usuário
+	function denuncia($idPost, $idUsuario){
+		$PDO = db_connect();
+		$sql = "SELECT * FROM ext_denuncia where idPost = $idPost and idUsuario = $idUsuario ORDER BY idDenuncia DESC";
+		$stmt = $PDO->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+		return $result;
+	}
+	//quantidade de denuncias
+	function total_denuncia($idPost){
+		$PDO = db_connect();
+		$sql = "SELECT  COUNT(*) AS total FROM ext_denuncia where idPost = $idPost ";
+		$stmt = $PDO->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchColumn();
+		return $result;
+	}
+
+
 ?>

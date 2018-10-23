@@ -1,6 +1,8 @@
 <?php
-ob_start();
-session_start();
+require_once 'conn/init.php';
+if(isset($_SESSION['idLogado'])){
+    header("Location: painel_usuario"); exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -24,123 +26,140 @@ session_start();
     <link href="css/owl.carousel.css" rel="stylesheet">
     <link href="css/owl.theme.css" rel="stylesheet">
     <!-- theme stylesheet -->
-    <link href="css/style.blue.css" rel="stylesheet" id="theme-stylesheet">
+    <link href="css/style.default.css" rel="stylesheet" id="theme-stylesheet">
     <!-- your stylesheet with modifications -->
-    <link href="css/custom.css" rel="stylesheet">
+    <link href="css/meu.css" rel="stylesheet">
     <script src="js/respond.min.js"></script>
     <link rel="shortcut icon" href="favicon.png">
 </head>
 <body>
     <!-- *** TOPBAR ***
- _________________________________________________________ -->
-   <div class="navbar-header">
-                <a class="navbar-brand home" href="index.html" data-animate-hover="bounce">
-                    <img src="imagem/extilos_preto.png" alt="eXtilos.com" class="img-responsive">
+    _________________________________________________________ -->
 
-                    <div class="navbar-buttons">
-                        <div class="col-md-6" data-animate="fadeInDown">
-                            <a type="button" class="navbar-toggle" data-toggle="modal" data-target="#login-modal">
-                                <span class="sr-only">Toggle navigation</span>
-                                <i class="fa fa-align-justify"></i>
-                            </a>
+    <div id="hot">
+     <?php include 'include/barra-superior.php';?>
+     <div id="content">
+        <div class="container">
+            <div class="col-sm-12 box">
+                <div class="col-sm-6">
+                    <h3>Inscreva-se | <small>Cadastro Pessoal</small></h3>
+                    <p class="lead">Siga, curta, faça a sua moda, mostre o seu <font face="segoe Print">e<b>X</b>tilo's.</font> </p>
+                    <?php
+                        //retorna o que foi preenchido caso ocorra algum erro no cadastro
+                    if(isset($_SESSION['resposta'])){
+                        if ($_SESSION['resposta'] != 'captcha'){
+                            include_once 'include/resposta.php';
+                        }
+                    }
+                    if(isset($_SESSION['n'])){
+
+                        $nome = $_SESSION['n'];
+                        unset($_SESSION['n']);
+                    }else{
+                        $nome = null;
+                    }
+                    if(isset($_SESSION['e']))
+                    {
+                        $email = $_SESSION['e'];
+                        unset($_SESSION['e']);
+                    }else{
+                        $email = null;
+                    }
+                    ?>
+                    <hr>
+                    <div class="card">
+                        <div class="card-block p-3">
+                            <!--Title-->
+                            <h3 class="text-center font-up font-bold indigo-text py-2 mb-3"><strong>Veja como funciona</strong></h3>
+
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/vlDzYIIOYmM" allowfullscreen></iframe>
+                            </div>
                         </div>
-                        <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true">
-                            <div class="modal-dialog modal-sm">
-
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title" id="Login">Painel de Acessos</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <?php include 'include/painel-login.php'  ?>
-                                    </div>
+                    </div>
+                    <hr>
+                </div>
+                    
+                        <div class="col-sm-6 box">
+                        <h3><small>Preencha os campos abaixo para realizar o seu cadastro.</small></h3>
+                        <form action="cadastros/addUsuario.php" method="post">
+                            <div class="col-sm-12">
+                                <div class ="form-group">
+                                    <label for="estado">Estado - UF</label>
+                                    <select name="estadoUsuario" id="estados" class="form-control" required>
+                                        <option value=""></option>
+                                    </select>
+                                    <label for="cidade">Cidade</label>
+                                    <select name="cidadeUsuario" id="cidades" class="form-control" required>
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-12">
+                                    <label for="sexo">Visualizar conteúdo para o sexo:</label>
+                                </div>
+                                        <div class="form-check col-sm-3" required>
+                                            <label>
+                                                <input type="radio" value="1" name="opSexo" checked> <span class="label-text">Feminino</span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check col-sm-3">
+                                            <label>
+                                                <input type="radio" value="2" name="opSexo"> <span class="label-text">Masculino</span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check col-sm-5">
+                                            <label>
+                                                <input type="radio" value="3" name="opSexo"> <span class="label-text">Diversificado</span>
+                                            </label>
+                                        </div>
+                                
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="name">Nome</label>
+                                    <input type="text" class="form-control" name="nomeUsuario" id="nomeUsuario" value="<?php echo $nome ?>">
+                                     <div id="resultado">Email</div> <!-- RESPONDE CASO O EMAIL NÃO FOR VÁLIDO  -->
+                                     <input type="email" class="form-control" name="" id="informaemail" value="<?php echo $email ?>">
+                                     <input type="hidden" id="emailUsuario" name="emailUsuario" value="<?php echo $email ?>">
+                                        <label for="password">Senha</label>
+                                        <input type="password" class="form-control" name="senhaUsuario" id="password">
+                                        <label for="password">Repita a senha</label>
+                                        <input type="password" class="form-control" name="" id="confirm_password">
+                                        <hr>
+                                        <div class="col-sm-6">
+                                        <div id="captchaResultado">Digite o código exibido </div> <!-- RESPONDE CASO O CAPTCHA NÃO FOR VÁLIDO  -->
+                                        <input class="form-control" type="text" name="captcha" id="captcha" required>
+                                        </div>
+                                        <div class="col-sm-6">
+                                        <img class="img-responsive" src="include/captcha.php" alt="captcha">
+                                        </div>
+                                        <label class="small">Ao se cadastrar estará concordando com os <a href="text.html">Termos de uso</a> do site.</label>
+                                        <div class="text-center">
+                                            <button type="submit" id="cadastroLogin" disabled="true" class="btn btn-lg btn-block btn-primary"> Cadastrar</button>
+                                        </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-    <div id="all">
-        <div id="content">
-            <div class="container box">
-                <div class="col-md-6">
-                    <div class="">
-                        <h3>Inscreva-se</h3>
-                        <p class="lead">Siga, curta, seja, mostre a sua moda e seu <font face="segoe Print">e<b>X</b>tilo.</font> </p>
-                        
-                        <hr>
-                        <?php
-                        //retorna o que foi preenchido caso ocorra algum erro no cadastro
-                            if(isset($_SESSION['resposta'])){
-                                if ($_SESSION['resposta'] != 'captcha'){
-                                    include_once 'include/resposta.php';
-                                }
-                            }
-                            if(isset($_SESSION['n'])){
-
-                                $nome = $_SESSION['n'];
-                                unset($_SESSION['n']);
-                            }else{
-                                $nome = null;
-                            }
-                            if(isset($_SESSION['e']))
-                            {
-                                $email = $_SESSION['e'];
-                                unset($_SESSION['e']);
-                            }else{
-                                $email = null;
-                            }
-                        ?>
-                        <form action="cadastros/addUsuario.php" method="post">
-                            <div class="form-group">
-                                <label for="name">Nome</label>
-                                <input type="text" class="form-control" name="nomeUsuario" id="nomeUsuario" value="<?php echo $nome ?>">
-                            </div>
-                            <div class="form-group">
-                                 <div id="resultado">Email</div> <!-- RESPONDE CASO O EMAIL NÃO FOR VÁLIDO  -->
-                                <input type="email" class="form-control" name="" id="informaemail" value="<?php echo $email ?>">
-                                <input type="hidden" id="emailUsuario" name="emailUsuario" value="<?php echo $email ?>">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="password">Senha</label>
-                                <input type="password" class="form-control" name="senhaUsuario" id="password">
-                            </div>
-                            <div class="form-group">
-                                <label for="password">Repita a senha</label>
-                                <input type="password" class="form-control" name="" id="confirm_password">
-                            </div>
-                            <div class="form-group">
-                                    <img class="img-responsive" src="include/captcha.php" alt="captcha">
-                                    <div id="captchaResultado">Digite o código acima</div> <!-- RESPONDE CASO O CAPTCHA NÃO FOR VÁLIDO  -->
-                                    <input class="form-control" type="text" name="captcha" id="captcha" required>
-                            </div>
-                            <label class="small">Ao se cadastrar estará concordando com os <a href="text.html">Termos de uso</a> do site.</label>
-                            <div class="text-center">
-                                <button type="submit" id="cadastroLogin" disabled="true" class="btn btn-lg btn-block btn-primary"> Cadastrar</button>
-                            </div>
                         </form>
-                    </div>
-                </div>
-               
+                        </div>
             </div>
-            <!-- /.container -->
+        </div>
+    <!-- /.container -->
+    </div>
+
+<div id="copyright">
+    <div class="container">
+        <div class="col-md-12">
+            <p class="pull-left">© 2018 eXtilos.com</p>
         </div>
 
-        <div id="copyright">
-            <div class="container">
-                <div class="col-md-12">
-                    <p class="pull-left">© 2018 eXtilos.com</p>
-                </div>
-                
-            </div>
-        </div>
-        <!-- *** COPYRIGHT END *** -->
     </div>
-    <!-- /#all -->
-    
+</div>
+<!-- *** COPYRIGHT END *** -->
+</div>
+<!-- /#all -->
+
     <!-- *** SCRIPTS TO INCLUDE ***
- _________________________________________________________ -->
+    _________________________________________________________ -->
     <script src="js/jquery-1.11.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.cookie.js"></script>
@@ -149,14 +168,15 @@ session_start();
     <script src="js/bootstrap-hover-dropdown.js"></script>
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/front.js"></script>
+    <script src="script/script-geral.js"></script>
     <script type="text/javascript">
-          $(document).ready(function(){
+      $(document).ready(function(){
                 //faz verificação de página no banco de dados
                 $("#informaemail").on('keyup focusout',function(){
                     var url = $("#informaemail").val();
 
                     $.ajax({
-                        url: 'functions/buscalogin.php',
+                        url: 'ajax/buscalogin.php',
                         type: 'POST',
                         data: {urlParaMontar:url},
                         beforeSend: function(){
@@ -174,9 +194,9 @@ session_start();
                 });
 
             });
-    </script>
-    <script type="text/javascript">
-                         $(document).ready(function(){
+        </script>
+        <script type="text/javascript">
+         $(document).ready(function(){
                 //faz verificação de página no banco de dados
                 $("#captcha").on('keyup focusout',function(){
                     var url = $("#captcha").val();
@@ -200,21 +220,21 @@ session_start();
                 });
 
             });
-    </script>
-    <script type="text/javascript">
-        var password = document.getElementById("password")
-        , confirm_password = document.getElementById("confirm_password");
-        
-        function validatePassword(){
-            if(password.value != confirm_password.value) {
-                confirm_password.setCustomValidity("Senhas diferentes!");
-            } else {
-                confirm_password.setCustomValidity('');
-            }
-        }
-                password.onchange = validatePassword;
-                confirm_password.onkeyup = validatePassword;
-    </script>
+        </script>
+        <script type="text/javascript">
+            var password = document.getElementById("password")
+            , confirm_password = document.getElementById("confirm_password");
 
-</body>
-</html>
+            function validatePassword(){
+                if(password.value != confirm_password.value) {
+                    confirm_password.setCustomValidity("Senhas diferentes!");
+                } else {
+                    confirm_password.setCustomValidity('');
+                }
+            }
+            password.onchange = validatePassword;
+            confirm_password.onkeyup = validatePassword;
+        </script>
+
+    </body>
+    </html>

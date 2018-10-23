@@ -1,5 +1,4 @@
 <?php
-session_start();
 $token = md5(session_id());
 ?>
 <html lang="pt-br">
@@ -49,13 +48,13 @@ $token = md5(session_id());
 
         <div id="content">
         <?php 
-        	if(isset($_GET['token']) && $_GET['token'] === $token) {
+        	if(isset($url[1]) && $url[1] === $token) {
 			   // limpe tudo que for necessário na saída.
 			   // Eu geralmente não destruo a seção, mas invalido os dados da mesma
 			   // para evitar algum "necromancer" recuperar dados. Mas simplifiquemos:
 			   session_destroy();
 			   echo '<h3>Obrigado!</h3>';
-			    header("Location: /extilos/login.php");
+			    header("Location: /extilos/login");
 			   
 			   exit();
 			} else {
@@ -74,8 +73,8 @@ $token = md5(session_id());
 
                                 <h3>Obrigado!</h3>
                                 <h4 class="text-muted">Deseja sair do site?</h4>
-                                <a href="end.php?token=<?php echo $token ?>" class="btn btn-block btn-danger "></i>SAIR</a><HR>
-                                <a href="index.html" "><i class="fa fa-home"></i>VOLTAR AO INICIO</a>
+                                <a href="sair/<?php echo $token ?>" class="btn btn-block btn-danger "></i>SAIR</a><HR>
+                                <a href="index" "><i class="fa fa-home"></i>VOLTAR AO INICIO</a>
                                 </p>
                             </div>
                         </div>

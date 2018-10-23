@@ -2,9 +2,15 @@
 include_once 'functions/iniciar.php';
 include_once 'functions/functions.php';
 include_once 'functions/conexoes.php';
+include_once 'functions/cadastros.php';
 include_once 'functions/functions.php';
 include_once 'include/modal.php';
 include'include/conteudos/topoHtml.php';
+// VERIFICAÇÕES PRIMÁRIAS
+date_default_timezone_set('America/Sao_Paulo');
+$data = date('d-m-Y');
+$hora = date('H:i');
+$executionStartTime = microtime(true);
 $explode = explode('/',$_SERVER["REQUEST_URI"]);
 $total = count($explode);
 if ($total == 3){
@@ -16,7 +22,15 @@ if ($total == 4){
 if ($total == 5){
     $caminho = "../../";
 }
-$idtorre = 3;
+$idtorre = $_GET['idTorre'];
+$pagina = $url[0];
+if (isset($_SESSION['idLogado'])){
+    $idUsuario =  $_SESSION["idLogado"];
+}else{
+    $idUsuario = '0.'.rand(123456789,987654321);
+    $_SESSION['idLogado'] = $idUsuario;
+}
+
 //PUXANDO TODOS OS DADOS REFERENTE A TORRE
 $dadosTorre =  topo_torre($idtorre);
 $paginasTorres = conta_pagina_torre($idtorre);
@@ -43,6 +57,7 @@ $paginasTorres = conta_pagina_torre($idtorre);
 
     <!-- theme stylesheet -->
     <link href="<?php echo $caminho ?>css/style.default.css" rel="stylesheet" id="theme-stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 
     <!-- your stylesheet with modifications -->
     <link href="<?php echo $caminho ?>css/meu.css" rel="stylesheet">
@@ -52,9 +67,7 @@ $paginasTorres = conta_pagina_torre($idtorre);
 </head>
 <body>
     <div id="all">
-        <?php include_once'include/barra-superior.php' ;
-
-        ?>
+        <?php include 'include/barra-superior.php';?>
         <div id="content">
             <div class="container">
                 <div class="box col-sm-12">
@@ -67,44 +80,44 @@ $paginasTorres = conta_pagina_torre($idtorre);
                             <img src="img/slider4.jpg" alt="" class="img-responsive">
                         </div>
                     </div>
-                    <div class="col-sm-3 hidden-xs">
+                    <div class="col-sm-3 hidden-xs text-center">
                         <h3 class="responsive">♜ | <?php echo $dadosTorre['nomeTorre'] ?></h3>
-                        <p><?php echo $dadosTorre['cidadeTorre'].'-'.$dadosTorre['estadoTorre'] ?>.</p>
-                    </div>
-                    <div class="col-sm-12 visible-xs">
-                        <h4 class="responsive">♜ | <?php echo $dadosTorre['nomeTorre'] ?></h4>
-                        <small><?php echo $dadosTorre['cidadeTorre'].'-'.$dadosTorre['estadoTorre'] ?>.</small>
-                        <hr>
-                    </div>
-                    <div class="col-sm-9">
-                        <div class="col-sm-12">
-                            <div class="col-sm-2 "><small><i class="fa fa-star"></i> Blog: <b><?php echo $paginasTorres ?></b> </small></div>
-                            <div class="col-sm-2"><small><i class="fa fa-star"></i> Lojas: <b><?php echo $paginasTorres ?> </b></small></div>
-                            <div class="col-sm-2"><small><i class="fa fa-star"></i> Fãs: <b><?php echo $paginasTorres ?> </b></small></div>
-                            <div class="col-sm-3"><small><i class="fa fa-star"></i>Pontuação: <b>585</b></small></div>
-                            <div class="col-sm-3"><small><i class="fa fa-star"></i>Ranking: <b>32º</b></small></div>
+                        <p><b><?php echo $dadosTorre['cidadeTorre'].'-'.$dadosTorre['estadoTorre'] ?></b><br>
+                            <i class="fa fa-star"></i> Fãs: <b><?php echo $paginasTorres ?> </b></p>
                         </div>
-                        <div class="col-sm-12 hidden-xs">
-                            <br>
-                            <p><?php echo $dadosTorre['descTorre'] ?>.</p>
-                        </div>
-                        <div class="col-sm-12 visible-xs">
-                            <br>
-                            <small><?php echo $dadosTorre['descTorre'] ?>.</small>
-                            <hr>
-                        </div>
-                    </div>
-                    <ul class="nav nav-tabs nav-justified">
-                      <li class="active"><a href="torre">INICIO</a></li>
-                      <li><a href="post">POSTAGENS</a></li>
-                      <li><a href="#">LOJAS</a></li>
-                      <li><a href="blogs.php">BLOGS</a></li>
-                      <li><a href="#">PUBLICIDADE</a></li>
-                      <li><a href="#">CONTATO</a></li>
-                  </ul>
+                        <div class="col-sm-12 visible-xs text-center">
+                            <h4 class="responsive">♜ | <?php echo $dadosTorre['nomeTorre'] ?></h4>
+                            <small><?php echo $dadosTorre['cidadeTorre'].'-'.$dadosTorre['estadoTorre'] ?>.
+                                <i class="fa fa-star"></i> Fãs: <b><?php echo $paginasTorres ?> </b></small>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="col-sm-12 col-xs-12 text-center ">
+                                    <div class="col-xs-6 col-sm-3"><small><i class="fa fa-star"></i> Blog: <b><?php echo $paginasTorres ?></b> </small></div>
+                                    <div class="col-xs-6 col-sm-3"><small><i class="fa fa-star"></i> Lojas: <b><?php echo $paginasTorres ?> </b></small></div>
+                                    <div class="col-xs-6 col-sm-3"><small><i class="fa fa-star"></i> Pts: <b>585</b></small></div>
+                                    <div class="col-xs-6 col-sm-3"><small><i class="fa fa-star"></i> Ranking: <b>32º</b></small></div>
+                                    <hr>
+                                </div>
+                                <div class="col-sm-12 hidden-xs">
+                                    <p>Sobre: <?php echo $dadosTorre['descTorre'] ?>.</p>
+                                </div>
+                                <div class="col-sm-12 visible-xs">
+                                    <br>
+                                    <small><?php echo $dadosTorre['descTorre'] ?>.</small>
+                                    <hr>
+                                </div>
+                            </div>
+                            <ul class="nav nav-tabs nav-justified">
+                              <li class="active"><a href="torre">INICIO</a></li>
+                              <li><a href="torre_post">POSTAGENS</a></li>
+                              <li><a href="#">LOJAS</a></li>
+                              <li><a href="blogs.php">BLOGS</a></li>
+                              <li><a href="#">PUBLICIDADE</a></li>
+                              <li><a href="#">CONTATO</a></li>
+                          </ul>
 
-              </div>
-          </div>
+                      </div>
+                  </div>
 
             <!-- *** ADVANTAGES HOMEPAGE ***
             _________________________________________________________ -->
@@ -165,25 +178,23 @@ $paginasTorres = conta_pagina_torre($idtorre);
                 </div>
 
                 <div class="container">
-
-                    <div id="" >
-                        <?php 
-                        $idTorre = 1;
+                    <?php 
+                    $idTorre = 3;
                         //total de post que existe na torre
-                        $totalPost = total_post($idTorre);
+                    $totalPost = total_post($idTorre);
                         // requisitar numero de valores do banco lembrando que se um registro é tirado ele continua contando
-                        $qtdeSolicita = 20;
+                    $qtdeSolicita = 20;
                         //calculo para saber a quantidade de páginas na paginação
-                        $qtdExibida = 4;
+                    $qtdExibida = 4;
                         // informa a quantidade de post para exibir
-                        if (isset($_GET['pgAtual'])){
-                            $inicio = (($_GET['pgAtual'] * $qtdExibida) - $qtdExibida);
-                            $fim = $qtdeSolicita;
-                         }else{
-                            $inicio = 1;
-                            $fim = $qtdeSolicita;
-                        }
-                        // busca os post relacionado a esta torra
+                    if (isset($_GET['pgAtual'])){
+                        $inicio = (($_GET['pgAtual'] * $qtdExibida) - $qtdExibida);
+                        $fim = $qtdeSolicita;
+                    }else{
+                        $inicio = 1;
+                        $fim = $qtdeSolicita;
+                    }
+                        // busca os post relacionado a esta torre
                     $torre_post = torre_post($idTorre, 0, $fim);
                         // Decodifica o formato JSON e retorna um Objeto
                     $json = json_decode($torre_post);
@@ -192,107 +203,262 @@ $paginasTorres = conta_pagina_torre($idtorre);
                         // Loop para percorrer o Objeto
                     foreach(array_slice($json, $inicio, $qtdExibida) as $registro):
                         if($registro->postagem > ''){
+                                        // busca a página que publicou o conteúdo
+                            $idPostagem = $registro->postagem;
+                            $pg_conteudo = pg_conteudo($idPostagem);
+                            $blogAleatorio = $pg_conteudo['id_pagina'];
+                            $nomePagina = busca_blog($pg_conteudo['id_pagina']);
+                            $nomeBlog = $nomePagina['nomePagina'];
                             ?>
-                            <div class="box slideshow col-sm-3 ">
-                                <div class="col-sm-12 ">
-                                <select class="form-control" name="formaPro">
-                                 <?php 
-                                // busca a página que publicou o conteúdo
-                                 $idPostagem = $registro->postagem;
-                                 $pg_conteudo = pg_conteudo($idPostagem);
-                                 while ($conteudo = $pg_conteudo->fetch(PDO::FETCH_ASSOC)):
-                                    //verifica se a página que publicou participa desta torre
-                                    $validarPost = verifica_pg_tr($conteudo['id_pagina'], $idTorre);
-                                    if ($validarPost['retorno'] == 'aceito'){
-                                        $nomePagina = busca_blog($conteudo['id_pagina']);
-                                         echo '<option value="0"><small><i class="fa fa-th-large"></i></small>'.$nomePagina['nomePagina'].' </option>';
-                                    }
-                                    //verifica se a o conteúdo pode ser publicado
-                                endwhile;
-                                ?>
-                                </select>
+        <!-- EXIBIR POSTAGEM -->
+                            <div class="box slideshow col-sm-3">
+                                <div class="col-sm-9 col-xs-9 text-left">
+                                    <p>Por:
+                                        <a href="pagina/<?php echo $nomeBlog?>" target="_blank"><?php echo '<i class="fa fa-user"></i>|'.$nomeBlog?></a></p>
                                 </div>
-                            <hr>
-                            <!-- FOTOS DO ALBUM -->
-                            <div class="owl-carousel owl-theme product-slider visible-xs ">
-                                <?php
-                                $foto0 = isset($registro->img) ? $registro->img : null;
-                                $foto1 = isset($registro->img1) ? $registro->img1 : null;
-                                $foto2 = isset($registro->img2) ? $registro->img2 : null;
-                                $foto3 = isset($registro->img3) ? $registro->img3 : null;
-                                $foto4 = isset($registro->img4) ? $registro->img4 : null;
+                                <?php if($idUsuario > 1){ ?>
+                                <div class="col-sm-2 col-xs-2 text-right">
+                                    <button class="btn btn-link btn-sm" data-toggle="modal" data-target="<?php echo '#DENUNCIA'.$registro->postagem ?>" ><i class="fa fa-ban" style="color:#ed0000"></i></button>
+                                </div>
+                                <?php } ?>
+                            <div id="denunciado"></div>
+                            <div class="col-sm-12">
+                            ARRUMAR O PROBLEMA DO USUÁRIO VISITANTE comentario/curtidas/favoritos
+                                <!-- FOTOS DO ALBUM -->
+                                <div class="lista-post">
+                                    <?php
+                                    $foto0 = isset($registro->img) ? $registro->img : null;
+                                    $foto1 = isset($registro->img1) ? $registro->img1 : null;
+                                    $foto2 = isset($registro->img2) ? $registro->img2 : null;
+                                    $foto3 = isset($registro->img3) ? $registro->img3 : null;
+                                    $foto4 = isset($registro->img4) ? $registro->img4 : null;
 
-                                $quantasFotos = array($foto0, $foto1, $foto2, $foto3, $foto4);
-                                $conta = count($quantasFotos);
-                                for ($g = 0; $g < $conta; $g++){
-                                    if ($quantasFotos[$g]!= 0){
-                                        ?>
-                                        <div class="banner visible-xs ">
-                                            <a href="#">
-                                               <img src="imagem/post/media/<?php echo $quantasFotos[$g] ?>" alt="" class="img-responsive" >
-                                           </a>
-                                       </div>
-                                       <?php
-                                   }
-                               }
-                               ?>
-                           </div>
-                           <div class="hidden-xs col-sm-12">
+                                    $quantasFotos = array($foto0, $foto1, $foto2, $foto3, $foto4);
+                                    $conta = count($quantasFotos);
+                                    for ($g = 0; $g < $conta; $g++){
+                                        if ($quantasFotos[$g]!= 0){
+                                            ?>
+                                            <div class="item" style="height: 400px" id="mainImage">
+                                                <a data-toggle='modal' data-target='#modal-editar' data-id='<?php echo $registro->postagem ?>' id='btnEditar'>
+                                                 <img src="imagem/post/media/<?php echo $quantasFotos[$g] ?>" alt="" class="img-responsive" >
+                                                 <div class="anuncio titulo">
+                                                    <div class="theribbon"><small>CONJUNTO</small></div>
+                                                </div>
+                                                <div class="anuncio risca">
+                                                    <div class="theribbon"><strike><small>R$799,90</small></strike></div>
+                                                </div>
+                                                <div class="anuncio terceiro">
+                                                    <div class="theribbon"><small>R$699,90</small></div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                            </div>
                             <div class="col-sm-12 ">
-                                <div id="mainImage ">
-                                    <img src="imagem/post/mini/<?php echo $registro->img ?>" alt="" class="img-responsive" >
+                                <p><b>
+                                    <?php
+                                    echo palavraCurta(15,$registro->usuTitulo);
+                                   // echo $registro->postagem;
+                                    $total_comentarios = total_comentarios($registro->postagem , $idUsuario);
+                                    $total_deslike = total_deslike($registro->postagem);
+                                    $total_like = total_like($registro->postagem);
+                                    $curtido = curtidos($registro->postagem , $idUsuario);
+                                    $favoritado = favoritos($registro->postagem , $idUsuario);
+                                    //print_r($total_comentarios);
+                                    //echo $curtido['curtir_positivo'];
+                                    if($favoritado['favorito']>0){
+                                        $styleFavorito = 'color:#e8e04e';
+                                    }else{
+                                        $styleFavorito = 'color:#000';
+                                    }
+                                    if($curtido['curtir_positivo'] == 1){
+                                        $stylePositivo = 'color:#0d86c6';
+                                        $bloqueioPositivo = 'btn btn-default disabled';
+                                    }
+                                    elseif($curtido['curtir_positivo'] == 0){
+                                        $stylePositivo = 'color:#000';
+                                        $bloqueioPositivo = 'btn btn-default';
+                                    }else{
+                                        $stylePositivo = 'color:#000';
+                                        $bloqueioPositivo = 'btn btn-default';
+                                    }
+                                    if($curtido['curtir_negativo'] == 1){
+                                        $styleNegativo = 'color:#f2341a';
+                                        $bloqueioNegativo = 'btn btn-default disabled';
+                                    }
+                                    elseif($curtido['curtir_negativo'] == 0){
+                                        $styleNegativo = 'color:#000';
+                                        $bloqueioNegativo = 'btn btn-default';
+                                    }else{
+                                        $styleNegativo = 'color:#000';
+                                        $bloqueioNegativo = 'btn btn-default';
+                                    }
+
+                                    ?></b></p>
                                 </div>
-                                <div class="ribbon sale">
-                                    <div class="theribbon">SALE</div>
-                                    <div class="ribbon-background"></div>
+                                <p class="buttons">
+                                    <a class="btn btn-default" 
+                                    onclick="
+                                    favoritar('<?php echo $registro->postagem?>','<?php echo $idUsuario ?>' )" 
+                                    id="<?php echo $registro->dataTorre.$registro->postagem.'favorito' ?>">
+                                    <b id="<?php echo 'favoritar'.$registro->postagem ?>"><i class="fa fa-star" style="<?php echo $styleFavorito ?>" ></i></b></a>
+
+                                    <a class="btn btn-default"
+                                    onclick="visita('<?php echo $registro->postagem?>','<?php echo $idUsuario ?>')"
+                                    data-toggle="modal"
+                                    data-target="<?php echo '#'.$registro->postagem ?>">
+                                    <i class="fa fa-eye"></i></a>
+
+                                    <a class="<?php echo $bloqueioNegativo ?>"
+                                    onclick="
+                                    mudaNegativo('<?php echo $registro->dataTorre.$registro->postagem.'negativoM' ?>');
+                                    mudaPositivo('<?php echo $registro->dataTorre.$registro->postagem.'negativo' ?>');
+                                    curtir('<?php echo $registro->postagem?>','<?php echo $idUsuario ?>' )"
+                                    id="<?php echo $registro->dataTorre.$registro->postagem.'positivo' ?>">
+                                    <small id="<?php echo 'curtir'.$registro->postagem ?>"><i class="fa fa-thumbs-up" style="<?php echo $stylePositivo ?>"></i> <?php echo $total_like ?></small></a>
+
+                                    <a class="<?php echo $bloqueioPositivo ?>"
+                                    onclick="
+                                    mudaPositivo('<?php echo $registro->dataTorre.$registro->postagem.'positivoM' ?>');
+                                    mudaNegativo('<?php echo $registro->dataTorre.$registro->postagem.'positivo' ?>');
+                                    descurtir('<?php echo $registro->postagem?>','<?php echo $idUsuario ?>' )"
+                                    id="<?php echo $registro->dataTorre.$registro->postagem.'negativo' ?>">
+                                    <small id="<?php echo 'descurtir'.$registro->postagem ?>"><i class="fa fa-thumbs-down" style="<?php echo $styleNegativo ?>"></i> <?php echo $total_deslike ?></small></a>
+                                </p> 
+                            </div>
+                            </div>
+        <!-- FIM EXIBIR POSTAGEM -->
+        <!-- MODAL DA POSTAGEM -->
+                            <div class="modal fade " id="<?php echo $registro->postagem ?>" tabindex="-1" role="dialog" aria-labelledby="">
+                              <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <div class="text-center">
+                                            <a class="btn btn-default" 
+                                            onclick="favoritar('<?php echo $registro->postagem?>','<?php echo $idUsuario ?>')" 
+                                            id="<?php echo $registro->dataTorre.$registro->postagem.'favoritoM' ?>">
+                                            <b id="<?php echo 'favoritarM'.$registro->postagem ?>"><i class="fa fa-star" style="<?php echo $styleFavorito ?>" ></i></b></a>
+
+                                            <a class="<?php echo $bloqueioNegativo ?>"
+                                            onclick="
+                                            mudaNegativo('<?php echo $registro->dataTorre.$registro->postagem.'negativo' ?>');
+                                            mudaPositivo('<?php echo $registro->dataTorre.$registro->postagem.'negativoM' ?>');
+                                            curtir('<?php echo $registro->postagem?>','<?php echo $idUsuario ?>' )"
+                                            id="<?php echo $registro->dataTorre.$registro->postagem.'positivoM' ?>">
+                                            <small id="<?php echo 'curtirM'.$registro->postagem ?>"><i class="fa fa-thumbs-up" style="<?php echo $stylePositivo ?>"></i> <?php echo $total_like ?></small></a>
+
+                                            <a class="<?php echo $bloqueioPositivo ?>"
+                                            onclick="
+                                            mudaPositivo('<?php echo $registro->dataTorre.$registro->postagem.'positivo' ?>');
+                                            mudaNegativo('<?php echo $registro->dataTorre.$registro->postagem.'positivoM' ?>');
+                                            descurtir('<?php echo $registro->postagem?>','<?php echo $idUsuario ?>' )"
+                                            id="<?php echo $registro->dataTorre.$registro->postagem.'negativoM' ?>">
+                                            <small id="<?php echo 'descurtirM'.$registro->postagem ?>"><i class="fa fa-thumbs-down" style="<?php echo $styleNegativo ?>"></i> <?php echo $total_deslike ?></small></a>
+                                        </div>
                                 </div>
-                                <div class="ribbon new">
-                                    <div class="theribbon">NEW</div>
-                                    <div class="ribbon-background"></div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            <div class="lista-post">
+                                                <?php for ($g = 0; $g < $conta; $g++){
+                                                    if ($quantasFotos[$g]!= 0){
+                                                        ?>
+                                                        <div class="item" id="mainImage">
+                                                            <a data-toggle='modal' data-target='#modal-editar' data-id='<?php echo $registro->postagem ?>' id='btnEditar'>
+                                                             <img src="imagem/post/media/<?php echo $quantasFotos[$g] ?>" alt="" class="img-responsive" >
+                                                             <div class="anuncio titulo">
+                                                                <div class="theribbon"><small>CONJUNTO</small></div>
+                                                            </div>
+                                                            <div class="anuncio risca">
+                                                                <div class="theribbon"><strike><small>R$799,90</small></strike></div>
+                                                            </div>
+                                                            <div class="anuncio terceiro">
+                                                                <div class="theribbon"><small>R$699,90</small></div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                    <?php
+                                                }
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div id="dataVisita"></div>
+                                    <div class="col-sm-6">
+                                    <h4 class="titulo"><?php echo $registro->usuTitulo ?></h4>
+                                    <hr>
+                                        <small>Descritivo</small>
+                                        <p><?php echo linkUsuario(linkHashtag($registro->usuDesc)) ?></p>
+                                        <br>
+                                        <small>Marcações</small>
+                                        <p><?php echo linkLoja(linkMarca($registro->usuMarca)) ?></p>
+                                    <!-- SISTEMA DE COMENTÁRIOS -->
+                                    <div class="col-md-12 text-center">
+                                    <a class="btn btn-dafault" onclick="carregarComentario('<?php echo $registro->postagem ?>','<?php echo $idUsuario ?>')">Meus comentários(<?php echo $total_comentarios ?>)</a>
+                                    </div>
+                                    <div id="<?php echo 'comentarios'.$registro->postagem ?>"></div>
+                                    <!-- FIM SISTEMA DE COMENTÁRIOS -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <p><?php echo palavraCurta(20,$registro->usuDesc)?></p>
-                        <p class="buttons">
-                            <a type='button' href='#editar' class='btn btn-default' data-toggle='modal' data-target='#modal-editar' data-id='<?php echo $fotos['idImg']; ?>' id='btnEditar' > VER MAIS
-
-                                <a href="basket.html" class="btn btn-primary"><i class="fa fa-star"></i>Add FAVORITO</a>
-                            </p>
-                        </div>
-                        <?php
-                    }
-                    endforeach;
-                    
-                    //$conta = count($json->postagem);
-                    //$ultimoPost = end($contaPost);
-                        //echo $totalPost;
-                        //echo $ultimoPost;
-                    ?>
-                </div>
-                <!-- whishlist -->
-                <div class="col-md-12 text-center">
-                    <div class="pages">
-                        <ul class="pagination">
-                            <?php
-                            $qtdPaginacao = 6;
-                            $pgAtual = isset($_GET['pgAtual']) ? $_GET['pgAtual'] : null;
-                            $paginacao = paginacao($numPaginas, $qtdExibida, $pgAtual, $qtdPaginacao);
-
-                            echo '<li><a href="'.$_GET['pg'].'&pgAtual=1#hot">&laquo;</a></li>';
-                            for ($pgA = $paginacao[0]; $pgA < $paginacao[1]; $pgA++){
-                                echo '<li><a href="'.$_GET['pg'].'&pgAtual='.$pgA.'#hot">'.$pgA.'</a></li>';
-                            }
-                            echo '<li><a href="'.$_GET['pg'].'&pgAtual='.$paginacao[2].'#hot">&raquo;</a></li>';
-                            ?>
-                        </ul>
                     </div>
                 </div>
+        <!-- FIM DO MODAL -->
+        <!-- MODAL PARA DENUNCIA DE POSTAGENS -->
+                <div class="modal fade" id="<?php echo 'DENUNCIA'.$registro->postagem ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Denúnciar Postagem</h4>
+                      </div>
+                      <div class="modal-body">
+                        <label for="">Qual o motivo da denúncia desta postagem?</label>
+                        <input type="text" class="form-control" id="denunciar"> 
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="button" onclick="denuncia('<?php echo $registro->postagem?>','<?php echo $idUsuario ?>' )"" class="btn btn-primary" data-dismiss="modal">Denúnciar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+        <!-- FIM MODAL PARA DENUNCIA DE POSTAGENS -->
+                <?php
+            }
+            endforeach;
+            ?>
+            <!-- whishlist -->
+            <div class="col-md-12 text-center">
+                <div class="pages">
+                    <ul class="pagination">
+                        <?php
+                        $qtdPaginacao = 6;
+                        $pgAtual = isset($_GET['pgAtual']) ? $_GET['pgAtual'] : 1;
+                        $paginacao = paginacao($numPaginas, $qtdExibida, $pgAtual, $qtdPaginacao);
 
+                        echo '<li><a href="'.$_GET['pg'].'&pgAtual=1#hot">&laquo;</a></li>';
+                        for ($pgA = $paginacao[0]; $pgA < $paginacao[1]; $pgA++){
+                            echo '<li><a href="'.$_GET['pg'].'&pgAtual='.$pgA.'#hot">'.$pgA.'</a></li>';
+                        }
+                        echo '<li><a href="'.$_GET['pg'].'&pgAtual='.$paginacao[2].'#hot">&raquo;</a></li>';
+                        $executionEndTime = microtime(true);
+                        $seconds = $executionEndTime - $executionStartTime;
+                        cadastro_tempoPagina($pagina, $idUsuario, $seconds, $hora, $data);
+                        ?>
+                    </ul>
+                </div>
             </div>
-            <!-- /.container -->
-
         </div>
-        <!-- /#hot -->
+
+        <!-- /.container -->
+
+    </div>
 
 
             <!-- *** GET INSPIRED ***
@@ -484,19 +650,19 @@ $paginasTorres = conta_pagina_torre($idtorre);
 
                                 <span class="input-group-btn">
 
-                                   <button class="btn btn-default" type="button">Subscribe!</button>
+                                 <button class="btn btn-default" type="button">Subscribe!</button>
 
-                               </span>
+                             </span>
 
-                           </div>
-                           <!-- /input-group -->
-                       </form>
+                         </div>
+                         <!-- /input-group -->
+                     </form>
 
-                       <hr>
+                     <hr>
 
-                       <h4>Stay in touch</h4>
+                     <h4>Stay in touch</h4>
 
-                       <p class="social">
+                     <p class="social">
                         <a href="#" class="facebook external" data-animate-hover="shake"><i class="fa fa-facebook"></i></a>
                         <a href="#" class="twitter external" data-animate-hover="shake"><i class="fa fa-twitter"></i></a>
                         <a href="#" class="instagram external" data-animate-hover="shake"><i class="fa fa-instagram"></i></a>
@@ -521,6 +687,7 @@ $paginasTorres = conta_pagina_torre($idtorre);
 
 
 
+
         <!-- *** COPYRIGHT ***
         _________________________________________________________ -->
         <div id="copyright">
@@ -531,86 +698,219 @@ $paginasTorres = conta_pagina_torre($idtorre);
                 </div>
                 <div class="col-md-6">
                     <p class="pull-right">Template by <a href="https://bootstrapious.com/e-commerce-templates">Bootstrapious</a> & <a href="https://fity.cz">Fity</a>
-                     <!-- Not removing these links is part of the license conditions of the template. Thanks for understanding :) If you want to use the template without the attribution links, you can do so after supporting further themes development at https://bootstrapious.com/donate  -->
-                 </p>
-             </div>
-         </div>
-     </div>
-     <!-- *** COPYRIGHT END *** -->
-     <!-- MODAL DA CRIAÇÃO DE PÁGINAS GRATUITAS -->
-     <div class="modal fade" id="modal-editar" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true">
-        <div class=" modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="Login">Breve apresentação de cada página.</h4>
-                </div>
-                <div class="modal-body">
-                  <div class="container-fluid">
-                    <div class="row">
+                       <!-- Not removing these links is part of the license conditions of the template. Thanks for understanding :) If you want to use the template without the attribution links, you can do so after supporting further themes development at https://bootstrapious.com/donate  -->
+                   </p>
+               </div>
+           </div>
+           </div>
+           <!-- *** COPYRIGHT END *** -->
+           <!-- MODAL DA CRIAÇÃO DE PÁGINAS GRATUITAS -->
+           </div>
+           <script src="js/jquery-1.11.0.min.js"></script>
+           <script src="js/bootstrap.min.js"></script>
+           <script src="js/jquery.cookie.js"></script>
+           <script src="js/waypoints.min.js"></script>
+           <script src="js/modernizr.js"></script>
+           <script src="js/bootstrap-hover-dropdown.js"></script>
+           <script src="js/owl.carousel.min.js"></script>
+           <script src="js/front.js"></script>
+           <script src="js/jquery.textcomplete.js"></script>
+           <script src="js/bootstrap-carousel.js"></script>
 
-                        <div  id="resultado">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-
-
-<script src="js/jquery-1.11.0.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/jquery.cookie.js"></script>
-<script src="js/waypoints.min.js"></script>
-<script src="js/modernizr.js"></script>
-<script src="js/bootstrap-hover-dropdown.js"></script>
-<script src="js/owl.carousel.min.js"></script>
-<script src="js/front.js"></script>
-<script src="js/jquery.textcomplete.js"></script>
-<script src="js/bootstrap-carousel.js"></script>
 <script type="text/javascript">
 
-   function Mudarestado(el) {
-    var display = document.getElementById(el).style.display;
-    if(display == "block")
-        document.getElementById(el).style.display = 'none';
-    else
-        document.getElementById(el).style.display = 'block';
+     function Mudarestado(el) {
+        var display = document.getElementById(el).style.display;
+        if(display == "block")
+            document.getElementById(el).style.display = 'none';
+        else
+            document.getElementById(el).style.display = 'block';
 
-}
-function Mudarestado1(el) {
-    var display = document.getElementById(el).style.display;
-    if(display == "none")
-        document.getElementById(el).style.display = 'block';
-    else
-        document.getElementById(el).style.display = 'none';
+    }
+    function Mudarestado1(el) {
+        var display = document.getElementById(el).style.display;
+        if(display == "none")
+            document.getElementById(el).style.display = 'block';
+        else
+            document.getElementById(el).style.display = 'none';
 
-}
-$(document).on("click", "#btnEditar", function () {
-    var info = $(this).attr('data-id');
-    var str = info.split('|');
-    var meuid = str[0];
-    var minhadata = str[1];
-    $(".modal-body #meuid").val(meuid);
-    $(".modal-body #minhadata").val(minhadata);
-    $.ajax({
-        url: 'functions/editar-produto.php',
-        type: 'POST',
-        data: {idAlbum:meuid},
-        beforeSend: function(){
-            $(".modal-body #resultado").html("Carregando...");
-        },
-        success: function(data)
-        {
-            $(".modal-body #resultado").html(data);
-        },
-        error: function(){
-            $(".modal-body #resultado").html("Erro ao enviar...");
+    }
+
+</script>
+
+<script type="text/javascript">
+    function favoritar(idPost, idUsuario){
+        $.ajax({
+            url:'ajax/favoritos.php',
+            type:'POST',
+            data:{idPost:idPost, idUsuario:idUsuario},
+            success:function(data){
+                $("#favoritar"+idPost).html(data);
+                $("#favoritarM"+idPost).html(data);
+            }
+        })
+    }
+</script>
+<script type="text/javascript">
+    function mudaPositivo(el) {
+        var btnStar = document.getElementById(el);
+        if (btnStar.classList == "btn btn-default disabled") {
+            btnStar.classList = "btn btn-default";
+        } else {
+            btnStar.classList = "btn btn-default disabled";
         }
-    })
-});
+
+    }
+    function mudaNegativo(el) {
+        var btnStar = document.getElementById(el);
+        if (btnStar.classList == "btn btn-default disabled") {
+            btnStar.classList = "btn btn-default";
+        } else {
+            btnStar.classList = "btn btn-default disabled";
+        }
+    }
+    function descurtir(idPost, idUsuario){
+        var positivo = 0;
+        var negativo = 1;
+        $.ajax({
+            url:'ajax/curtidas.php',
+            type:'POST',
+            data:{positivo:positivo, negativo:negativo, idPost:idPost, idUsuario:idUsuario},
+            beforeSend: function(){
+                $("#descurtir").html('load..');
+            },
+            success:function(data){
+                $("#descurtir"+idPost).html(data);
+                $("#descurtirM"+idPost).html(data);
+            },
+            error: function(){
+                $("#descurtir").html('erro ao enviar');
+            }
+        })
+    }
+    function curtir(idPost, idUsuario){
+        var positivo = 1;
+        var negativo = 0;
+        $.ajax({
+            url:'ajax/curtidas.php',
+            type:'POST',
+            data:{positivo:positivo, negativo:negativo, idPost:idPost, idUsuario:idUsuario},
+            beforeSend: function(){
+                $("#curtir").html('load..');
+            },
+            success:function(data){
+                $("#curtir"+idPost).html(data);
+                $("#curtirM"+idPost).html(data);
+            },
+            error: function(){
+                $("#curtir").html('erro ao enviar');
+            }
+        })
+    }
+    function visita(idPost, idUsuario){
+        $.ajax({
+            url:'ajax/visitas.php',
+            type:'POST',
+            data:{idPost:idPost, idUsuario:idUsuario},
+
+        success:function(data){
+                $("#dataVisita").html(data);
+            },
+        })
+    }
+    function denuncia(idPost, idUsuario){
+        $.ajax({
+            url:'ajax/denuncia.php',
+            type:'POST',
+            data:{idPost:idPost, idUsuario:idUsuario},
+        success:function(data){
+                $("#denunciado").html(data);
+            },
+
+        })
+    }
+</script>
+<script type="text/javascript">
+        function carregarComentario(idPost, idUsuario) {
+                        $.ajax({
+                            url: 'ajax/comentario.php',
+                            type: 'POST',
+                            data: {carrega:idPost, idUsuario:idUsuario},
+                            beforeSend: function(){
+                                $("#comentarios"+idPost).html("");
+                            },
+                            success: function(data)
+                            {
+                                $("#comentarios"+idPost).html(data);
+
+                            },
+                            error: function(){
+                                $("#comentarios"+idPost).html("Erro ao enviar...");
+                            }
+                        })
+                    }
+        function comentarPost(idPost, idUsuario) {
+                         var comentario = $("#comentario"+idPost).val();
+                        if (comentario > ''){
+                            $.ajax({
+                                url: 'ajax/comentario.php',
+                                type: 'POST',
+                                data: {comment:comentario, idPost:idPost, idUsuario:idUsuario},
+                                beforeSend: function(){
+                                    $("#postagem"+idPost).html("load..");
+                                },
+                                success: function(data)
+                                {
+                                    $("#postagem"+idPost).html(data);
+                                    $("#comentario"+idPost).val('');
+
+                                },
+                                error: function(){
+                                    $("#postagem"+idPost).html("Erro ao enviar...");
+                                }
+                            })
+                        }
+                    }
+        function atualizarPost(idPost, idComentario, idUsuario) {
+                     var comentario = $("#textResp"+idPost+idComentario).val();
+                     if (comentario > ''){
+                        $.ajax({
+                            url: 'ajax/comentario.php',
+                            type: 'POST',
+                            data: {atualiza:comentario, idPost:idPost, idUsuario:idUsuario ,idComentario:idComentario},
+                            beforeSend: function(){
+                                $("#atualiza"+idPost).html("load..");
+                            },
+                            success: function(data)
+                            {
+                                $("#atualiza"+idPost+idComentario).html(data);
+
+                            },
+                            error: function(){
+                                $("#atualiza"+idPost).html("Erro ao enviar...");
+                            }
+                        })
+                    }
+                }
+        function excluirComentario(idPost, idComentario, idUsuario){
+            var excluir = 1;
+                    $.ajax({
+                        url: 'ajax/comentario.php',
+                        type: 'POST',
+                        data: {excluir:excluir, idPost:idPost, idUsuario:idUsuario ,idComentario:idComentario},
+                        beforeSend: function(){
+                            $("#acao"+idPost).html("load..");
+                        },
+                        success: function(data)
+                        {
+                            $("#acao"+idPost+idComentario).html(data);
+
+                        },
+                        error: function(){
+                            $("#acao"+idPost).html("Erro ao enviar...");
+                        }
+                    })
+        }
 </script>
 
 

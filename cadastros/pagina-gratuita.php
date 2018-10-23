@@ -14,7 +14,7 @@ $descPagina = isset($_POST['descPagina']) ? $_POST['descPagina'] : null;
 $estadoPagina = isset($_POST['estadoPagina']) ? $_POST['estadoPagina'] : null;
 $cidadePagina = isset($_POST['cidadePagina']) ? $_POST['cidadePagina'] : null;
 $emailPagina = isset($_POST['emailPagina']) ? $_POST['emailPagina'] : null;
-$tipoPagina = '0';
+$tipoPagina = isset($_POST['opcao']) ? $_POST['opcao'] : null;;
 $pgCapa = 'album.jpg';
 
 

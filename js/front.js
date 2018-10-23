@@ -153,6 +153,36 @@ function carousels() {
 	}
     });
 
+    $('#editar-post').owlCarousel({
+	navigation: true, // Show next and prev buttons
+	slideSpeed: 300,
+	paginationSpeed: 400,
+	autoPlay: true,
+	stopOnHover: true,
+	singleItem: true,
+	afterInit: ''
+    });
+
+    $('.lista-post').owlCarousel({
+	navigation: true, // Show next and prev buttons
+	slideSpeed: 300,
+	paginationSpeed: 400,
+	//autoPlay: true,
+	stopOnHover: true,
+	singleItem: true,
+	afterInit: ''
+    });
+    
+    $('.editar-post').owlCarousel({
+	navigation: true, // Show next and prev buttons
+	slideSpeed: 300,
+	paginationSpeed: 400,
+	//autoPlay: true,
+	stopOnHover: true,
+	singleItem: true,
+	afterInit: ''
+    });
+
     $('#main-slider').owlCarousel({
 	navigation: true, // Show next and prev buttons
 	slideSpeed: 300,

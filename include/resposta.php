@@ -148,7 +148,7 @@ $imagem     =   isset($_SESSION['imagem'])    ? $_SESSION['imagem']   : null;
     unset($_SESSION['resposta']);}
     ?>
     <?php
-    // RESPOSTA DE ERRO NO CADASTRO DE HASTAG NO BANCO DE DADOS
+    // RESPOSTA DE ERRO NO CADASTRO DA POSTAGEM NA TORRE
     if ($resposta == 'alb_erro_cTorre' ){ ?>
       <div class="alert">
         <button type="button" class="close" data-dismiss="alert">×</button>
@@ -194,6 +194,26 @@ $imagem     =   isset($_SESSION['imagem'])    ? $_SESSION['imagem']   : null;
       <div class="alert">
         <button type="button" class="close" data-dismiss="alert">×</button>
           <p class="text-muted" ><b><font color="d60808">Ops!</b> Ocorreu algum erro na criação, tente novamente. Caso persista este erro, abra um chamado no suporte informando este código: <b>NPG#102</b></font></p>
+      </div>
+    <?php ;
+    unset($_SESSION['resposta']);}
+    ?>
+    <?php
+    // RESPOSTA PARA ALBUM SEM FOTO
+  if ($resposta == 'album_vazio' ){ ?>
+      <div class="alert">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+          <p class="text-muted" ><b><font color="ff9000">Informe!</b> Esta pasta está sem albuns.</font></p>
+      </div>
+    <?php ;
+    unset($_SESSION['resposta']);}
+    ?>
+    <?php
+    // RESPOSTA PARA ALBUM SEM FOTO
+  if ($resposta == 'falta_album' ){ ?>
+      <div class="alert">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+          <p class="text-muted" ><b><font color="d60808">Ops!</b> Primeiro selecione uma pasta de fotos.</font></p>
       </div>
     <?php ;
     unset($_SESSION['resposta']);}

@@ -1,3 +1,51 @@
+.alfabeto a{
+  cursor:pointer;
+}
+a:hover {
+    font-weight:bold;
+}
+section.pricing {}
+
+
+.pricing hr {
+  margin: 1.5rem 0;
+}
+
+.pricing .card-title {
+  margin: 0.5rem 0;
+  font-size: 0.6rem;
+  letter-spacing: .1rem;
+  font-weight: bold;
+}
+
+.pricing .card-price {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.pricing .card-price .period {
+  font-size: 0.8rem;
+}
+
+.pricing ul li {
+  margin-bottom: 1rem;
+}
+
+.pricing .text-muted {
+  opacity: 0.7;
+}
+
+.pricing .btn {
+  font-size: 80%;
+  border-radius: 5rem;
+  letter-spacing: .1rem;
+  font-weight: bold;
+  padding: 1rem;
+  opacity: 0.7;
+  transition: all 0.2s;
+}
+
+}
 .box-album {
   background: #FFF;
   margin: 30px -20px -20px;
@@ -326,4 +374,39 @@
 .custom-box
 {
     width:278px !important;
+}
+
+
+input[type="checkbox"], input[type="radio"]{
+  position: absolute;
+  right: 9000px;
+}
+input[type="radio"] + .label-text:before{
+  content: "\f10c";
+  font-family: "FontAwesome";
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 2;
+  -webkit-font-smoothing:antialiased;
+  width: 1em;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+input[type="radio"]:checked + .label-text:before{
+  content: "\f192";
+  color: #8e44ad;
+  animation: effect 250ms ease-in;
+}
+
+input[type="radio"]:disabled + .label-text{
+  color: #aaa;
+}
+
+input[type="radio"]:disabled + .label-text:before{
+  content: "\f111";
+  color: #ccc;
 }

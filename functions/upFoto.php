@@ -43,7 +43,7 @@ for($i = 0; $i < count($tmp_name); $i++){ //passa por todos os arquivos
             $fundo = $image->crop("center","middle",500,250);
             $fundo = $fundo->addNoise('50', 'color');
             $image = $image->resize(600, 300, 'inside'); //Redimensiona a imagem para 170 de largura e 180 de altura
-            $image = $fundo->merge($image,"center","middle");
+           // $image = $fundo->merge($image,"center","middle");
             //$image = $image->crop('center', 'center', 500, 700); //Corta a imagem do centro, forçando sua altura e largura
             $image->saveToFile($temp.$new_name); //Salva a imagem
             //IMAGEM PEQUENA
@@ -53,7 +53,7 @@ for($i = 0; $i < count($tmp_name); $i++){ //passa por todos os arquivos
 
             //echo $image;
             $str[] = $new_name;
-            echo'<img src="imagem/capa/temp/'.$str[$i].'" class="img-responsive">
+            echo'<img src="../imagem/capa/temp/'.$str[$i].'" class="img-responsive">
             <input type="hidden" id="nomeFoto" value="'.$str[$i].'">';
        }
 

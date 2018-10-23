@@ -3,7 +3,6 @@ include_once 'functions/iniciar.php';
 include_once 'functions/functions.php';
 include_once 'functions/conexoes.php';
 include_once 'include/modal.php';
-include_once 'cadastros/caracteres-especiais.php';
 include'include/conteudos/topoHtml.php';
 $explode = explode('/',$_SERVER["REQUEST_URI"]);
 $total = count($explode);
@@ -136,7 +135,7 @@ $paginasTorres = conta_pagina_torre($idtorre);
                 <?php while ($fotos = $albumImagemResposta->fetch(PDO::FETCH_ASSOC)): //prepara o conteúdo para ser listado ?>
                     <!-- INFORMAÇÃOE DO ALBUM -->
                     <div class="box slideshow col-sm-4">
-                     <p><?php echo palavraCurta20($fotos['usuTitulo']) ?></p>
+                     <p><?php echo palavraCurta(10,$fotos['usuTitulo']) ?></p>
                      <!-- FOTOS DO ALBUM -->
                      <div class="owl-carousel owl-theme product-slider visible-xs ">
                         <?php
@@ -181,7 +180,7 @@ $paginasTorres = conta_pagina_torre($idtorre);
 
                     </div>
                 </div>
-                <p><?php echo palavraCurta20($fotos['usuTitulo']) ?></p>
+                <p><?php echo palavraCurta(10,$fotos['usuTitulo']) ?></p>
                 <p class="price"><del>$280</del> $143.00</p>
                 <p class="buttons">
                     <a type='button' href='#editar' class='btn btn-default' data-toggle='modal' data-target='#modal-editar' data-id='<?php echo $fotos['idImg']; ?>' id='btnEditar' > VER MAIS

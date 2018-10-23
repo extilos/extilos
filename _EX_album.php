@@ -5,7 +5,7 @@ if(!isset($_SESSION['idLogado']) && (!isset($_POST['emailUsuario']))){
     header("Location: login"); exit;
 } 
 //INCLUI AS FUNÇÕES NECESSÁRIAS
-include_once 'functions/validar.php';
+include_once 'ajax/validar.php';
 include_once 'functions/functions.php';
 include_once 'functions/conexoes.php';
 include_once 'include/modal.php';
@@ -48,8 +48,8 @@ $while = album_while($idLogado);
                 <div class="col-md-9" id="customer-order">
                     <a type="button" class="" data-toggle="modal" data-target="#modal-fotos">
                         <i class="pull-right fa fa-align-justify"></i></a>
-                        <h4>Álbuns de fotos</h4>
-                        <p class="text-muted">Seus álbuns e postagens são organizadas por estilo.</p>
+                        <h4>Pasta de álbuns</h4>
+                        <p class="text-muted">Seus álbuns e postagens são organizadas por pastas.</p>
                         <?php
                         if(isset($_SESSION['resposta'])){
                             include_once 'include/resposta.php';
@@ -58,7 +58,7 @@ $while = album_while($idLogado);
                         <div class="col-sm-6 box">
                             <form action="cadastros/album.php" method="post" >
                                 <div class="form-group">
-                                    <label for="album">Novo estilo.</label>
+                                    <label for="album">Nova pasta.</label>
                                     <input type="text" class="form-control" name="album" id="album" size="50">
                                 </div>
                                 <div class="text-center">
@@ -78,7 +78,7 @@ $while = album_while($idLogado);
                                 </thead>
                                 <tbody>
                                     <?php while ($user = $while->fetch(PDO::FETCH_ASSOC)): //prepara o conteúdo para ser listado ?>
-                                    <form action="fotos" method="post">
+                                    <form action="minhas_fotos" method="post">
                                     <?php
                                             $nomeAlbum = mb_strimwidth($user['album'], 0, 13,"..."); // carrega informações do album
                                             $idAlbum = $user['idAlbum'];

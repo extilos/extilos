@@ -1,36 +1,230 @@
 <?php
-ob_start();
-session_start();
 
 include_once 'functions/iniciar.php';
 include_once 'functions/functions.php';
 include_once 'functions/conexoes.php';
-include_once 'cadastros/caracteres-especiais.php';
 include'include/conteudos/topoHtml.php';
 
 ?>
 <div id="all">
     <div id="content">
+  <!--  <div id="top">
+        <div class="container">
+            <div class="col-md-2 offer" data-animate="fadeInDown">
+                 <img src="imagem/sistema/extilos_branco.png" alt="extilos logo" height="50" class="">
+            </div>
+            <div class="col-md-4" data-animate="fadeInDown">
+                
+                    <ul class="nav nav-pills nav-justified hidden-xs">
+                        <li><a href="register.html">Home</a>
+                        </li>
+                        <li><a href="register.html">Sobre</a>
+                        </li>
+                        <li><a href="contact.html">Cadastro</a>
+                        </li>
+                        <li><a href="#" data-toggle="modal" data-target="#login-modal">Login</a>
+                        </li>
+                    </ul>
+                    <div class="navbar-collapse collapse" id="navigation">
+
+                    <ul class="nav nav-pills nav-justified visible-xs">
+                        <li><a href="register.html">Home</a>
+                        </li>
+                        <li><a href="register.html">Sobre</a>
+                        </li>
+                        <li><a href="contact.html">Cadastro</a>
+                        </li>
+                        <li><a href="#" data-toggle="modal" data-target="#login-modal">Login</a>
+                        </li>
+                    </ul>
+                    </div>
+            </div>
+            <div class="col-md-6 col-xs-9" data-animate="fadeInDown">
+            	<form class="" role="search">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="o que procura?">
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-primary hidden-xs"><i class="fa fa-search"></i>Buscar</button>
+                                <button type="submit" class="btn btn-primary visible-xs">Buscar</button>
+                            </span>
+                        </div>
+                    </form>
+            </div>
+            <div class="col-xs-2">
+                <button type="submit" class="btn btn-defalt visible-xs" data-toggle="collapse" data-target="#navigation">Menu</button>
+            </div>
+        </div>
+        <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="Login">Customer login</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="customer-orders.html" method="post">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="email-modal" placeholder="email">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="password-modal" placeholder="password">
+                            </div>
+
+                            <p class="text-center">
+                                <button class="btn btn-primary"><i class="fa fa-sign-in"></i> Log in</button>
+                            </p>
+
+                        </form>
+
+                        <p class="text-center text-muted">Not registered yet?</p>
+                        <p class="text-center text-muted"><a href="register.html"><strong>Register now</strong></a>! It is easy and done in 1&nbsp;minute and gives you access to special discounts and much more!</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> -->
+<div class="navbar navbar-default yamm" role="navigation" id="navbar">
+        <div class="container">
+            <div class="navbar-header">
+
+                <a class="navbar-brand home" href="index.html" data-animate-hover="bounce">
+                    <img src="imagem/sistema/extilos_rosa.png" alt="extilos logo" height="50" class="">
+                </a>
+                <div class="navbar-buttons">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation">
+                        <span class="sr-only">Toggle navigation</span>
+                        <i class="fa fa-align-justify"></i>
+                    </button>
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#search">
+                        <span class="sr-only">Toggle search</span>
+                        <i class="fa fa-search"></i>
+                    </button>
+                    <a class="btn btn-default navbar-toggle" href="basket.html">
+                        <i class="fa fa-shopping-cart"></i>  <span class="hidden-xs">3 items in cart</span>
+                    </a>
+                </div>
+            </div>
+            <!--/.navbar-header -->
+
+            <div class="navbar-collapse collapse" id="navigation">
+
+                <ul class="nav navbar-nav navbar-left">
+                    <li class="active"><a href="index.html">Inicio</a>
+                    </li>
+                    <li class="dropdown yamm-fw">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">Comunidade <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <div class="yamm-content">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <h5>Selecione sua preferência</h5>
+                                            <ul>
+                                                <li><a href="category.html">Vestuário / Acessórios</a>
+                                                </li>
+                                                <li><a href="category.html">Corpo / Beleza</a>
+                                                </li>
+                                                <li><a href="category.html">Locais / Fotografia</a>
+                                                </li>
+                                                <li><a href="category.html">Dicas / Informações</a>
+                                                </li>
+                                                <li><a href="category.html">Eventos Locais</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.yamm-content -->
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown yamm-fw">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">Açoes <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <div class="yamm-content">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <h5>Ferramentas</h5>
+                                            <ul>
+                                                <li><a href="index.html">Publicidade</a>
+                                                </li>
+                                                <li><a href="category.html">Cadastros</a>
+                                                </li>
+                                                <li><a href="category-right.html">Sobre</a>
+                                                </li>
+                                                <li><a href="category-full.html">Termos</a>
+                                                </li>
+                                                <li><a href="detail.html">Contato</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.yamm-content -->
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+            <!--/.nav-collapse -->
+
+            <div class="navbar-buttons">
+
+                <div class="navbar-collapse collapse right" id="basket-overview">
+                    <a href="basket.html" class="btn btn-primary navbar-btn"><i class="fa fa-shopping-cart"></i><span class="hidden-sm">3 items in cart</span></a>
+                </div>
+                <!--/.nav-collapse -->
+
+                <div class="navbar-collapse collapse right" id="search-not-mobile">
+                    <button type="button" class="btn navbar-btn btn-primary" data-toggle="collapse" data-target="#search">
+                        <span class="sr-only">Toggle search</span>
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="collapse clearfix" id="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                      <span class="input-group-btn">
+			             <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+		              </span>
+                    </div>
+
+            </div>
+            <!--/.nav-collapse -->
+
+        </div>
+        <!-- /.container -->
+    </div>
         <div class="container-full box">
+
 <!-- SELECIONE A TORRE QUE DESEJA EXIBIR -->
 				<?php
 				if(isset($_SESSION['idLogado']) && (isset($_POST['emailUsuario']))){
 				// Se usuário estiver logado, carregar torres com base em sua preferência
 				}else{
 				// Se usuário é visitante, carregar aleatóriamente ou o que ele selecionar na busca.
-				$preferencia = "";
+				$preferencia = 3;
 				$torre = busca_torre($preferencia);
 				?>
 				<div id="hot">
 				<div class="container-full">
                     <div class="product-slider">
                     <?php while ($resultado_torre = $torre->fetch(PDO::FETCH_ASSOC)): //prepara o conteúdo para ser listado ?>
-	                    <form action="index.php" method="post">
+	                    <form action="azul" method="post">
 	                        	<div class="item">
 		                            <div class="product">
 		                                <img src="img/main-slider1.jpg" alt="" class="img-responsive">
 		                                <div class="text">
-		                                    <h4>♜ | <?php $result = palavracurta($resultado_torre['nomeTorre']); echo $result ?></h4>
+		                                    <h4>♜ | <?php $result = palavracurta(10,$resultado_torre['nomeTorre']); echo $result ?></h4>
 		                                    <input type="submit" class="btn btn-sm btn-block btn-default btn-primary" value="Visitar">
 		                                    <input type="hidden" name="torre" value=<?php echo $resultado_torre['idTorre'] ?>>
 		                                    <input type="hidden" name="qtdpost" value="5">

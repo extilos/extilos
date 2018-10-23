@@ -14,7 +14,7 @@ if ($_SESSION['captcha'] === $captcha){
 		$_SESSION['n'] = $_POST['nomeUsuario'];
 		$_SESSION['e'] = $_POST['emailUsuario'];
 		unset($_SESSION['captcha']);
-		header("Location: ../register.php"); exit;
+		header("Location: ../cadastro_pessoal"); exit;
 	}
 
 // pega os dados do formuário
@@ -27,6 +27,9 @@ $captcha = isset($_POST['captcha']) ? $_POST['captcha'] : null;
 $usuMarca = '@nick_name('.$captcha.')';
 $usuFoto = 'album.jpg';
 $primeiroAcesso = '0';
+$estadoUsuario = isset($_POST['estadoUsuario']) ? $_POST['estadoUsuario'] : null;
+$cidadeUsuario = isset($_POST['cidadeUsuario']) ? $_POST['cidadeUsuario'] : null;
+$opSexo = isset($_POST['opSexo']) ? $_POST['opSexo'] : null;
 $idUsuBasico = isset($_POST['idUsuBasico']) ? $_POST['idUsuBasico'] : null;
 $nomeUsuario = isset($_POST['nomeUsuario']) ? $_POST['nomeUsuario'] : null;
 $emailUsuario = isset($_POST['emailUsuario']) ? $_POST['emailUsuario'] : null;
@@ -38,13 +41,13 @@ if (empty($emailUsuario) || empty($senhaUsuario) )
 	$_SESSION['resposta'] = 'nome_email';
 	$_SESSION['n'] = $nomeUsuario;
 	$_SESSION['e'] = $emailUsuario;
-   	header("Location: ../register.php");
+   	header("Location: ../cadastro_pessoal");
     exit;
 }
 
 // insere no banco
 $PDO = db_connect();
-$sql = "INSERT INTO ext_usuarios(nomeUsuario, emailUsuario, senhaUsuario, ip1, ip2, ip3, ip4, data, captcha, usuMarca, usuFoto, primeiroAcesso) VALUES(:nomeUsuario, :emailUsuario, :senhaUsuario, :ip1, :ip2, :ip3, :ip4, :data, :captcha, :usuMarca, :usuFoto, :primeiroAcesso)";
+$sql = "INSERT INTO ext_usuarios(nomeUsuario, emailUsuario, senhaUsuario, ip1, ip2, ip3, ip4, data, captcha, usuMarca, usuFoto, usuEstado, usuCidade, primeiroAcesso, opSexo) VALUES(:nomeUsuario, :emailUsuario, :senhaUsuario, :ip1, :ip2, :ip3, :ip4, :data, :captcha, :usuMarca, :usuFoto, :usuEstado, :usuCidade, :primeiroAcesso, :opSexo)";
 $stmt = $PDO->prepare($sql);
 $stmt->bindParam(':nomeUsuario', $nomeUsuario);
 $stmt->bindParam(':emailUsuario', $emailUsuario);
@@ -58,13 +61,17 @@ $stmt->bindParam(':data', $data);
 $stmt->bindParam(':captcha', $captcha);
 $stmt->bindParam(':usuMarca', $usuMarca);
 $stmt->bindParam(':usuFoto', $usuFoto);
+$stmt->bindParam(':usuEstado', $estadoUsuario);
+$stmt->bindParam(':usuCidade', $cidadeUsuario);
 $stmt->bindParam(':primeiroAcesso', $primeiroAcesso);
+$stmt->bindParam(':opSexo', $opSexo);
 
 if ($stmt->execute())
 {
 	$_SESSION['e'] = $emailUsuario;
 	$_SESSION['resposta'] = 'sucesso';
-    header('Location: ../login.php');
+	$_SESSION['retorno'] = 'painel_usuario';
+    header('Location: ../login');
 }
 else
 {

@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../conn/init.php';
-include_once 'caracteres-especiais.php';
+include_once '../functions/functions.php';
 
 // carrega os dados a serem salvos
 $dataAlbum = date("Y-m-d");
@@ -18,7 +18,7 @@ if (empty($album))
 {
 	$_SESSION['resposta'] = 'alb_nome_negado';
 	//$_SESSION['n'] = $_POST['nomeUsuario'];
-   	header("Location: albuns.php");
+   	header("Location: album_fotos");
     exit;
 }
 
@@ -36,7 +36,7 @@ if ($stmt->execute())
 {
 	//$_SESSION['e'] = $_POST['emailUsuBasico'];
 	$_SESSION['resposta'] = 'alb_nome_criado';
-   header('Location: ../album.php');
+   header('Location: ../album_fotos');
 }
 else
 {

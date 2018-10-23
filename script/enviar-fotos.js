@@ -44,7 +44,7 @@ $(document).ready(function(){
                 $("#descricao").on('keyup focusout',function(){
                     var hashTag = $("#descricao").val();
                     $.ajax({
-                        url: 'functions/buscaTag.php',
+                        url: 'ajax/buscaTag.php',
                         type: 'POST',
                         data: {descricao:hashTag},
                         success: function(data)

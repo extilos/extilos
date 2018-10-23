@@ -300,62 +300,80 @@ h1 {
   text-transform: uppercase;
   font-weight: 700;
 }
-.ribbon {
+.anuncio {
   position: absolute;
-  top: 50px;
-  padding-left: 51px;
+  top: 100px;
+  padding-left: 0px;
   z-index: 20;
+  text-align: center;
 }
-.ribbon .ribbon-background {
+.anuncio .ribbon-background {
   position: absolute;
   top: 0;
   right: 0;
 }
-.ribbon .theribbon {
+.anuncio .theribbon {
   position: relative;
   width: 80px;
-  padding: 6px 20px 6px 20px;
-  margin: 30px 10px 10px -71px;
+  padding: 6px 20px 6px 10px;
+  margin: 10px 10px 10px 0px;
   color: #fff;
   background-color: #4fbfa8;
   text-shadow: 0px 1px 2px #bbb;
 }
-.ribbon .theribbon:before,
-.ribbon .theribbon:after {
+.anuncio p{
+  margin: 0px 0px 0px -20px;
+}
+
+.anuncio .theribbon:before,
+.anuncio .theribbon:after {
   content: ' ';
   position: absolute;
   width: 0;
   height: 0;
 }
-.ribbon .theribbon:after {
+/*.anuncio .theribbon:after {
   left: 0px;
   top: 100%;
   border-width: 5px 10px;
   border-style: solid;
   border-color: #2d7b6b #2d7b6b transparent transparent;
+}*/
+.anuncio.sale {
+  top: 10;
 }
-.ribbon.sale {
-  top: 0;
+.anuncio.titulo {
+  top: 10px;
 }
-.ribbon.new {
-  top: 50px;
+.anuncio.titulo .theribbon {
+  background-color: #e87b37;
+  text-shadow: 0px 1px 2px #1a1c1a; */
 }
-.ribbon.new .theribbon {
-  background-color: #5bc0de;
-  text-shadow: 0px 1px 2px #bbb;
+/*
+.ribbon.titulo .theribbon:after {
+  border-color: #3f423f #3f423f transparent transparent;
+}*/
+.anuncio.risca {
+  top: 40px;
 }
-.ribbon.new .theribbon:after {
-  border-color: #2390b0 #2390b0 transparent transparent;
+.anuncio.risca .theribbon {
+  background-color: #595959;
+  text-shadow: 0px 1px 2px #1a1c1a; */
 }
-.ribbon.gift {
-  top: 100px;
+.anuncio.segundo {
+  top: 40px;
 }
-.ribbon.gift .theribbon {
-  background-color: #5cb85c;
-  text-shadow: 0px 1px 2px #bbb;
+.anuncio.segundo .theribbon {
+  background-color: #427484;
+  text-shadow: 0px 1px 2px #1a1c1a; */
 }
-.ribbon.gift .theribbon:after {
-  border-color: #357935 #357935 transparent transparent;
+.anuncio.terceiro {
+  top: 70px;
+}
+.anuncio.terceiro .theribbon {
+  background-color: #4087a5;
+  text-shadow: 0px 1px 2px #1a1c1a; */
+  opacity: .95;
 }
 #content .panel.sidebar-menu {
   -webkit-box-sizing: border-box;

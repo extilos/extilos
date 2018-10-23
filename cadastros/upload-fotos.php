@@ -5,7 +5,7 @@ session_start();
     //header("Location: login.php?acao=negado"); exit;
 //} 
 include_once '../conn/init.php';
-include_once 'caracteres-especiais.php';
+include_once '../functions/functions.php';
 include_once '../functions/conexoes.php';
 //carrega informação da session
 $idUsuario = $_SESSION['idLogado'];
@@ -25,13 +25,13 @@ $infoPro =        isset($_POST['infoPro'])    ? $_POST['infoPro']     : null;
 //limpa as strings passadas via post
 $usuEstilo =  sanitizeString($usuEstilo);
 $usuTitulo=   sanitizeString($usuTitulo);
-$usuDesc =   sanitizeStringlight($usuDesc);
-$usuMarca =   sanitizeStringlight($usuMarca);
+$usuDesc =   sanitizeStringTexto($usuDesc);
+$usuMarca =   sanitizeStringTexto($usuMarca);
 $publicarTorre =  sanitizeString($publicarTorre);
-$precPro = sanitizeStringlight($precPro);
-$descPro = sanitizeStringlight($descPro);
+$precPro = sanitizeStringTexto($precPro);
+$descPro = sanitizeStringTexto($descPro);
 $formaPro = sanitizeString($formaPro);
-$infoPro = sanitizeStringlight($infoPro);
+$infoPro = sanitizeStringTexto($infoPro);
 // validação (bem simples, só pra evitar dados vazios)
 if (empty($usuEstilo) || empty($usuTitulo) )
 {
@@ -253,9 +253,10 @@ if(isset($_FILES['imagem']))
                        $stmt = $PDO->prepare($sql);
                        if ($stmt->execute()){
                        }else{
-                        //print_r($stmt->errorInfo());
                         $_SESSION['resposta'] = 'alb_erro_cTorre';
-                            header('Location: ../foto');
+                           //print_r($stmt->errorInfo());
+                           // header('Location: ../album_fotos');
+                        exit;
                        }
 
                        $sql1 = sprintf( 'INSERT INTO ext_compartilha(id_post, id_pagina) VALUES (%s);' , implode( '),(' , $idPag ) );
@@ -265,7 +266,7 @@ if(isset($_FILES['imagem']))
                         print_r($stmt1->errorInfo());
                         exit;
                         $_SESSION['resposta'] = 'alb_erro_cPagina';
-                            header('Location: ../foto');
+                            header('Location: ../album_fotos');
                        }
 
         //Cadastro de eComercial no banco de dados com Loop
@@ -281,7 +282,7 @@ if(isset($_FILES['imagem']))
                           {
                           }else{
                             $_SESSION['resposta'] = 'alb_erro_eCom';
-                            header('Location: ../foto');
+                            header('Location: ../album_fotos');
                             exit;
                           }
                         }
@@ -298,7 +299,7 @@ if(isset($_FILES['imagem']))
                           {
                           }else{
                             $_SESSION['resposta'] = 'alb_erro_mLoja';
-                            header('Location: ../foto');
+                            header('Location: ../album_fotos');
                             exit;
                           }
                         }
@@ -315,7 +316,7 @@ if(isset($_FILES['imagem']))
                           {
                           }else{
                             $_SESSION['resposta'] = 'alb_erro_hash';
-                            header('Location: ../foto');
+                            header('Location: ../album_fotos');
                             exit;
                           }
                         }
@@ -333,11 +334,11 @@ if(isset($_FILES['imagem']))
                           {
                           }else{
                             $_SESSION['resposta'] = 'alb_erro_arroba';
-                            header('Location: ../foto');
+                            header('Location: ../album_fotos');
                             exit;
                           }
                         }
-                       header('Location: ../foto');
+                       header('Location: ../album_fotos');
                       }
                       else
                       {
