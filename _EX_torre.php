@@ -1,11 +1,4 @@
 <?php
-include_once 'functions/iniciar.php';
-include_once 'functions/functions.php';
-include_once 'functions/conexoes.php';
-include_once 'functions/cadastros.php';
-include_once 'functions/functions.php';
-include_once 'include/modal.php';
-include'include/conteudos/topoHtml.php';
 // VERIFICAÇÕES PRIMÁRIAS
 date_default_timezone_set('America/Sao_Paulo');
 $data = date('d-m-Y');
@@ -24,12 +17,12 @@ if ($total == 5){
 }
 $idtorre = $_GET['idTorre'];
 $pagina = $url[0];
-if (isset($_SESSION['idLogado'])){
-    $idUsuario =  $_SESSION["idLogado"];
-}else{
-    $idUsuario = '0.'.rand(123456789,987654321);
-    $_SESSION['idLogado'] = $idUsuario;
-}
+//if (isset($_SESSION['idLogado'])){
+//    $idUsuario =  $_SESSION["idLogado"];
+//}else{
+//    $idUsuario = '0.'.rand(123456789,987654321);
+//    $_SESSION['idLogado'] = $idUsuario;
+//}
 
 //PUXANDO TODOS OS DADOS REFERENTE A TORRE
 $dadosTorre =  topo_torre($idtorre);
@@ -46,7 +39,7 @@ $paginasTorres = conta_pagina_torre($idtorre);
     <meta name="keywords" content="">
 
     <title>
-        eXtilos
+        eXtilos | ♜ | <?php echo $dadosTorre['nomeTorre'] ?>
     </title>
 
     <link href="<?php echo $caminho ?>css/font-awesome.css" rel="stylesheet">
@@ -60,11 +53,22 @@ $paginasTorres = conta_pagina_torre($idtorre);
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 
     <!-- your stylesheet with modifications -->
+    <link href="<?php echo $caminho ?>css/custom.css" rel="stylesheet">
     <link href="<?php echo $caminho ?>css/meu.css" rel="stylesheet">
 
     <script src="<?php echo $caminho ?>js/respond.min.js"></script>
     <link rel="extilos icon" href="favicon.png">
 </head>
+<?php
+include_once 'functions/iniciar.php';
+include_once 'functions/functions.php';
+include_once 'functions/conexoes.php';
+include_once 'functions/cadastros.php';
+include_once 'functions/functions.php';
+include_once 'include/modal.php';
+include'include/conteudos/topoHtml.php';
+
+?>
 <body>
     <div id="all">
         <?php include 'include/barra-superior.php';?>

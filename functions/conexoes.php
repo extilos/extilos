@@ -523,9 +523,20 @@
 		$blog = $blog->fetch(PDO::FETCH_ASSOC);
 		return $blog;
 		}catch (PDOException $e) {
-    echo 'Connection failed: ' . $e->getMessage();
-	}
+		    echo 'Connection failed: ' . $e->getMessage();
+			}
 		}
+	// VERIFICA SE EXISTE BLOG PELO NOME
+		function busca_nome_blog($nomeBlog){
+		$PDO = db_connect();
+		$sql_fotos = "SELECT * FROM ext_paginas where nomePagina = '$nomeBlog'";
+		$blog = $PDO->prepare($sql_fotos);
+		$blog->execute();
+		$blog = $blog->fetch(PDO::FETCH_ASSOC);
+		return $blog;
+		//return print_r($blog);
+	}
+
 	function busca_blog_texto($idPagina){
 		$PDO = db_connect();
 		$sql_fotos = "SELECT * FROM ext_paginas where idPagina = $idPagina";

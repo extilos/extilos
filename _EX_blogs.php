@@ -1,18 +1,29 @@
 <?php
-ob_start();
-session_start();
+// VERIFICAÇÕES PRIMÁRIAS
+date_default_timezone_set('America/Sao_Paulo');
+$data = date('d-m-Y');
+$hora = date('H:i');
+$executionStartTime = microtime(true);
+$explode = explode('/',$_SERVER["REQUEST_URI"]);
+$total = count($explode);
+if ($total == 3){
+    $caminho = "";
+}
+if ($total == 4){
+    $caminho = "../";
+}
+if ($total == 5){
+    $caminho = "../../";
+}
+$buscaBlog = busca_nome_blog($url[1]);
+if (isset($_SESSION['idLogado'])){
+  $idLogado = $_SESSION['idLogado'];
+// verifica se usuário logado é gerenciador do blog
+  $verificaUsuario = usuarioAdm($buscaBlog['idPagina'],$idLogado);
+}
 
-include_once 'functions/iniciar.php';
-include_once 'functions/functions.php';
-include_once 'functions/conexoes.php';
-include_once 'include/modal.php';
-include_once 'cadastros/caracteres-especiais.php';
-include'include/conteudos/topoHtml.php';
-$idtorre = 1;
-//PUXANDO TODOS OS DADOS REFERENTE A TORRE
-$dadosTorre =  topo_torre($idtorre);
-$paginasTorres = conta_pagina_torre($idtorre);
 ?>
+<!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
@@ -34,712 +45,255 @@ $paginasTorres = conta_pagina_torre($idtorre);
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100' rel='stylesheet' type='text/css'>
 
     <!-- styles -->
-    <link href="css/font-awesome.css" rel="stylesheet">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/animate.min.css" rel="stylesheet">
-    <link href="css/owl.carousel.css" rel="stylesheet">
-    <link href="css/owl.theme.css" rel="stylesheet">
+    <link href="<?php echo $caminho ?>css/font-awesome.css" rel="stylesheet">
+    <link href="<?php echo $caminho ?>css/bootstrap.min.css" rel="stylesheet">
+    <link href="<?php echo $caminho ?>css/animate.min.css" rel="stylesheet">
+    <link href="<?php echo $caminho ?>css/owl.carousel.css" rel="stylesheet">
+    <link href="<?php echo $caminho ?>css/owl.theme.css" rel="stylesheet">
 
     <!-- theme stylesheet -->
-    <link href="css/style.default.css" rel="stylesheet" id="theme-stylesheet">
+    <link href="<?php echo $caminho ?>css/style.default.css" rel="stylesheet" id="theme-stylesheet">
 
     <!-- your stylesheet with modifications -->
-    <link href="css/custom.css" rel="stylesheet">
+    <link href="<?php echo $caminho ?>css/custom.css" rel="stylesheet">
 
-    <script src="js/respond.min.js"></script>
+    <link href="<?php echo $caminho ?>css/meu.css" rel="stylesheet">
+
+    <script src="<?php echo $caminho ?>js/respond.min.js"></script>
 
     <link rel="shortcut icon" href="favicon.png">
-       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
 
 
 </head>
 
 <body>
+    
 
-    <div class="hidden-xs"><!-- TOPO INVISÍVEL PARA CELULAR -->
-
-        <div class="navbar navbar-fixed-top yamm navbar-inverse" role="navigation" id="navbar">
+    <div id="all">
+        <?php include_once 'include/barra-superior.php';?>
+        <div id="content">
             <div class="container">
-                <div class="navbar-header">
+                <div class="col-sm-12">
+                    <div class="box">
+                        <img src="<?php echo $caminho ?>imagem/capa/media/<?php echo $buscaBlog['pgCapa'] ?>" alt="" style="max-height: 250px" class="img-responsive">
+                        <a href="../painel_usuario/editar_blog" class="btn btn-xs btn-primary pull-right" href="#"> Configurações</a>
+                    </div>
 
-                    <a class="navbar-brand home" href="index.html" data-animate-hover="bounce">
-                        <img src="imagem/sistema/extilos.png" alt="extilos logo" height="70" class="hidden-xs">
-
-                    </a>
                 </div>
-                <!--/.navbar-header -->
+                <div class="col-md-3">
+                    <!-- *** MENUS AND FILTERS ***
+ _________________________________________________________ -->
+                    <div class="panel panel-default sidebar-menu">
 
-                <div class="navbar-collapse collapse" id="navigation">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Filtros</h3>
+                        </div>
 
-                    <ul class="nav navbar-nav navbar-left">
-                        <li class="active"><a href="index.html">Home</a>
-                        </li>
-                        <li class="dropdown yamm-fw">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">Men <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked category-menu">
+                                <li class="active">
+                                    <a href="category.html">Destaques <span class="badge pull-right">123</span></a>
+                                    <ul>
+                                        <li class="active" ><a href="category.html">Destaques</a>
+                                        </li>
+                                        <li><a href="category.html">Top</a>
+                                        </li>
+                                        <li><a href="category.html">Pants</a>
+                                        </li>
+                                        <li><a href="category.html">Accessories</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+                    <div class="panel panel-default sidebar-menu">
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Gerenciadores</h3>
+                        </div>
+
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked category-menu">
+                                <li class="active">
+                                    <a href="category.html">@usuario <span class="badge pull-right">123</span></a>
+                                    <ul>
+                                        <li class="active" ><a href="category.html">Pasta</a>
+                                        </li>
+                                        <li><a href="category.html">Balada</a>
+                                        </li>
+                                        <li><a href="category.html">Casual</a>
+                                        </li>
+                                        <li><a href="category.html">Moderno</a>
+                                        </li>
+                                    </ul>
+                                </li>
                                 <li>
-                                    <div class="yamm-content">
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <h5>Clothing</h5>
-                                                <ul>
-                                                    <li><a href="category.html">T-shirts</a>
-                                                    </li>
-                                                    <li><a href="category.html">Shirts</a>
-                                                    </li>
-                                                    <li><a href="category.html">Pants</a>
-                                                    </li>
-                                                    <li><a href="category.html">Accessories</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <h5>Shoes</h5>
-                                                <ul>
-                                                    <li><a href="category.html">Trainers</a>
-                                                    </li>
-                                                    <li><a href="category.html">Sandals</a>
-                                                    </li>
-                                                    <li><a href="category.html">Hiking shoes</a>
-                                                    </li>
-                                                    <li><a href="category.html">Casual</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <h5>Accessories</h5>
-                                                <ul>
-                                                    <li><a href="category.html">Trainers</a>
-                                                    </li>
-                                                    <li><a href="category.html">Sandals</a>
-                                                    </li>
-                                                    <li><a href="category.html">Hiking shoes</a>
-                                                    </li>
-                                                    <li><a href="category.html">Casual</a>
-                                                    </li>
-                                                    <li><a href="category.html">Hiking shoes</a>
-                                                    </li>
-                                                    <li><a href="category.html">Casual</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <h5>Featured</h5>
-                                                <ul>
-                                                    <li><a href="category.html">Trainers</a>
-                                                    </li>
-                                                    <li><a href="category.html">Sandals</a>
-                                                    </li>
-                                                    <li><a href="category.html">Hiking shoes</a>
-                                                    </li>
-                                                </ul>
-                                                <h5>Looks and trends</h5>
-                                                <ul>
-                                                    <li><a href="category.html">Trainers</a>
-                                                    </li>
-                                                    <li><a href="category.html">Sandals</a>
-                                                    </li>
-                                                    <li><a href="category.html">Hiking shoes</a>
-                                                    </li>
-                                                </ul>
+                                    <a href="category.html">@usuario2  <span class="badge pull-right">11</span></a>
+                                </li>
+                                <li>
+                                    <a href="category.html">@usuario3  <span class="badge pull-right">25</span></a>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default sidebar-menu">
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Parceiros <a class="btn btn-xs btn-primary pull-right" href="#"> Ver Todos</a></h3>
+                        </div>
+
+                        <div class="panel-body">
+
+                            <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked category-menu">
+                                <li class="active">
+                                    <a href="category.html">&loja <span class="badge pull-right">123</span></a>
+                                    <ul>
+                                        <li class="active" ><a href="category.html">Masculino</a>
+                                        </li>
+                                        <li><a href="category.html">Feminino</a>
+                                        </li>
+                                        <li><a href="category.html">Kids</a>
+                                        </li>
+                                        <li><a href="category.html">Novidades</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="category.html">&loja2  <span class="badge pull-right">11</span></a>
+                                </li>
+                                <li>
+                                    <a href="category.html">&loja3  <span class="badge pull-right">25</span></a>
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default sidebar-menu">
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Colours <a class="btn btn-xs btn-danger pull-right" href="#"><i class="fa fa-times-circle"></i> Clear</a></h3>
+                        </div>
+
+                        <div class="panel-body">
+
+                            <form>
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox"> <span class="colour white"></span> White (14)
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox"> <span class="colour blue"></span> Blue (10)
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox"> <span class="colour green"></span> Green (20)
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox"> <span class="colour yellow"></span> Yellow (13)
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox"> <span class="colour red"></span> Red (10)
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-default btn-sm btn-primary"><i class="fa fa-pencil"></i> Apply</button>
+
+                            </form>
+
+                        </div>
+                    </div>
+
+                    <!-- *** MENUS AND FILTERS END *** -->
+
+                    <div class="banner">
+                        <a href="#">
+                            <img src="img/banner.jpg" alt="sales 2014" class="img-responsive">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <?php if(isset($idLogado)){
+                        //VERIFICA SE USUÁRIO TEM PERMISÃO PARA PUBLICAR CONTEÚDO NESTE BLOG
+                        if($verificaUsuario['pm_post'] == 1){
+                         ?>
+                            <div class="box">
+                                <h1>Publicações</h1>
+                                <p>In our Ladies department we offer wide selection of the best products we have found and carefully selected worldwide.</p>
+                                <?php echo $idLogado ?>
+                            </div>
+                    <?php } } ?>
+                    <div class="box info-bar">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-4 products-showing">
+                                <?php 
+                                    print_r($verificaUsuario);
+                                    print_r($buscaBlog); 
+                                ?>
+                                Showing <strong>12</strong> of <strong>25</strong> products
+                            </div>
+
+                            <div class="col-sm-12 col-md-8  products-number-sort">
+                                <div class="row">
+                                    <form class="form-inline">
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="products-number">
+                                                <strong>Show</strong>  <a href="#" class="btn btn-default btn-sm btn-primary">12</a>  <a href="#" class="btn btn-default btn-sm">24</a>  <a href="#" class="btn btn-default btn-sm">All</a> products
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- /.yamm-content -->
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="dropdown yamm-fw">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">Ladies <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <div class="yamm-content">
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <h5>Clothing</h5>
-                                                <ul>
-                                                    <li><a href="category.html">T-shirts</a>
-                                                    </li>
-                                                    <li><a href="category.html">Shirts</a>
-                                                    </li>
-                                                    <li><a href="category.html">Pants</a>
-                                                    </li>
-                                                    <li><a href="category.html">Accessories</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <h5>Shoes</h5>
-                                                <ul>
-                                                    <li><a href="category.html">Trainers</a>
-                                                    </li>
-                                                    <li><a href="category.html">Sandals</a>
-                                                    </li>
-                                                    <li><a href="category.html">Hiking shoes</a>
-                                                    </li>
-                                                    <li><a href="category.html">Casual</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <h5>Accessories</h5>
-                                                <ul>
-                                                    <li><a href="category.html">Trainers</a>
-                                                    </li>
-                                                    <li><a href="category.html">Sandals</a>
-                                                    </li>
-                                                    <li><a href="category.html">Hiking shoes</a>
-                                                    </li>
-                                                    <li><a href="category.html">Casual</a>
-                                                    </li>
-                                                    <li><a href="category.html">Hiking shoes</a>
-                                                    </li>
-                                                    <li><a href="category.html">Casual</a>
-                                                    </li>
-                                                </ul>
-                                                <h5>Looks and trends</h5>
-                                                <ul>
-                                                    <li><a href="category.html">Trainers</a>
-                                                    </li>
-                                                    <li><a href="category.html">Sandals</a>
-                                                    </li>
-                                                    <li><a href="category.html">Hiking shoes</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <div class="banner">
-                                                    <a href="#">
-                                                        <img src="img/banner.jpg" class="img img-responsive" alt="">
-                                                    </a>
-                                                </div>
-                                                <div class="banner">
-                                                    <a href="#">
-                                                        <img src="img/banner2.jpg" class="img img-responsive" alt="">
-                                                    </a>
-                                                </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="products-sort-by">
+                                                <strong>Sort by</strong>
+                                                <select name="sort-by" class="form-control">
+                                                    <option>Price</option>
+                                                    <option>Name</option>
+                                                    <option>Sales first</option>
+                                                </select>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- /.yamm-content -->
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="dropdown yamm-fw">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">Template <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <div class="yamm-content">
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <h5>Shop</h5>
-                                                <ul>
-                                                    <li><a href="index.html">Homepage</a>
-                                                    </li>
-                                                    <li><a href="category.html">Category - sidebar left</a>
-                                                    </li>
-                                                    <li><a href="category-right.html">Category - sidebar right</a>
-                                                    </li>
-                                                    <li><a href="category-full.html">Category - full width</a>
-                                                    </li>
-                                                    <li><a href="detail.html">Product detail</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <h5>User</h5>
-                                                <ul>
-                                                    <li><a href="register.html">Register / login</a>
-                                                    </li>
-                                                    <li><a href="customer-orders.html">Orders history</a>
-                                                    </li>
-                                                    <li><a href="customer-order.html">Order history detail</a>
-                                                    </li>
-                                                    <li><a href="customer-wishlist.html">Wishlist</a>
-                                                    </li>
-                                                    <li><a href="customer-account.html">Customer account / change password</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <h5>Order process</h5>
-                                                <ul>
-                                                    <li><a href="basket.html">Shopping cart</a>
-                                                    </li>
-                                                    <li><a href="checkout1.html">Checkout - step 1</a>
-                                                    </li>
-                                                    <li><a href="checkout2.html">Checkout - step 2</a>
-                                                    </li>
-                                                    <li><a href="checkout3.html">Checkout - step 3</a>
-                                                    </li>
-                                                    <li><a href="checkout4.html">Checkout - step 4</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <h5>Pages and blog</h5>
-                                                <ul>
-                                                    <li><a href="blog.html">Blog listing</a>
-                                                    </li>
-                                                    <li><a href="post.html">Blog Post</a>
-                                                    </li>
-                                                    <li><a href="faq.html">FAQ</a>
-                                                    </li>
-                                                    <li><a href="text.html">Text page</a>
-                                                    </li>
-                                                    <li><a href="text-right.html">Text page - right sidebar</a>
-                                                    </li>
-                                                    <li><a href="404.html">404 page</a>
-                                                    </li>
-                                                    <li><a href="contact.html">Contact</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /.yamm-content -->
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-
-                </div>
-                <!--/.nav-collapse -->
-
-                <div class="navbar-buttons">
-
-                    <div class="navbar-collapse collapse right" id="basket-overview">
-                        <a data-toggle="modal" data-target="#login-modal" class="btn btn-secondary navbar-btn"><i class="fa fa-user"></i><span class="hidden-sm">Login</span></a>
-                    </div>
-                    <!--/.nav-collapse -->
-
-                    <div class="navbar-collapse collapse right" id="search-not-mobile">
-                       <form class="navbar-form" role="search">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search">
-                            <span class="input-group-btn">
-
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i>Buscar</button>
-
-                            </span>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
-                    </form>
+                    </div>
+
+                    <?php 
+                        //INCLUDE MODULO DE POSTAGENS
+                        echo 'incluir modulo com as postagens';
+                     ?>
+                    
+
+
                 </div>
-
+                <!-- /.col-md-9 -->
             </div>
-
+            <!-- /.container -->
         </div>
-        <!-- /.container -->
-    </div>
-</div>
-
-<div id="all">
-
-    <div id="content">
-        <div class="container">
-
-            <div class="col-sm-12 box hidden-xs">
-            </div>
-            
-            <div class="col-md-12">
-
-                <div class=" col-sm-12 box">
-                    <img src="imagem/sistema/extilos.png" alt="extilos logo" height="30" class="visible-xs">
-                </div>
-                <div class="box col-sm-12">
-                    <div class="visible-xs">
-                    <h4>♜ | <?php echo $dadosTorre['nomeTorre'] ?></h4>
-                        <small><?php echo $dadosTorre['cidadeTorre'].'-'.$dadosTorre['estadoTorre'] ?>.</small>
-                <div id="main-slider">
-                    <div class="item">
-                        <img src="img/slider2.jpg" alt="" class="img-responsive">
-                    </div>
-                    <div class="item">
-                        <img src="img/slider4.jpg" alt="" class="img-responsive">
-                    </div>
-                </div>
-            </div>
-                    <div class="col-sm-3 hidden-xs">
-                        <h3 class="responsive">♜ | <?php echo $dadosTorre['nomeTorre'] ?></h3>
-                        <p><?php echo $dadosTorre['cidadeTorre'].'-'.$dadosTorre['estadoTorre'] ?>.</p>
-                    </div>
-                    <div class="col-sm-9">
-                        <ul class="nav nav-tabs nav-justified">
-                          <li><a href="#">INICIO</a></li>
-                          <li class="active"><a href="#">POSTAGENS</a></li>
-                          <li><a href="#">LOJAS</a></li>
-                          <li><a href="blogs.php">BLOGS</a></li>
-                          <li><a href="#">PUBLICIDADE</a></li>
-                          <li><a href="#">CONTATO</a></li>
-                      </ul>
-                      <br>
-                  </div>
-
-
-                  <div class="col-sm-9 hidden-xs">
-                    <ul class="nav nav-pills nav-justified">
-                      <li class="active"><a href="#">Ultimos Post</a></li>
-                      <li><a href="#">Mais Votados</a></li>
-                      <li><a href="#">Look Masculino</a></li>
-                      <li><a href="lista-paginas.php">Look Feminino</a></li>
-                      <li><a href="#">Produtos</a></li>
-                      <li><a href="#">Destaques</a></li>
-                  </ul>
-              </div>
-              <div class="col-sm-9 visible-xs">
-                <div class="products-sort-by">
-                    <strong>Aplicar Filtro</strong>
-                    <select name="sort-by" class="form-control">
-                        <option><a href="#">Ultimos Post</a></option>
-                        <option><a href="#">Mais Votados</a></option>
-                        <option><a href="#">Look Masculino</a></option>
-                        <option><a href="#">Look Feminino</a></option>
-                        <option><a href="#">Produtos</a></option>
-                        <option><a href="#">Destaques</a></option>
-                    </select>
-                </div>
-            </div>
-            </div>
-        <div class="row products">
-
-            <div class="col-md-3 col-sm-4">
-                <div class="product">
-                            <div class="">
-                                <a href="detail.html">
-                                    <img src="img/banner.jpg" alt="" class="img-responsive">
-                                </a>
-                            </div>
-                    <div class="text">
-                        <p class="buttons">
-                            <a href="detail.html" class="btn btn-primary"><i class="fa fa-eye"></i>Visitar Blog</a>
-                            <a href="basket.html" class="btn btn-default">+<i class="fa fa-hand-o-up"></i>fã</a>
-                        </p>
-                    </div>
-                    <!-- /.text -->
-                </div>
-                <!-- /.product -->
-            </div>
-
-            <div class="col-md-3 col-sm-4">
-                <div class="product">
-                    <div class="flip-container">
-                        <div class="flipper">
-                            <div class="front">
-                                <a href="detail.html">
-                                    <img src="img/product2.jpg" alt="" class="img-responsive">
-                                </a>
-                            </div>
-                            <div class="back">
-                                <a href="detail.html">
-                                    <img src="img/product2_2.jpg" alt="" class="img-responsive">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="detail.html" class="invisible">
-                        <img src="img/product2.jpg" alt="" class="img-responsive">
-                    </a>
-                    <div class="text">
-                        <h3><a href="detail.html">White Blouse Armani</a></h3>
-                        <p class="price"><del>$280</del> $143.00</p>
-                        <p class="buttons">
-                            <a href="detail.html" class="btn btn-default">View detail</a>
-                            <a href="basket.html" class="btn btn-primary"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-                        </p>
-                    </div>
-                    <!-- /.text -->
-
-                    <div class="ribbon sale">
-                        <div class="theribbon">SALE</div>
-                        <div class="ribbon-background"></div>
-                    </div>
-                    <!-- /.ribbon -->
-
-                    <div class="ribbon new">
-                        <div class="theribbon">NEW</div>
-                        <div class="ribbon-background"></div>
-                    </div>
-                    <!-- /.ribbon -->
-
-                    <div class="ribbon gift">
-                        <div class="theribbon">GIFT</div>
-                        <div class="ribbon-background"></div>
-                    </div>
-                    <!-- /.ribbon -->
-                </div>
-                <!-- /.product -->
-            </div>
-
-            <div class="col-md-3 col-sm-4">
-                <div class="product">
-                    <div class="flip-container">
-                        <div class="flipper">
-                            <div class="front">
-                                <a href="detail.html">
-                                    <img src="img/product3.jpg" alt="" class="img-responsive">
-                                </a>
-                            </div>
-                            <div class="back">
-                                <a href="detail.html">
-                                    <img src="img/product3_2.jpg" alt="" class="img-responsive">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="detail.html" class="invisible">
-                        <img src="img/product3.jpg" alt="" class="img-responsive">
-                    </a>
-                    <div class="text">
-                        <h3><a href="detail.html">Black Blouse Versace</a></h3>
-                        <p class="price">$143.00</p>
-                        <p class="buttons">
-                            <a href="detail.html" class="btn btn-default">View detail</a>
-                            <a href="basket.html" class="btn btn-primary"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-                        </p>
-
-                    </div>
-                    <!-- /.text -->
-                </div>
-                <!-- /.product -->
-            </div>
-
-            <div class="col-md-3 col-sm-4">
-                <div class="product">
-                    <div class="flip-container">
-                        <div class="flipper">
-                            <div class="front">
-                                <a href="detail.html">
-                                    <img src="img/product3.jpg" alt="" class="img-responsive">
-                                </a>
-                            </div>
-                            <div class="back">
-                                <a href="detail.html">
-                                    <img src="img/product3_2.jpg" alt="" class="img-responsive">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="detail.html" class="invisible">
-                        <img src="img/product3.jpg" alt="" class="img-responsive">
-                    </a>
-                    <div class="text">
-                        <h3><a href="detail.html">Black Blouse Versace</a></h3>
-                        <p class="price">$143.00</p>
-                        <p class="buttons">
-                            <a href="detail.html" class="btn btn-default">View detail</a>
-                            <a href="basket.html" class="btn btn-primary"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-                        </p>
-
-                    </div>
-                    <!-- /.text -->
-                </div>
-                <!-- /.product -->
-            </div>
-
-            <div class="col-md-3 col-sm-4">
-                <div class="product">
-                    <div class="flip-container">
-                        <div class="flipper">
-                            <div class="front">
-                                <a href="detail.html">
-                                    <img src="img/product2.jpg" alt="" class="img-responsive">
-                                </a>
-                            </div>
-                            <div class="back">
-                                <a href="detail.html">
-                                    <img src="img/product2_2.jpg" alt="" class="img-responsive">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="detail.html" class="invisible">
-                        <img src="img/product2.jpg" alt="" class="img-responsive">
-                    </a>
-                    <div class="text">
-                        <h3><a href="detail.html">White Blouse Versace</a></h3>
-                        <p class="price">$143.00</p>
-                        <p class="buttons">
-                            <a href="detail.html" class="btn btn-default">View detail</a>
-                            <a href="basket.html" class="btn btn-primary"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-                        </p>
-
-                    </div>
-                    <!-- /.text -->
-
-                    <div class="ribbon new">
-                        <div class="theribbon">NEW</div>
-                        <div class="ribbon-background"></div>
-                    </div>
-                    <!-- /.ribbon -->
-                </div>
-                <!-- /.product -->
-            </div>
-
-            <div class="col-md-3 col-sm-4">
-                <div class="product">
-                    <div class="flip-container">
-                        <div class="flipper">
-                            <div class="front">
-                                <a href="detail.html">
-                                    <img src="img/product1.jpg" alt="" class="img-responsive">
-                                </a>
-                            </div>
-                            <div class="back">
-                                <a href="detail.html">
-                                    <img src="img/product1_2.jpg" alt="" class="img-responsive">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="detail.html" class="invisible">
-                        <img src="img/product1.jpg" alt="" class="img-responsive">
-                    </a>
-                    <div class="text">
-                        <h3><a href="detail.html">Fur coat</a></h3>
-                        <p class="price">$143.00</p>
-                        <p class="buttons">
-                            <a href="detail.html" class="btn btn-default">View detail</a>
-                            <a href="basket.html" class="btn btn-primary"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-                        </p>
-
-                    </div>
-                    <!-- /.text -->
-
-                    <div class="ribbon gift">
-                        <div class="theribbon">GIFT</div>
-                        <div class="ribbon-background"></div>
-                    </div>
-                    <!-- /.ribbon -->
-
-                </div>
-                <!-- /.product -->
-            </div>
-            <!-- /.col-md-4 -->
-
-            <div class="col-md-3 col-sm-4">
-                <div class="product">
-                    <div class="flip-container">
-                        <div class="flipper">
-                            <div class="front">
-                                <a href="detail.html">
-                                    <img src="img/product2.jpg" alt="" class="img-responsive">
-                                </a>
-                            </div>
-                            <div class="back">
-                                <a href="detail.html">
-                                    <img src="img/product2_2.jpg" alt="" class="img-responsive">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="detail.html" class="invisible">
-                        <img src="img/product2.jpg" alt="" class="img-responsive">
-                    </a>
-                    <div class="text">
-                        <h3><a href="detail.html">White Blouse Armani</a></h3>
-                        <p class="price"><del>$280</del> $143.00</p>
-                        <p class="buttons">
-                            <a href="detail.html" class="btn btn-default">View detail</a>
-                            <a href="basket.html" class="btn btn-primary"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-                        </p>
-                    </div>
-                    <!-- /.text -->
-
-                    <div class="ribbon sale">
-                        <div class="theribbon">SALE</div>
-                        <div class="ribbon-background"></div>
-                    </div>
-                    <!-- /.ribbon -->
-
-                    <div class="ribbon new">
-                        <div class="theribbon">NEW</div>
-                        <div class="ribbon-background"></div>
-                    </div>
-                    <!-- /.ribbon -->
-
-                    <div class="ribbon gift">
-                        <div class="theribbon">GIFT</div>
-                        <div class="ribbon-background"></div>
-                    </div>
-                    <!-- /.ribbon -->
-                </div>
-                <!-- /.product -->
-            </div>
-
-            <div class="col-md-3 col-sm-4">
-                <div class="product">
-                    <div class="flip-container">
-                        <div class="flipper">
-                            <div class="front">
-                                <a href="detail.html">
-                                    <img src="img/product3.jpg" alt="" class="img-responsive">
-                                </a>
-                            </div>
-                            <div class="back">
-                                <a href="detail.html">
-                                    <img src="img/product3_2.jpg" alt="" class="img-responsive">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="detail.html" class="invisible">
-                        <img src="img/product3.jpg" alt="" class="img-responsive">
-                    </a>
-                    <div class="text">
-                        <h3><a href="detail.html">Black Blouse Versace</a></h3>
-                        <p class="price">$143.00</p>
-                        <p class="buttons">
-                            <a href="detail.html" class="btn btn-default">View detail</a>
-                            <a href="basket.html" class="btn btn-primary"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-                        </p>
-
-                    </div>
-                    <!-- /.text -->
-                </div>
-                <!-- /.product -->
-            </div>
-
-        </div>
-        <!-- /.products -->
-
-        <div class="pages">
-
-            <p class="loadMore">
-                <a href="#" class="btn btn-primary btn-lg"><i class="fa fa-chevron-down"></i> Load more</a>
-            </p>
-
-            <ul class="pagination">
-                <li><a href="#">&laquo;</a>
-                </li>
-                <li class="active"><a href="#">1</a>
-                </li>
-                <li><a href="#">2</a>
-                </li>
-                <li><a href="#">3</a>
-                </li>
-                <li><a href="#">4</a>
-                </li>
-                <li><a href="#">5</a>
-                </li>
-                <li><a href="#">&raquo;</a>
-                </li>
-            </ul>
-        </div>
-
-
-    </div>
-    <!-- /.col-md-9 -->
-
-</div>
-<!-- /.container -->
-</div>
-<!-- /#content -->
+        <!-- /#content -->
 
 
         <!-- *** FOOTER ***
-        _________________________________________________________ -->
+ _________________________________________________________ -->
         <div id="footer" data-animate="fadeInUp">
             <div class="container">
                 <div class="row">
@@ -840,45 +394,45 @@ $paginasTorres = conta_pagina_torre($idtorre);
 
                                 <span class="input-group-btn">
 
-                                 <button class="btn btn-default" type="button">Subscribe!</button>
+                <button class="btn btn-default" type="button">Subscribe!</button>
 
-                             </span>
+            </span>
 
-                         </div>
-                         <!-- /input-group -->
-                     </form>
+                            </div>
+                            <!-- /input-group -->
+                        </form>
 
-                     <hr>
+                        <hr>
 
-                     <h4>Stay in touch</h4>
+                        <h4>Stay in touch</h4>
 
-                     <p class="social">
-                        <a href="#" class="facebook external" data-animate-hover="shake"><i class="fa fa-facebook"></i></a>
-                        <a href="#" class="twitter external" data-animate-hover="shake"><i class="fa fa-twitter"></i></a>
-                        <a href="#" class="instagram external" data-animate-hover="shake"><i class="fa fa-instagram"></i></a>
-                        <a href="#" class="gplus external" data-animate-hover="shake"><i class="fa fa-google-plus"></i></a>
-                        <a href="#" class="email external" data-animate-hover="shake"><i class="fa fa-envelope"></i></a>
-                    </p>
+                        <p class="social">
+                            <a href="#" class="facebook external" data-animate-hover="shake"><i class="fa fa-facebook"></i></a>
+                            <a href="#" class="twitter external" data-animate-hover="shake"><i class="fa fa-twitter"></i></a>
+                            <a href="#" class="instagram external" data-animate-hover="shake"><i class="fa fa-instagram"></i></a>
+                            <a href="#" class="gplus external" data-animate-hover="shake"><i class="fa fa-google-plus"></i></a>
+                            <a href="#" class="email external" data-animate-hover="shake"><i class="fa fa-envelope"></i></a>
+                        </p>
 
+
+                    </div>
+                    <!-- /.col-md-3 -->
 
                 </div>
-                <!-- /.col-md-3 -->
+                <!-- /.row -->
 
             </div>
-            <!-- /.row -->
-
+            <!-- /.container -->
         </div>
-        <!-- /.container -->
-    </div>
-    <!-- /#footer -->
+        <!-- /#footer -->
 
-    <!-- *** FOOTER END *** -->
+        <!-- *** FOOTER END *** -->
 
 
 
 
         <!-- *** COPYRIGHT ***
-        _________________________________________________________ -->
+ _________________________________________________________ -->
         <div id="copyright">
             <div class="container">
                 <div class="col-md-6">
@@ -887,31 +441,31 @@ $paginasTorres = conta_pagina_torre($idtorre);
                 </div>
                 <div class="col-md-6">
                     <p class="pull-right">Template by <a href="https://bootstrapious.com/e-commerce-templates">Bootstrapious</a> & <a href="https://fity.cz">Fity</a>
-                       <!-- Not removing these links is part of the license conditions of the template. Thanks for understanding :) If you want to use the template without the attribution links, you can do so after supporting further themes development at https://bootstrapious.com/donate  -->
-                   </p>
-               </div>
-           </div>
-       </div>
-       <!-- *** COPYRIGHT END *** -->
+                         <!-- Not removing these links is part of the license conditions of the template. Thanks for understanding :) If you want to use the template without the attribution links, you can do so after supporting further themes development at https://bootstrapious.com/donate  -->
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- *** COPYRIGHT END *** -->
 
 
 
-   </div>
-   <!-- /#all -->
+    </div>
+    <!-- /#all -->
 
 
-
+    
 
     <!-- *** SCRIPTS TO INCLUDE ***
-    _________________________________________________________ -->
-    <script src="js/jquery-1.11.0.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.cookie.js"></script>
-    <script src="js/waypoints.min.js"></script>
-    <script src="js/modernizr.js"></script>
-    <script src="js/bootstrap-hover-dropdown.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/front.js"></script>
+ _________________________________________________________ -->
+    <script src="<?php echo $caminho ?>js/jquery-1.11.0.min.js"></script>
+    <script src="<?php echo $caminho ?>js/bootstrap.min.js"></script>
+    <script src="<?php echo $caminho ?>js/jquery.cookie.js"></script>
+    <script src="<?php echo $caminho ?>js/waypoints.min.js"></script>
+    <script src="<?php echo $caminho ?>js/modernizr.js"></script>
+    <script src="<?php echo $caminho ?>js/bootstrap-hover-dropdown.js"></script>
+    <script src="<?php echo $caminho ?>js/owl.carousel.min.js"></script>
+    <script src="<?php echo $caminho ?>js/front.js"></script>
 
 
 

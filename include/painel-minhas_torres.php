@@ -7,7 +7,7 @@
                   <h4 class="card-title">Lista de Torres</h4>
                   <p class="card-category">Administrado por <?php echo $usuario['usuMarca'] ?></p>
                   <div class="text-right" >
-                  <a href="cadastro_torre" class="btn btn-sm btn-success">Criar novo blog</a>
+                  <a href="cadastro_torre" class="btn btn-sm btn-success">Criar nova Torre</a>
                   </div>
                 </div>
                 <div class="card-body table-responsive">

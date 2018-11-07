@@ -1,17 +1,3 @@
-<?php
-//verifica se usuario está logado para acessar a página
-if(!isset($_SESSION['idLogado']) && (!isset($_POST['emailUsuario']))){
-    $_SESSION['resposta'] = 'registrar';
-    header("Location: ../login"); exit;
-}
-//INCLUI AS FUNÇÕES NECESSÁRIAS
-//include_once 'ajax/validar.php';
-include_once 'functions/conexoes.php';
-include_once 'functions/functions.php';
-include_once 'include/modal.php';
-$idUsuario = $_SESSION['idLogado'];
-$usuario = busca_usuario($idUsuario);
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -29,15 +15,28 @@ $usuario = busca_usuario($idUsuario);
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
   <!-- CSS Files -->
-  <link href="../css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
-  <link href="../css/meu.css" rel="stylesheet">
+  <link href="/extilos/css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
+  <link href="/extilos/css/meu.css" rel="stylesheet">
 
-  <link href="../css/owl.theme.css" rel="stylesheet">
+  <link href="/extilos/css/owl.theme.css" rel="stylesheet">
   <!-- CSS Just for demo purpose, don't include it in your project 
   <link href="../demo/demo.css" rel="stylesheet" /> -->
   
 </head>
-
+<?php
+//verifica se usuario está logado para acessar a página
+if(!isset($_SESSION['idLogado']) && (!isset($_POST['emailUsuario']))){
+    $_SESSION['resposta'] = 'registrar';
+    header("Location: ../login"); exit;
+}
+//INCLUI AS FUNÇÕES NECESSÁRIAS
+//include_once 'ajax/validar.php';
+include_once 'functions/conexoes.php';
+include_once 'functions/functions.php';
+//include_once 'include/modal.php';
+$idUsuario = $_SESSION['idLogado'];
+$usuario = busca_usuario($idUsuario);
+?>
 <body class="">
   <div class="wrapper ">
     <div class="sidebar" data-color="purple" data-background-color="white" data-image="../assets/img/sidebar-1.jpg">

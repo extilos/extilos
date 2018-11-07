@@ -9,6 +9,13 @@ date_default_timezone_set('America/Sao_Paulo');
 <?php
 // funsão para trazer conteúdos
 if (!isset($_GET['pg'])){
+	//include 'teste.php';
+	$getUrl = strip_tags(trim(filter_input(INPUT_GET, 'pg', FILTER_DEFAULT)));
+		$getUrl = (empty($getUrl) ? 'index' : $getUrl);
+		$url = explode('/', $getUrl);
+		//print_r($url);
+	 //echo $url[0];
+	//echo 'Não encontrado';
 	//echo $resultado;
 	}else{
 		$getUrl = strip_tags(trim(filter_input(INPUT_GET, 'pg', FILTER_DEFAULT)));
@@ -19,13 +26,26 @@ if (!isset($_GET['pg'])){
 
 	//------------------------------------ PÁGINAS FIXAS -------------------------------------------------
 	if ($url[0] === 'pagina'){if (isset($url[3])){echo 'pagina inválida';}else{include '_EX_pagina.php';}exit;}
-
 	if ($url[0] === 'index'){if (isset($url[3])){echo 'pagina inválida';}else{include '_EX_index.php';}exit;}
 	if ($url[0] === 'torre_post'){if (isset($url[3])){echo 'pagina inválida';}else{include '_EX_post.php';}exit;}
 	if ($url[0] === 'torre'){if (isset($url[3])){echo 'pagina inválida';}else{include '_EX_torre.php';}exit;}
 	if ($url[0] === 'login'){if (isset($url[3])){echo 'pagina inválida';}else{include '_EX_login.php';}exit;}
 	if ($url[0] === 'cadastro_pessoal'){if (isset($url[3])){echo 'pagina inválida';}else{include '_EX_register.php';}exit;}
 	if ($url[0] === 'meu_post'){if (isset($url[3])){echo 'pagina inválida';}else{include '_EX_foto.php';}exit;}
+	// CARREGA BLOG PROCURADO NA URL
+	if ($url[0] === 'blog'){
+		if (isset($url[1])){
+			$buscaBlog = busca_nome_blog($url[1]);
+			if ($buscaBlog  > ""){
+				include '_EX_blogs.php';
+			}else{
+				echo 'blog nao encontrado';
+			}
+			//include '_EX_buscaBlogs.php';
+		}else{
+			include '_EX_blogs.php';
+		}exit;
+	}
 	// CARREGA PÁGINA DE PASTAS DE ALBUM
 	if ($url[0] === 'album_fotos'){if (isset($url[3])){echo 'pagina inválida';}else{include '_EX_album.php';}exit;}
 	// CARREGA PÁGINA COM MINHAS FOTOS
@@ -50,8 +70,8 @@ if (!isset($_GET['pg'])){
 	}
 
 
-		$buscaTorre = nome_torre($getUrl);
-	if (isset($buscaTorre)){
+	$buscaTorre = nome_torre($getUrl);
+	if ($buscaTorre > ""){
 				$_GET['idTorre'] = $buscaTorre['idTorre'];
 				include '_EX_torre.php';
 			exit;

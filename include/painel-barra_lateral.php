@@ -45,6 +45,22 @@
             </a>
           </li>
         <!-- TORRE -->
+         <!-- PUBLICIDADE -->
+        <?php } if($url[1] == "publicidade_usuario" || $url[1] == "minhas_publicidades" || $filtro[0] == "comprar_publicidade"){?>
+          <li class="nav-item active">
+            <a class="nav-link" href="minhas_publicidades">
+              <i class="material-icons">publicidade</i>
+              <p>Publicidade</p>
+            </a>
+          </li>
+        <?php }else{ ?>
+          <li class="nav-item ">
+            <a class="nav-link" href="minhas_publicidades">
+              <i class="material-icons">publicidade</i>
+              <p>Publicidade</p>
+            </a>
+          </li>
+        <!-- FIM PUBLICIDADE -->
         <?php }?>
           <li class="nav-item ">
             <a class="nav-link" href="./icons.html">

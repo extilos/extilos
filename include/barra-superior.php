@@ -1,7 +1,7 @@
 <div id="top">
         <div class="container">
             <div class="col-md-2 offer" data-animate="fadeInDown">
-                 <img src="imagem/sistema/extilos_branco.png" alt="extilos logo" height="50" class="">
+                 <img src="<?php echo $caminho ?>imagem/sistema/extilos_branco.png" alt="extilos logo" height="50" class="">
             </div>
             <div class="col-md-4" data-animate="fadeInDown">
                 
