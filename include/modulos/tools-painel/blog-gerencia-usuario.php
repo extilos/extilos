@@ -38,6 +38,7 @@
                                   <input type="text" class="form-control" id="adm" placeholder="@nome">
                                 </div>
                                 <div id="respUsuario"></div>
+                                <div id="respUsuarioAdm"></div>
                               </form>
                               <?php } ?>
                               <hr>

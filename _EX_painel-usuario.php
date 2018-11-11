@@ -19,6 +19,7 @@
   <link href="/extilos/css/meu.css" rel="stylesheet">
 
   <link href="/extilos/css/owl.theme.css" rel="stylesheet">
+
   <!-- CSS Just for demo purpose, don't include it in your project 
   <link href="../demo/demo.css" rel="stylesheet" /> -->
   
@@ -163,7 +164,7 @@ $usuario = busca_usuario($idUsuario);
   <script src="../js/core/bootstrap-material-design.min.js" type="text/javascript"></script>
   <script src="../js/plugins/perfect-scrollbar.jquery.min.js"></script>
   <!--  Google Maps Plugin    -->
-  <!-- Chartist JS -->
+  <!-- Chartist JS 
   <script src="../js/plugins/chartist.min.js"></script>
   <script src="../js/material-dashboard.min.js?v=2.1.0" type="text/javascript"></script>
   <!--  Notifications Plugin    -->

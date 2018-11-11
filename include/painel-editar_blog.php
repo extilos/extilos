@@ -1,6 +1,6 @@
 <?php
 if (isset($_POST['idPagina'])){
-              $idPagina = $_POST['idPagina']; // busca do post o id do blog
+            $idPagina = $_POST['idPagina']; // busca do post o id do blog
             }else{
               header("Location: meus_blogs"); exit;
             }

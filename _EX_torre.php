@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 // VERIFICAÇÕES PRIMÁRIAS
 date_default_timezone_set('America/Sao_Paulo');
@@ -28,6 +29,9 @@ $pagina = $url[0];
 $dadosTorre =  topo_torre($idtorre);
 $paginasTorres = conta_pagina_torre($idtorre);
 ?>
+=======
+<!DOCTYPE html> 
+>>>>>>> adc18539d984a9e5de305db099b9be8de01686f4
 <html lang="pt-br">
 <head>
     <meta charset="utf-8">
@@ -39,7 +43,11 @@ $paginasTorres = conta_pagina_torre($idtorre);
     <meta name="keywords" content="">
 
     <title>
+<<<<<<< HEAD
         eXtilos | ♜ | <?php echo $dadosTorre['nomeTorre'] ?>
+=======
+        eXtilos
+>>>>>>> adc18539d984a9e5de305db099b9be8de01686f4
     </title>
 
     <link href="<?php echo $caminho ?>css/font-awesome.css" rel="stylesheet">
@@ -53,12 +61,16 @@ $paginasTorres = conta_pagina_torre($idtorre);
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 
     <!-- your stylesheet with modifications -->
+<<<<<<< HEAD
     <link href="<?php echo $caminho ?>css/custom.css" rel="stylesheet">
+=======
+>>>>>>> adc18539d984a9e5de305db099b9be8de01686f4
     <link href="<?php echo $caminho ?>css/meu.css" rel="stylesheet">
 
     <script src="<?php echo $caminho ?>js/respond.min.js"></script>
     <link rel="extilos icon" href="favicon.png">
 </head>
+<<<<<<< HEAD
 <?php
 include_once 'functions/iniciar.php';
 include_once 'functions/functions.php';
@@ -72,6 +84,42 @@ include'include/conteudos/topoHtml.php';
 <body>
     <div id="all">
         <?php include 'include/barra-superior.php';?>
+=======
+<body>
+    <?php
+    include_once 'functions/iniciar.php';
+    include_once 'functions/functions.php';
+    include_once 'functions/conexoes.php';
+    include_once 'functions/cadastros.php';
+    include_once 'functions/functions.php';
+    include_once 'include/modal.php';
+    // VERIFICAÇÕES PRIMÁRIAS
+    date_default_timezone_set('America/Sao_Paulo');
+    $data = date('d-m-Y');
+    $hora = date('H:i');
+    $executionStartTime = microtime(true);
+    $explode = explode('/',$_SERVER["REQUEST_URI"]);
+    $total = count($explode);
+    if ($total == 3){
+        $caminho = "";
+    }
+    if ($total == 4){
+        $caminho = "../";
+    }
+    if ($total == 5){
+        $caminho = "../../";
+    }
+    $idtorre = $_GET['idTorre'];
+    $pagina = $url[0];
+    //PUXANDO TODOS OS DADOS REFERENTE A TORRE
+    $dadosTorre =  topo_torre($idtorre);
+    $paginasTorres = conta_pagina_torre($idtorre);
+    ?>
+    <div id="all">
+        <?php 
+        include 'include/barra-superior.php';
+        ?>
+>>>>>>> adc18539d984a9e5de305db099b9be8de01686f4
         <div id="content">
             <div class="container">
                 <div class="box col-sm-12">
@@ -214,7 +262,11 @@ include'include/conteudos/topoHtml.php';
                             $nomePagina = busca_blog($pg_conteudo['id_pagina']);
                             $nomeBlog = $nomePagina['nomePagina'];
                             ?>
+<<<<<<< HEAD
         <!-- EXIBIR POSTAGEM -->
+=======
+                    <!-- EXIBIR POSTAGEM -->
+>>>>>>> adc18539d984a9e5de305db099b9be8de01686f4
                             <div class="box slideshow col-sm-3">
                                 <div class="col-sm-9 col-xs-9 text-left">
                                     <p>Por:
@@ -334,8 +386,13 @@ include'include/conteudos/topoHtml.php';
                                 </p> 
                             </div>
                             </div>
+<<<<<<< HEAD
         <!-- FIM EXIBIR POSTAGEM -->
         <!-- MODAL DA POSTAGEM -->
+=======
+                            <!-- FIM EXIBIR POSTAGEM -->
+                            <!-- MODAL DA POSTAGEM -->
+>>>>>>> adc18539d984a9e5de305db099b9be8de01686f4
                             <div class="modal fade " id="<?php echo $registro->postagem ?>" tabindex="-1" role="dialog" aria-labelledby="">
                               <div class="modal-dialog modal-lg" role="document">
                                 <div class="modal-content">
@@ -720,6 +777,7 @@ include'include/conteudos/topoHtml.php';
            <script src="js/front.js"></script>
            <script src="js/jquery.textcomplete.js"></script>
            <script src="js/bootstrap-carousel.js"></script>
+<<<<<<< HEAD
 
 <script type="text/javascript">
 
@@ -916,6 +974,11 @@ include'include/conteudos/topoHtml.php';
                     })
         }
 </script>
+=======
+           <script src="js/js_ext/script_projeto.js"></script>
+
+
+>>>>>>> adc18539d984a9e5de305db099b9be8de01686f4
 
 
 </body>

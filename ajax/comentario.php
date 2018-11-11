@@ -25,7 +25,9 @@ $comentarios = comentarios($idPost,$idUsuario);
 </div>
 <div class="row">
 	<div class="col-sm-12 text-right">
-		<button class="btn btn-primary" onclick="comentarPost('<?php echo $idPost ?>', '<?php echo $idUsuario ?>')" id="btnComent")><i class="fa fa-comment-o"></i> Postar</button>
+		<button class="btn btn-primary" onclick="
+		comentarPost('<?php echo $idPost ?>', '<?php echo $idUsuario ?>'); 
+		pontos('COMENTARIO','<?php echo $idPost ?>','<?php echo $idUsuario ?>','<?php echo $tokenDia ?>','<?php echo $idTorre ?>')" id="btnComent")><i class="fa fa-comment-o"></i> Postar</button>
 	</div>
 </div>
 <div id="<?php echo 'postagem'.$idPost ?>"></div> <!-- RETORNO DO PRIMEIRO COMENTARIO -->

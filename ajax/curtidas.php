@@ -7,6 +7,9 @@ if (isset($_POST['idPost'])){
 
 	$idPost = $_POST['idPost'];
 	$idUsuario = $_POST['idUsuario'];
+	$tokenDia = $_POST['tokenDia'];
+	$idTorre = $_POST['idTorre'];
+	$idPagina = $_POST['idPagina'];
 	$positivo = $_POST['positivo'];
 	$negativo = $_POST['negativo'];
 	$data = date('d-m-Y H:i');
@@ -21,11 +24,14 @@ if (isset($_POST['idPost'])){
 			$negativo = 0;
 		}
 		$PDO = db_connect();
-		$sql = "UPDATE ext_curtidas SET id_post = :idPost, idUsuario = :idUsuario, curtir_positivo = :positivo, curtir_negativo = :negativo, data_atualizado = :data WHERE idCurtida = :idCurtida";
+		$sql = "UPDATE ext_curtidas SET id_post = :idPost, idUsuario = :idUsuario, tokenDia = :tokenDia, idTorre = :idTorre, idPagina = :idPagina , curtir_positivo = :positivo, curtir_negativo = :negativo, data_atualizado = :data WHERE idCurtida = :idCurtida";
 		$stmt = $PDO->prepare($sql);
 		$stmt->bindParam(':idCurtida', $idCurtida);
 		$stmt->bindParam(':idPost', $idPost);
 		$stmt->bindParam(':idUsuario', $idUsuario);
+		$stmt->bindParam(':tokenDia', $tokenDia);
+		$stmt->bindParam(':idTorre', $idTorre);
+		$stmt->bindParam(':idPagina', $idPagina);
 		$stmt->bindParam(':positivo', $positivo);
 		$stmt->bindParam(':negativo', $negativo);
 		$stmt->bindParam(':data', $data);
@@ -57,10 +63,13 @@ if (isset($_POST['idPost'])){
 		}
 	}else{
 		$PDO = db_connect();
-		$sql = "INSERT INTO ext_curtidas(id_post, idUsuario, curtir_positivo, curtir_negativo, data_atualizado) VALUES(:idPost, :idUsuario, :positivo , :negativo, :data)";
+		$sql = "INSERT INTO ext_curtidas(id_post, idUsuario, tokenDia, idTorre, idPagina, curtir_positivo, curtir_negativo, data_atualizado) VALUES(:idPost, :idUsuario, :tokenDia, :idTorre, :idPagina, :positivo , :negativo, :data)";
 		$stmt = $PDO->prepare($sql);
 		$stmt->bindParam(':idPost', $idPost);
 		$stmt->bindParam(':idUsuario', $idUsuario);
+		$stmt->bindParam(':tokenDia', $tokenDia);
+		$stmt->bindParam(':idTorre', $idTorre);
+		$stmt->bindParam(':idPagina', $idPagina);
 		$stmt->bindParam(':positivo', $positivo);
 		$stmt->bindParam(':negativo', $negativo);
 		$stmt->bindParam(':data', $data);

@@ -502,7 +502,11 @@ $(function () {
         //var name = event.target.files[0].content.name; // para capturar o nome do arquivo com sua extenção
 
         $.ajax({
+<<<<<<< HEAD
             url: 'functions/upFoto.php', // Url do lado server que vai receber o arquivo
+=======
+            url: 'ajax/upFoto.php', // Url do lado server que vai receber o arquivo
+>>>>>>> adc18539d984a9e5de305db099b9be8de01686f4
             data: form_data,
             processData: false,
             contentType: false,
@@ -539,7 +543,11 @@ $(function () {
         $.ajax({
           processData: false,
           contentType: false,
+<<<<<<< HEAD
           url:("functions/attPagina.php"),
+=======
+          url:("ajax/attPagina.php"),
+>>>>>>> adc18539d984a9e5de305db099b9be8de01686f4
           type: "POST",
           data: form_data,
           beforeSend: function(){

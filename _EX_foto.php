@@ -1,6 +1,8 @@
 <?php
 //verifica se usuario está logado para acessar a página
+
 //include 'include/valida_acesso.php';
+
 //abre a conexão com banco de dados
 require_once 'conn/init.php';
 require_once 'functions/conexoes.php';

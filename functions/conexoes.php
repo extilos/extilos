@@ -384,6 +384,7 @@
 		$sql_inicio = $PDO->prepare($sql_inicio);
 		$sql_inicio->execute();
 				while ($lista = $sql_inicio->fetch(PDO::FETCH_ASSOC)):
+					$r['idUsuario'] = $lista['idUsuario'];
 					$r['arrobaUsuario'] = $lista['arrobaUsuario'];
 					$r['dataSolicita'] = $lista['dataSolicita'];
 					$r['usuEstado'] = $lista['usuEstado'];
@@ -535,8 +536,7 @@
 		$blog = $blog->fetch(PDO::FETCH_ASSOC);
 		return $blog;
 		//return print_r($blog);
-	}
-
+		}
 	function busca_blog_texto($idPagina){
 		$PDO = db_connect();
 		$sql_fotos = "SELECT * FROM ext_paginas where idPagina = $idPagina";
@@ -571,11 +571,20 @@
 	}
 //----------------------------------------------------------------------------------------------------------------------
 	// Dados para torre
-		function torre_post($idTorre, $inicio, $fim){
+		function buscar_post($idTorre, $tipoBusca, $inicio, $fim){
 		$PDO = db_connect();
-		$sql_fotos = "SELECT DISTINCT id_postagem, post_data FROM ext_post where id_torre = $idTorre  ORDER BY 'id_post' desc LIMIT $inicio, $fim";
-		$blog = $PDO->prepare($sql_fotos);
-		$blog->execute();
+
+		if ($tipoBusca === 'torre'){
+			$sql_fotos = "SELECT DISTINCT id_postagem, post_data FROM ext_post where id_torre = $idTorre  ORDER BY 'id_post' desc LIMIT $inicio, $fim";
+			$blog = $PDO->prepare($sql_fotos);
+			$blog->execute();
+		}
+		if ($tipoBusca === 'index'){
+			$sql_fotos = "SELECT DISTINCT id_postagem FROM ext_post  ORDER BY rand() desc LIMIT $inicio, $fim";
+			$blog = $PDO->prepare($sql_fotos);
+			$blog->execute();
+		}
+
 		while ($postagens = $blog->fetch(PDO::FETCH_ASSOC)):
 			$idPostagem = $postagens['id_postagem'];
 			$PDO = db_connect();
@@ -587,7 +596,7 @@
 						//dados da tabela ext_post
 					$r['temFoto'] = 'sim';
 					$r['postagem'] = $postagens['id_postagem'];
-					$r['dataTorre'] = $postagens['post_data'];
+					$r['dataTorre'] = $post_usuario['data_post'];
 						//dados da tabela img_usuarios
 					$r['idPost'] = $post_usuario['idImg'];
 					$r['idUsuario'] = $post_usuario['idUsuario'];
@@ -613,7 +622,7 @@
 				}else{
 					$r['temFoto'] = 'nao';
 					$r['postagem'] = $postagens['id_postagem'];
-					$r['dataTorre'] = $postagens['post_data'];
+					$r['dataTorre'] = $post_usuario['data_post'];
 						//dados da tabela img_usuarios
 					$r['idPost'] = $post_usuario['idImg'];
 					$r['idUsuario'] = $post_usuario['idUsuario'];
@@ -711,9 +720,9 @@
 	}
 // ------------------------------------------- CONSULTAS NO BANCO EXT_VISITAS ----------------------------------------
 	//pesquisa o post curtido pelo usuário
-	function visitas($idPost, $idUsuario){
+	function visitas($idPost, $tokenDia){
 		$PDO = db_connect();
-		$sql = "SELECT * FROM ext_visita where idPost = $idPost and idUsuario = $idUsuario ORDER BY idVisita DESC";
+		$sql = "SELECT * FROM ext_visita where tokenDia = '$tokenDia' and idPost = $idPost ORDER BY idVisita DESC";
 		$stmt = $PDO->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -756,6 +765,55 @@
 		$result = $stmt->fetchColumn();
 		return $result;
 	}
+// --------------------------------------- CONSULTAS NO BANCO EXT_PTS -------------------------------------------------
 
-
+	function ext_pts_all(){
+		$PDO = db_connect();
+		$sql = "SELECT * FROM ext_pts ORDER BY id_pts DESC";
+		$stmt = $PDO->prepare($sql);
+		$stmt->execute();
+		$lista = $stmt->fetch(PDO::FETCH_ASSOC);
+					$c['idPagina'] = $lista['idPagina'];
+					$c['idTorre'] = $lista['idTorre'];
+					$c['idPost'] = $lista['idPost'];
+					$c['idUsuario'] = $lista['idUsuario'];
+					$c['ptsCurtida'] = $lista['ptsCurtida'];
+					$c['ptsSeguidores'] = $lista['ptsSeguidores'];
+					$c['ptsComentario'] = $lista['ptsComentario'];
+					$c['ptsFavoritos'] = $lista['ptsFavoritos'];
+					$c['ptsExtras'] = $lista['ptsExtras'];
+					$c['ptsVisitas'] = $lista['ptsVisitas'];
+					$c['ptsPost'] = $lista['ptsPost'];
+					$c['ptsLoja'] = $lista['ptsLoja'];
+					$c['ptsCompartilha'] = $lista['ptsCompartilha'];
+					$c['ptsBonus'] = $lista['ptsBonus'];
+					$c['ptsExtilos'] = $lista['ptsExtilos'];
+					$pontos[] = $c;
+		return json_encode($pontos, JSON_PRETTY_PRINT);
+	}
+	function verifica_pts($idPost, $idUsuario){
+		$PDO = db_connect();
+		$sql = "SELECT * FROM ext_pts where idPost = $idPost and idUsuario = $idUsuario";
+		$stmt = $PDO->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+		return $result;
+	}
+// --------------------------------------- CONSULTAS NO BANCO ALBUM_BLOG -------------------------------------------------
+	function pasta_album_blog($idPagina){
+		$PDO = db_connect();
+		$sql = "SELECT * FROM album_blog WHERE idPagina = $idPagina ORDER BY idAlbumBlog DESC";
+		$stmt = $PDO->prepare($sql);
+		$stmt->execute();
+		while ($lista = $stmt->fetch(PDO::FETCH_ASSOC)):
+					$c['idAlbumBlog'] = $lista['idAlbumBlog'];
+					$c['idPagina'] = $lista['idPagina'];
+					$c['idUsuario'] = $lista['idUsuario'];
+					$c['albumBlog'] = $lista['albumBlog'];
+					$c['data'] = $lista['data'];
+					$albuns[] = $c;
+		endwhile;
+		return json_encode($albuns, JSON_PRETTY_PRINT);
+	}
+	
 ?>

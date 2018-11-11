@@ -15,7 +15,9 @@ if ($total == 4){
 if ($total == 5){
     $caminho = "../../";
 }
+
 $buscaBlog = busca_nome_blog($url[1]);
+$idPagina = $buscaBlog['idPagina'];
 if (isset($_SESSION['idLogado'])){
   $idLogado = $_SESSION['idLogado'];
 // verifica se usuário logado é gerenciador do blog
@@ -63,13 +65,9 @@ if (isset($_SESSION['idLogado'])){
 
     <link rel="shortcut icon" href="favicon.png">
 
-
-
 </head>
 
 <body>
-    
-
     <div id="all">
         <?php include_once 'include/barra-superior.php';?>
         <div id="content">
@@ -85,62 +83,10 @@ if (isset($_SESSION['idLogado'])){
                     <!-- *** MENUS AND FILTERS ***
  _________________________________________________________ -->
                     <div class="panel panel-default sidebar-menu">
-
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Filtros</h3>
-                        </div>
-
-                        <div class="panel-body">
-                            <ul class="nav nav-pills nav-stacked category-menu">
-                                <li class="active">
-                                    <a href="category.html">Destaques <span class="badge pull-right">123</span></a>
-                                    <ul>
-                                        <li class="active" ><a href="category.html">Destaques</a>
-                                        </li>
-                                        <li><a href="category.html">Top</a>
-                                        </li>
-                                        <li><a href="category.html">Pants</a>
-                                        </li>
-                                        <li><a href="category.html">Accessories</a>
-                                        </li>
-                                    </ul>
-                                </li>
-
-                            </ul>
-
-                        </div>
+                        <?php include 'include/modulos/front/bloco-lateral-album-blog.php' ?>
                     </div>
                     <div class="panel panel-default sidebar-menu">
-
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Gerenciadores</h3>
-                        </div>
-
-                        <div class="panel-body">
-                            <ul class="nav nav-pills nav-stacked category-menu">
-                                <li class="active">
-                                    <a href="category.html">@usuario <span class="badge pull-right">123</span></a>
-                                    <ul>
-                                        <li class="active" ><a href="category.html">Pasta</a>
-                                        </li>
-                                        <li><a href="category.html">Balada</a>
-                                        </li>
-                                        <li><a href="category.html">Casual</a>
-                                        </li>
-                                        <li><a href="category.html">Moderno</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="category.html">@usuario2  <span class="badge pull-right">11</span></a>
-                                </li>
-                                <li>
-                                    <a href="category.html">@usuario3  <span class="badge pull-right">25</span></a>
-                                </li>
-
-                            </ul>
-
-                        </div>
+                        <?php include 'include/modulos/front/bloco-lateral-album-adm.php' ?>
                     </div>
 
                     <div class="panel panel-default sidebar-menu">
@@ -240,7 +186,7 @@ if (isset($_SESSION['idLogado'])){
                             <div class="box">
                                 <h1>Publicações</h1>
                                 <p>In our Ladies department we offer wide selection of the best products we have found and carefully selected worldwide.</p>
-                                <?php echo $idLogado ?>
+                                <?php echo $idLogado.'pagina'.$idPagina ?>
                             </div>
                     <?php } } ?>
                     <div class="box info-bar">
@@ -279,7 +225,7 @@ if (isset($_SESSION['idLogado'])){
 
                     <?php 
                         //INCLUDE MODULO DE POSTAGENS
-                        echo 'incluir modulo com as postagens';
+                        include 'include/modulos/front/exibe_postagens.php';
                      ?>
                     
 
@@ -294,6 +240,7 @@ if (isset($_SESSION['idLogado'])){
 
         <!-- *** FOOTER ***
  _________________________________________________________ -->
+
         <div id="footer" data-animate="fadeInUp">
             <div class="container">
                 <div class="row">
@@ -424,15 +371,7 @@ if (isset($_SESSION['idLogado'])){
             </div>
             <!-- /.container -->
         </div>
-        <!-- /#footer -->
 
-        <!-- *** FOOTER END *** -->
-
-
-
-
-        <!-- *** COPYRIGHT ***
- _________________________________________________________ -->
         <div id="copyright">
             <div class="container">
                 <div class="col-md-6">
@@ -453,9 +392,6 @@ if (isset($_SESSION['idLogado'])){
     </div>
     <!-- /#all -->
 
-
-    
-
     <!-- *** SCRIPTS TO INCLUDE ***
  _________________________________________________________ -->
     <script src="<?php echo $caminho ?>js/jquery-1.11.0.min.js"></script>
@@ -466,11 +402,6 @@ if (isset($_SESSION['idLogado'])){
     <script src="<?php echo $caminho ?>js/bootstrap-hover-dropdown.js"></script>
     <script src="<?php echo $caminho ?>js/owl.carousel.min.js"></script>
     <script src="<?php echo $caminho ?>js/front.js"></script>
-
-
-
-
-
 
 </body>
 

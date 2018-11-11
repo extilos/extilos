@@ -25,13 +25,26 @@ if (!isset($_GET['pg'])){
 		
 
 	//------------------------------------ PÁGINAS FIXAS -------------------------------------------------
+
 	if ($url[0] === 'pagina'){if (isset($url[3])){echo 'pagina inválida';}else{include '_EX_pagina.php';}exit;}
+
+	//CARREGA PAGINA PRINCIPAL
+	if ($url[0] === 'index'){
+		if (isset($url[3])){echo 'pagina inválida';
+		}else{
+			include '_EX_index.php';
+		}exit;
+	}
+	if ($url[0] === 'teste'){if (isset($url[3])){echo 'pagina inválida';}else{include 'testes_gerais.php';}exit;}
+	if ($url[0] === 'pagina'){if (isset($url[3])){echo 'pagina inválida';}else{include '_EX_pagina.php';}exit;}
+
 	if ($url[0] === 'index'){if (isset($url[3])){echo 'pagina inválida';}else{include '_EX_index.php';}exit;}
 	if ($url[0] === 'torre_post'){if (isset($url[3])){echo 'pagina inválida';}else{include '_EX_post.php';}exit;}
 	if ($url[0] === 'torre'){if (isset($url[3])){echo 'pagina inválida';}else{include '_EX_torre.php';}exit;}
 	if ($url[0] === 'login'){if (isset($url[3])){echo 'pagina inválida';}else{include '_EX_login.php';}exit;}
 	if ($url[0] === 'cadastro_pessoal'){if (isset($url[3])){echo 'pagina inválida';}else{include '_EX_register.php';}exit;}
 	if ($url[0] === 'meu_post'){if (isset($url[3])){echo 'pagina inválida';}else{include '_EX_foto.php';}exit;}
+
 	// CARREGA BLOG PROCURADO NA URL
 	if ($url[0] === 'blog'){
 		if (isset($url[1])){
@@ -57,7 +70,7 @@ if (!isset($_GET['pg'])){
 		if (isset($url[1])){
 			// para adicionar mais um comando de busca dentro do painel extilos.com/painel_usuario/local&filtro01&filtro02...
 			$filtro = explode('=', $url[1]);
-			if ($url[1] === 'cadastro_blog' || $url[1] === 'meus_blogs' || $filtro[0] === 'editar_blog' || $url[1] === 'relatorio_geral' || $url[1] === 'blog_fa' || $url[1] === 'lista_fans' || $url[1] === 'editar_fans' || $url[1] === 'cadastro_torre'  || $url[1] === 'minhas_torres' || $filtro[0] === 'editar_torre' ){
+			if ($url[1] === 'cadastro_blog' || $url[1] === 'meus_blogs' || $filtro[0] === 'editar_blog' || $url[1] === 'relatorio_geral' || $url[1] === 'blog_fa' || $url[1] === 'lista_fans' || $url[1] === 'editar_fans' || $url[1] === 'cadastro_torre'  || $url[1] === 'minhas_torres' ||  $filtro[0] === 'editar_torre' ){
 				include '_EX_painel-usuario.php';
 			}
 			else{
@@ -69,9 +82,10 @@ if (!isset($_GET['pg'])){
 		}exit;
 	}
 
-
 	$buscaTorre = nome_torre($getUrl);
 	if ($buscaTorre > ""){
+		$buscaTorre = nome_torre($getUrl);
+	if (isset($buscaTorre)){
 				$_GET['idTorre'] = $buscaTorre['idTorre'];
 				include '_EX_torre.php';
 			exit;
@@ -87,5 +101,6 @@ if (!isset($_GET['pg'])){
 	//}
 
 	}
+}
 
 ?>

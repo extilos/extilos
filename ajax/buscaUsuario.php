@@ -14,6 +14,7 @@ if (isset($_POST['adm'])){
   $localBusca = isset($_POST['localBusca']) ?  $_POST['localBusca'] : null;
   $tipoPagina = isset($_POST['tipoPagina']) ?  $_POST['tipoPagina'] : null;
   $PDO = db_connect();
+  //faz a consulta para verificar se existe usuario fã da pagina para ser incluido como adm
   $busca = busca_lista_fans($consulta, $letra, $idPagina, $idTorre);
   $json = json_decode($busca);
   if ($localBusca == 'lista'){
@@ -30,6 +31,7 @@ if (isset($_POST['adm'])){
       if(!isset($json)){
           echo '<td><small>Vazio</small></td>';
       }else{
+        //EXIBE A LISTA DE USUÁRIO ENCONTRADO COM LIMITE DE 10 REGISTROS
         foreach(array_slice($json, 0, 10) as $lista){ ?>
           <form action="editar_fans" method="post">
             <input type="hidden" name="idPagina" value="<?php echo $lista->idUsuario  ?>">
@@ -46,20 +48,25 @@ if (isset($_POST['adm'])){
       <?php } } ?>
     </tbody>
 </table>
-<?php }else{ ?>
+<?php 
+}else{ 
+?>
 <div class="box pesquisa">
   <?php foreach(array_slice($json, 0, 10) as $lista){ ?>
     <input onclick="permitir('<?php echo $idPagina ?>','<?php echo $lista->idUsuario ?>')" class="form-control" value="<?php echo $lista->arrobaUsuario ?>">
   <?php } ?>
 </div>
 <?php } }?>
+
+
+
 <?php
 if(isset($_POST['user'])){
  $idUsuario = $_POST['user'];
  $idPagina = $_POST['pagina'];
  $tipoPagina = $_POST['tipoPagina'];
  if($tipoPagina > 0){
-  $limitAdm = '50';
+  $limitAdm = '20';
 }else{
   $limitAdm = '3';
 }
@@ -124,11 +131,23 @@ if($usuCadastrado > ''){
       </div>
       <?php }else{ ?>
       <div id="respostaUser">
-        <?php if($quantAdm >= $limitAdm){ ?>
-        <p>Ops! O limite de administradores foi atingido</p>
-        <label for="city">É permitido no máximo 03 administradores para o blog gratuíto e 20 para o blog profissinal. </label>
-        <a onclick="cancelaUser()" class="btn btn-sm btn-block btn-default">Voltar</a>
-        <?php }else{ ?>
+        <?php 
+        if($quantAdm >= $limitAdm){ 
+          if($limitAdm == 3){
+          ?>
+            <p>Ops! O limite de administradores foi atingido</p>
+            <label for="city">É permitido no máximo 03 administradores para o blog gratuíto e 20 para o blog profissinal. </label>
+            <a onclick="cancelaUser()" class="btn btn-sm btn-block btn-default">Voltar</a>
+          <?php 
+          }else{ 
+          ?>
+            <p>Ops! O limite de administradores foi atingido</p>
+            <label for="city">É permitido no máximo 20 administradores para o blog profissional. </label>
+            <a onclick="cancelaUser()" class="btn btn-sm btn-block btn-default">Voltar</a>
+        <?php
+          }
+        }else{ 
+          ?>
         <label for="city">Permisões do usuário</label>
         <p><?php echo $arroba ?></p> 
         <a onclick="permisoes()" class="btn btn-sm btn-block btn-default">Add Permisões</a>
