@@ -17,14 +17,14 @@ $idPagina = $_POST['idPagina'];
 $_SESSION['pgLogada'] = $idPagina;
 }
 elseif(isset($_SESSION['pgLogada'])){
-$idPagina = $_SESSION['pgLogada'];
-}else{
-header("Location: paginas-usuario.php"); 
-exit;
+$idPagina = 15;
+//}else{
+//header("Location: paginas-usuario.php"); 
+//exit;
 }
 $idUsuario = $_SESSION['idLogado']; // puxa da sessão o usuário logado
 $usuario = busca_usuario($idUsuario); //retorna os dados do usuário que esta acessando a página
-$blog = busca_blog($idPagina); // faz consulta no conexoes.php para saber qual a página(blog) pelo id informado
+$blog = busca_blog(15); // faz consulta no conexoes.php para saber qual a página(blog) pelo id informado
 $idPagina = $blog['idPagina']; //retorna o id da página(blog)
 $criadorPagina = $blog['idUsuario']; //retorna o id do usuário que criou a página
 $arrobaCriador = busca_usuario($criadorPagina); //retorna informações do usuário criador da página

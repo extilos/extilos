@@ -7,39 +7,10 @@ if(isset($_SESSION['idLogado'])){
     }
 }
 ?>
-<!DOCTYPE html>
-<html lang="pt-br">
-<head> 
-    <meta charset="utf-8">
-    <meta name="robots" content="all,follow,extilos,moda">
-    <meta name="googlebot" content="index,follow,snippet,archive,moda,extilos">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Extilos - Mostre a sua moda">
-    <meta name="author" content="APP Extilos | vempublicar.com">
-    <meta name="keywords" content="">
-    <title>
-        eXtilos | Painel
-    </title>
-    <meta name="keywords" content="">
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100' rel='stylesheet' type='text/css'>
-    <!-- styles -->
-    <link href="css/font-awesome.css" rel="stylesheet">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/animate.min.css" rel="stylesheet">
-    <link href="css/owl.carousel.css" rel="stylesheet">
-    <link href="css/owl.theme.css" rel="stylesheet">
-    <!-- theme stylesheet -->
-    <link href="css/style.default.css" rel="stylesheet" id="theme-stylesheet">
-    <!-- your stylesheet with modifications -->
-    <link href="css/meu.css" rel="stylesheet">
-    <script src="js/respond.min.js"></script>
-    <link rel="shortcut icon" href="favicon.png">
-</head>
-<body>
+
     <div id="hot">
-    <?php include 'include/barra-superior.php';?>
         <div id="content">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="col-sm-12 box">
                 <?php
                 if(isset($_SESSION['resposta'])){
@@ -49,21 +20,9 @@ if(isset($_SESSION['idLogado'])){
                <div id="load" style="display: none" >
                   <p><i class="fa fa-spinner fa-spin" style="font-size:24px"></i> Verificando</p>
                </div>
-               <div class="col-md-8">
-                    <div class="">
-                        <h1>Bem Víndo.</h1>
-
-                        <p class="lead">eXtilos.com - Mostre a sua moda!</p>
-                        <hr>
-                        <p>Para quem tem uma loja!</p>
-                        <p>Para quem tem uma tatto!</p>
-                        <p>Para quem tem uma cabelo!</p>
-                        <p>Para quem tem uma sapatos!</p>
-                        <p>Para quem tem uma roupas acessorios!</p>
-                        <p>Para quem gosta de moda!</p>
-                        <p class="text-muted">Conheça as nossa politica e regras <a href="contact.html">AQUI</a>. Venha construir novas idéias.. blabla.</p>
-                        <hr>
-                    </div>
+            
+                <div class="col-md-8">
+                    <?php include 'include/modulos/front/universal/banner-login.php'; ?>
                 </div>
                <div class="col-md-4 box">
                 <h3>Acesso</h3>
@@ -127,5 +86,3 @@ if(isset($_SESSION['idLogado'])){
             document.getElementById(el).style.display = 'none';
     }
     </script>
-</body>
-</html>

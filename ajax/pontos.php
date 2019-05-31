@@ -2,11 +2,11 @@
 
 	require_once '../conn/init.php';
 	require_once '../functions/conexoes.php';
-	$idPagina = 0;
 	$idUsuario = $_POST['idUsuario'];
 	$local = isset($_POST['tipo']) ? $_POST['tipo'] : null ;
 	$idPost = isset($_POST['idPost']) ? $_POST['idPost'] : null ;
 	$idTorre = isset($_POST['idTorre']) ? $_POST['idTorre'] : null;
+	$idPagina = isset($_POST['idPagina']) ? $_POST['idPagina'] : null;
 	$tokenDia = isset($_POST['tokenDia']) ? $_POST['tokenDia'] : null;
 	//CADASTRO DE PONTUAÇÃO
 		//REALIZA O CADASTRO DE PONTUAÇÃO DAS POSTAGENS, BLOGS E TORRES.
@@ -21,7 +21,7 @@
 		FAVORITOS 	- pts Favoritos / cada usuário soma 15 pontos. (PBT)
 		EXTRA 	- pts Extra / se o usuário acessar o link da loja macada soma 10 pontos. (PBT)
 		VISITAS - pts Visitas / cada visita de usuário soma 5 pontos por dia, 20 é o maximo de pontos somados por usuários. (PBT)
-		PUBLICA 	- pts Post / publicação com 5 fotos somam 15 pontos. (PB)
+		PUBLICA 	- pts Post / publicação com 5 fotos somam 75 pontos. (PB)
 		LOJA 	- pts Loja / fazer a marcação da loja ou da marca soma 10 pontos. (PB)
 		COMPARTILHA	- pts Comparilha / se a loja ou a marca compartilhar a postagem somam 120 pontos. (PB)
 		BONUS 	- pts Bonus / caso ocorra um bonus por um periodo ou promoção as pontuações são multiplicadas por 2x (PBT)
@@ -43,7 +43,7 @@
 			if($local == 'FAVORITOS'){ 	$ptsFavoritos = 15; }else{ $ptsFavoritos = $verifica_pts['ptsFavoritos']; };
 			if($local == 'EXTRA'){ 		$ptsExtras = 10;}else{ $ptsExtras = $verifica_pts['ptsExtras'];};
 			if($local == 'VISITAS'){	$ptsVisitas = 5; }else{ $ptsVisitas = $verifica_pts['ptsVisitas'];};
-			if($local == 'PUBLICA'){	$ptsPost = 15;}	else{$ptsPost = $verifica_pts['ptsPost'];};
+			if($local == 'PUBLICA'){	$ptsPost = 75;}	else{$ptsPost = $verifica_pts['ptsPost'];};
 			if($local == 'LOJA'){		$ptsLoja = 10; }else{$ptsLoja = $verifica_pts['ptsLoja'];};
 			if($local == 'COMPARTILHA'){$ptsCompartilha = 120; }else{ $ptsCompartilha = $verifica_pts['ptsCompartilha'];};
 			$id_pts = $verifica_pts['id_pts'];
@@ -87,7 +87,7 @@
 			if($local == 'PUBLICA'){	$ptsPost = 15;}else{$ptsPost = 0;};
 			if($local == 'LOJA'){		$ptsLoja = 10; }else{$ptsLoja = 0;};
 			if($local == 'COMPARTILHA'){$ptsCompartilha = 120; }else{ $ptsCompartilha = 0;};
-		$PDO = db_connect();
+			$PDO = db_connect();
 			$sql = "
 			INSERT INTO ext_pts(idPost, idPagina, idTorre, idUsuario, ptsSeguidores, ptsCurtida, ptsComentario, ptsFavoritos, ptsExtras, ptsVisitas, ptsPost, ptsLoja, ptsCompartilha, ptsBonus, ptsExtilos) 
 			VALUES(:idPost, :idPagina, :idTorre, :idUsuario, :ptsSeguidores, :ptsCurtida, :ptsComentario, :ptsFavoritos, :ptsExtras, :ptsVisitas, :ptsPost, :ptsLoja, :ptsCompartilha, :ptsBonus, :ptsExtilos)";

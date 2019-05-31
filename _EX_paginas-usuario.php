@@ -131,10 +131,10 @@ if ($corBotao == 1){
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/front.js"></script>
     <script type="text/javascript">
-    function Nova()
-    {
-    location.href="cadastro-geral.php"
-    }
+    //function Nova()
+    //{
+    //location.href="cadastro-geral.php"
+    //s}
     </script>
 
 

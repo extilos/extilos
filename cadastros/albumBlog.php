@@ -7,7 +7,8 @@ include_once '../functions/functions.php';
 $data = date("Y-m-d");
 $idUsuario = $_SESSION['idLogado'];
 $idPagina = isset($_POST['idPagina']) ? $_POST['idPagina'] : null;
-$albumBlog = isset($_POST['album']) ? $_POST['album'] : null;
+$local = isset($_POST['local']) ? $_POST['local'] : 'history.go(-1)';
+$albumBlog = isset($_POST['nomePasta']) ? $_POST['nomePasta'] : null;
 
 //limpa a string de caracteres especiais
 $idUsuario = sanitizeString($idUsuario);
@@ -36,8 +37,8 @@ $stmt->bindParam(':data', $data);
 if ($stmt->execute())
 {
 	//$_SESSION['e'] = $_POST['emailUsuBasico'];
-	$_SESSION['resposta'] = 'alb_nome_criado';
-   header('location: ../painel_usuario/editar_blog');
+	//$_SESSION['resposta'] = 'alb_nome_criado';
+   header('location:'.$local.'#albuns');
 }
 else
 {

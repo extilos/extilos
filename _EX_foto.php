@@ -83,7 +83,7 @@ include_once 'include/modal.php';
                         <div id="resultadohashPag"></div>
                     </div>
                     <div class="form-group">
-                        <label for="subject">O que está vestindo? <small><b>&</b>Marca | <b>$</b>Loja</label></small>
+                        <label for="subject">O que está vestindo? <small><b>&</b>Marca | <b>$</b>Loja</small></label>
                          <textarea type="text" class="form-control" name="usuMarca" id="marcacao" placeholder="Use: &marcaDoProduto | $nomeDaLoja." rows="3"></textarea>
                     </div>
                     <label for='upload_file' class="upload">Selecionar fotos</label>

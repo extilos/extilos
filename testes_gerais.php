@@ -118,6 +118,21 @@
            <?php } } ?>
          </tbody>
        </table>
+       <?php
+       $array = array(
+    "foo" => "10",
+);
+       $idTeste = $array;
+       foreach ($idTeste as $pag) {
+                            $paginaTorre = pagina_torre($pag);
+                                while ($torre = $paginaTorre->fetch(PDO::FETCH_ASSOC)): 
+                                   // $idPoste = $ultimo;
+                                    $idTor[] = $idPoste.','.$torre['idTorre'].','.$pag;
+                                endwhile;
+                          //  $idPag[] = $idPoste.','.$pag;
+                      }
+                      print_r($idTor)
+        ?>
      </div>
 
     <script src="js/jquery-1.11.0.min.js"></script>

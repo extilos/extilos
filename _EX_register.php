@@ -37,9 +37,13 @@ if(isset($_SESSION['idLogado'])){
     _________________________________________________________ -->
 
     <div id="hot">
-     <?php include 'include/barra-superior.php';?>
+     <?php
+        include_once 'functions/iniciar.php'; 
+        include_once 'include/barra-superior.php';
+
+     ?>
      <div id="content">
-        <div class="container">
+        <div class="container-fluid">
             <div class="col-sm-12 box">
                 <div class="col-sm-6">
                     <h3>Inscreva-se | <small>Cadastro Pessoal</small></h3>
@@ -95,7 +99,7 @@ if(isset($_SESSION['idLogado'])){
                                     </select>
                                 </div>
                                 <div class="col-sm-12">
-                                    <label for="sexo">Visualizar conteúdo para o sexo:</label>
+                                    <label for="sexo">Visualizar conteúdo:</label>
                                 </div>
                                         <div class="form-check col-sm-3" required>
                                             <label>

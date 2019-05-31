@@ -1,8 +1,8 @@
 <?php
 session_start();
 if(!isset($_SESSION['idLogado']) && (!isset($_POST['emailUsuario']))){
-    $_SESSION['resp'] = 'negado';
-    header("Location: login.php"); exit;
+	$_SESSION['resp'] = 'negado';
+	header("Location: login.php"); exit;
 } 
 require_once '../conn/init.php';
 
@@ -35,12 +35,70 @@ $stmt->bindParam(':pgCapa', $pgCapa);
 
 if ($stmt->execute())
 {
+	// Consulta para saber o ultimo post do usuário, para recuperar o valor de IDdo Post
+	$sqlConsulta = "SELECT MAX(idPagina) as ultimo FROM ext_paginas where idUsuario = $idUsuario";
+	$sqlExecuta = $PDO->prepare($sqlConsulta);
+	$sqlExecuta -> execute();
+	$ultimoNum = $sqlExecuta -> fetch(PDO::FETCH_ASSOC);
+	$ultimo = $ultimoNum['ultimo'];
+
+	$idPagina = $ultimo;
+	$post = 1;
+	$editar = 1;
+	$excluir = 1;
+	$cadastro = 1;
+	$financeiro = 1;
+	$PDO = db_connect();
+	$sql = "INSERT INTO ext_permite(idPagina, idUsuario, pm_post, pm_editar, pm_excluir, pm_cadastro, pm_financeiro) VALUES(:idPagina, :idUsuario, :post, :editar, :excluir, :cadastro, :financeiro)";
+	$stmt = $PDO->prepare($sql);
+
+	$stmt->bindParam(':idUsuario', $idUsuario);
+	$stmt->bindParam(':idPagina', $idPagina);
+	$stmt->bindParam(':post', $post);
+	$stmt->bindParam(':editar', $editar);
+	$stmt->bindParam(':excluir', $excluir);
+	$stmt->bindParam(':cadastro', $cadastro);
+	$stmt->bindParam(':financeiro', $financeiro);
+
+	if ($stmt->execute()){
+
+		$albumBlog = 'album';
+		$PDO = db_connect();
+		$sql = "INSERT INTO album_blog(idPagina, idUsuario, albumBlog, data) VALUES(:idPagina, :idUsuario, :albumBlog, :data)";
+		$stmt = $PDO->prepare($sql);
+		$stmt->bindParam(':idPagina', $idPagina);
+		$stmt->bindParam(':idUsuario', $idUsuario);
+		$stmt->bindParam(':albumBlog', $albumBlog);
+		$stmt->bindParam(':data', $dataPagina);
+
+
+		if ($stmt->execute())
+		{
+			
+			$PDO = db_connect();
+			$sqli = "INSERT INTO ext_dados_paginas(idPagina) VALUES(:idPagina)";
+			
+			$stmt = $PDO->prepare($sqli);
+			$stmt->bindParam(':idPagina', $idPagina);
+			if ($stmt->execute())
+			{
+				header('Location: ../painel_usuario/meus_blogs');
+			}
+		}
+		else
+		{
+			echo "Erro ao cadastrar";
+			print_r($stmt->errorInfo());
+		}
+	}else{
+		echo 'Ocorreu algum erro!';
+	}
 
 	$_SESSION['resposta'] = 'npg_criada';
-    header('Location: ../paginas-usuario.php');
+    //header('Location: ../paginas-usuario.php');
 }
 else
 {
-    $_SESSION['resposta'] = 'npg_erro';
-    header('Location: ../nova-pg-gratuita.php');
+	$_SESSION['resposta'] = 'npg_erro';
+    //header('Location: ../nova-pg-gratuita.php');
 }

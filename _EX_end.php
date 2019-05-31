@@ -14,7 +14,7 @@ $token = md5(session_id());
     <meta name="keywords" content="">
 
     <title>
-        Obaju : e-commerce template
+        Extilos
     </title>
 
     <meta name="keywords" content="">

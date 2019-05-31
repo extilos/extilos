@@ -4,7 +4,6 @@ if (isset($_POST['idPost'])){
 
 	include_once '../conn/init.php';
 	require_once '../functions/conexoes.php';
-	require_once '../functions/cadastros.php';
 	date_default_timezone_set('America/Sao_Paulo');
 	$idPagina = '0';
 	$idUsuario = $_POST['idUsuario'];
@@ -13,8 +12,6 @@ if (isset($_POST['idPost'])){
 	$tokenDia = isset($_POST['tokenDia']) ? $_POST['tokenDia'] : null;
 	$dataVisita = date('d-m-Y');
 	$visitado = visitas($idPost,$tokenDia);
-	//CADASTRO DE PONTUAÇÃO
-	cadastro_pontos('VISITAS',$idPost,$idPagina,$idUsuario,$idTorre);
 	
 	if (isset($visitado)){
 		if($visitado['dataVisita'] < $dataVisita){ // verifica se a data do ultimo acesso é menor do que a data atual

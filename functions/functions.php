@@ -118,7 +118,35 @@
                 }
             else
                 {
-            $textoTela = $contaPalavras[0].' '.$contaPalavras[1].' '.$contaPalavras[2].' '.$contaPalavras[3].' '.$contaPalavras[4].' '.$contaPalavras[5].' '.$contaPalavras[6].' '.$contaPalavras[7].' '.$contaPalavras[8].' '.$contaPalavras[9].' '.$contaPalavras[10].' '.$contaPalavras[11].' '.$contaPalavras[12].' '.$contaPalavras[13].' '.$contaPalavras[14].' '.$contaPalavras[15].' '.$contaPalavras[16].' '.$contaPalavras[17].' '.$contaPalavras[18].' '.$contaPalavras[19].' '.$contaPalavras[20]; // monta uma palavra curta com os 20 primeiros fragmentos
+            $textoTela = $contaPalavras[0].' '.$contaPalavras[1].' '.$contaPalavras[2].' '.$contaPalavras[3].' '.$contaPalavras[4].' '.$contaPalavras[5].' '.$contaPalavras[6].' '.$contaPalavras[7].' '.$contaPalavras[8].' '.$contaPalavras[9].' '.$contaPalavras[10].' '.$contaPalavras[11].' '.$contaPalavras[12].' '.$contaPalavras[13].' '.$contaPalavras[14].' '.$contaPalavras[15].' '.$contaPalavras[16].' '.$contaPalavras[17].' '.$contaPalavras[18].' '.$contaPalavras[19].' '.$contaPalavras[20].'...'; // monta uma palavra curta com os 20 primeiros fragmentos
+            $textoCurto = '';
+            $palavraCurta = $textoTela;
+            $continua = implode(" ", $contaPalavras);
+            $continua = $continua;
+                }
+        return array ($textoCurto, $continua, $palavraCurta, $qtdePalavras); //envia para ser montada nas descrições com marcações
+        }
+         function tamanhoTexto40($palavra){
+            $contaPalavras = explode(" ", $palavra); //explode o texto pelos espaços
+            $qtdePalavras = count($contaPalavras); // conta a quantidade de fragmentos
+            if ($qtdePalavras < 20) //caso haja mais de 20 pedaços, ele cria uma formatação para ter a opção de (vermais)
+                {
+            $textoCurto = implode(" ", $contaPalavras); // une novamente a palavra
+            $palavraCurta = '';
+            $continua = '';
+                }
+            else
+                {
+            $textoTela =        
+            $contaPalavras[0].' '.$contaPalavras[1].' '.$contaPalavras[2].' '.$contaPalavras[3].' '.$contaPalavras[4].' '.
+            $contaPalavras[5].' '.$contaPalavras[6].' '.$contaPalavras[7].' '.$contaPalavras[8].' '.$contaPalavras[9].' '.
+            $contaPalavras[10].' '.$contaPalavras[11].' '.$contaPalavras[12].' '.$contaPalavras[13].' '.$contaPalavras[14].' '.
+            $contaPalavras[15].' '.$contaPalavras[16].' '.$contaPalavras[17].' '.$contaPalavras[18].' '.$contaPalavras[19].' '.
+            $contaPalavras[20].' '.$contaPalavras[21].' '.$contaPalavras[22].' '.$contaPalavras[23].' '.$contaPalavras[24].' '.
+            $contaPalavras[25].' '.$contaPalavras[26].' '.$contaPalavras[27].' '.$contaPalavras[28].' '.$contaPalavras[29].' '.
+            $contaPalavras[30].' '.$contaPalavras[31].' '.$contaPalavras[32].' '.$contaPalavras[33].' '.$contaPalavras[34].' '.
+            $contaPalavras[35].' '.$contaPalavras[36].' '.$contaPalavras[37].' '.$contaPalavras[38].' '.$contaPalavras[39].' '.
+            $contaPalavras[40].'...'; // monta uma palavra curta com os 40 primeiros fragmentos
             $textoCurto = '';
             $palavraCurta = $textoTela;
             $continua = implode(" ", $contaPalavras);
@@ -150,17 +178,9 @@
             // matriz de saída
             $by   = array( '_','_','_','_','_','_' );
 
-            // devolver a string
+             // devolver a string
             $retorno = str_replace($what, $by, $string);
-            $separaPalavras = preg_split('/ /', $retorno, -1);
-            $contaPalavras = count($separaPalavras);
-            for ($r=0 ; $r<$contaPalavras ; $r++ ){
-                $contaLetras = strlen($separaPalavras[$r]);
-                    if($contaLetras > 20){
-                        $separaPalavras[$r] = mb_strimwidth($separaPalavras[$r], 0, 20).'...';
-                    }
-            }
-            $retorno = implode(" ", $separaPalavras);
+            $retorno = preg_replace('/[[:^print:]]/','a', $retorno);
             return $retorno;
         }
 //----------------------------------------------------------------------------------------------------------------------
@@ -190,10 +210,10 @@
         function sanitizeString($string) {
 
             // matriz de entrada
-            $what = array( 'ä','ã','à','á','â','ê','ë','è','é','ï','ì','í','ö','õ','ò','ó','ô','ü','ù','ú','û','À','Á','É','Í','Ó','Ú','ñ','Ñ','ç','Ç',' ','(',')',',',';',':','|','!','"','$','%','&','/','=','?','~','^','>','<','ª','º','#','-','[',']','$','*','+' );
+            $what = array( 'ä','ã','à','á','â','ê','ë','è','é','ï','ì','í','ö','õ','ò','ó','ô','ü','ù','ú','û','À','Á','É','Í','Ó','Ú','ñ','Ñ','ç','Ç',' ','(',')',',',';',':','|','!','"','$','%','&','/','=','?','~','^','>','<','ª','º','#','[',']','$','*','+' );
 
             // matriz de saída
-            $by   = array( 'a','a','a','a','a','e','e','e','e','i','i','i','o','o','o','o','o','u','u','u','u','a','a','e','i','o','u','n','n','ç','ç','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_', );
+            $by   = array( 'a','a','a','a','a','e','e','e','e','i','i','i','o','o','o','o','o','u','u','u','u','a','a','e','i','o','u','n','n','ç','ç','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_', );
 
             // devolver a string
             $retorno = str_replace($what, $by, $string);

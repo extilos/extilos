@@ -12,8 +12,8 @@
   <link rel="extilos icon" href="../favicon.png">
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
   <!--     Fonts and icons     -->
-  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/extilos/css/google-fonts.css" />
+  <link rel="stylesheet" href="/extilos/css/painel.css">
   <!-- CSS Files -->
   <link href="/extilos/css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
   <link href="/extilos/css/meu.css" rel="stylesheet">
@@ -25,21 +25,24 @@
   
 </head>
 <?php
+include_once 'functions/iniciar.php';
 //verifica se usuario está logado para acessar a página
-if(!isset($_SESSION['idLogado']) && (!isset($_POST['emailUsuario']))){
+if($idUsuario == 1){
     $_SESSION['resposta'] = 'registrar';
     header("Location: ../login"); exit;
 }
 //INCLUI AS FUNÇÕES NECESSÁRIAS
 //include_once 'ajax/validar.php';
+
+
 include_once 'functions/conexoes.php';
 include_once 'functions/functions.php';
 //include_once 'include/modal.php';
 $idUsuario = $_SESSION['idLogado'];
 $usuario = busca_usuario($idUsuario);
 ?>
-<body class="">
-  <div class="wrapper ">
+<body>
+  <div class="wrapper">
     <div class="sidebar" data-color="purple" data-background-color="white" data-image="../assets/img/sidebar-1.jpg">
       <!--
         Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
@@ -52,15 +55,15 @@ $usuario = busca_usuario($idUsuario);
         </a>
       </div>
       <div class="sidebar-wrapper">
-        <?php include 'include/painel-barra_lateral.php'; ?>
+        <?php include 'include/modulos/tools-painel/lateral/painel-barra_lateral.php'; ?>
       </div>
     </div>
     <div class="main-panel">
       <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
+      <nav class="navbar navbar-expand-sm  sticky-top ">
         <div class="container-fluid">
           <div class="navbar-wrapper">
-            <a class="navbar-brand" href="#pablo">e<b>X</b>tilos.com</a>
+            <a class="navbar-brand" href="#pablo">vem.moda</a>
           </div>
           <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
             <span class="sr-only">Toggle navigation</span>
@@ -69,7 +72,7 @@ $usuario = busca_usuario($idUsuario);
             <span class="navbar-toggler-icon icon-bar"></span>
           </button>
           <div class="collapse navbar-collapse justify-content-end">
-            <form class="navbar-form">
+           <!-- <form class="navbar-form">
               <div class="input-group no-border">
                 <input type="text" value="" class="form-control" placeholder="Search...">
                 <button type="submit" class="btn btn-white btn-round btn-just-icon">
@@ -77,11 +80,11 @@ $usuario = busca_usuario($idUsuario);
                   <div class="ripple-container"></div>
                 </button>
               </div>
-            </form>
+            </form> -->
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link" href="#pablo">
-                  <i class="material-icons">dashboard</i>
+                <a class="nav-link" href="/extilos/">
+                  <i class="material-icons">home</i>
                   <p class="d-lg-none d-md-block">
                     Stats
                   </p>
@@ -89,7 +92,7 @@ $usuario = busca_usuario($idUsuario);
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="material-icons">notifications</i>
+                  <i class="material-icons">bookmark</i>
                   <span class="notification">5</span>
                   <p class="d-lg-none d-md-block">
                     Some Actions
@@ -103,13 +106,19 @@ $usuario = busca_usuario($idUsuario);
                   <a class="dropdown-item" href="#">Another One</a>
                 </div>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#pablo">
-                  <i class="material-icons">person</i>
+              <li class="nav-item dropdown">
+                <a class="nav-link" href="#pablo" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="material-icons">input</i>
                   <p class="d-lg-none d-md-block">
                     Account
                   </p>
                 </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
+                  <a class="dropdown-item" href="#">Profile</a>
+                  <a class="dropdown-item" href="#">Settings</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#">Log out</a>
+                </div>
               </li>
             </ul>
           </div>
@@ -117,59 +126,65 @@ $usuario = busca_usuario($idUsuario);
       </nav>
       <!-- End Navbar -->
       <div class="content">
-        <div class="container-fluid">
-          <div class="row">
         <?php
+              // CADASTROS
                 if($url[1] == "cadastro_blog"){
-                    include 'include/painel-cadastro_blog.php';
+                    include 'include/modulos/tools-painel/cadastro/painel-cadastro_blog.php';
                 }
-                if($url[1] == "meus_blogs"){
-                    include 'include/painel-meus_blogs.php';
+                if($url[1] == "cadastro_torre"){
+                    include 'include/modulos/tools-painel/cadastro/painel-cadastro_torre.php';
                 }
+              // EDITAR
                 if($filtro[0] == "editar_blog"){
-                    include 'include/painel-editar_blog.php';
+                    include 'include/modulos/tools-painel/blog/painel-relatorio_blog.php';
+                }
+                if($filtro[0] == "editar_user"){
+                    include 'include/modulos/tools-painel/geral/painel-relatorio_geral.php';
+                }
+
+                if($url[1] == "meus_blogs"){
+                    include 'include/modulos/tools-painel/blog/painel-meus_blogs.php';
                 }
                 if($url[1] == "relatorio_geral"){
-                    include 'include/painel-relatorio_geral.php';
+                    include 'include/modulos/tools-painel/geral/painel-relatorio_geral.php';
                 }
                 if($url[1] == "blog_fa"){
                     include 'include/painel-blog_fa.php';
                 }
                 if($url[1] == "lista_fans"){
-                    include 'include/painel-lista_fans.php';
+                    include 'include/modulos/tools-painel/fans/painel-lista_fans.php';
                 }
                 if($url[1] == "editar_fans"){
-                    include 'include/painel-editar_fans.php';
+                    include 'include/modulos/tools-painel/fans/painel-editar_fans.php';
                 }
-                if($url[1] == "cadastro_torre"){
-                    include 'include/painel-cadastro_torre.php';
-                }
+                
                 if($url[1] == "minhas_torres"){
-                    include 'include/painel-minhas_torres.php';
+                    include 'include/modulos/tools-painel/torre/painel-minhas_torres.php';
                 }
                 if($filtro[0] == "editar_torre"){
-                    include 'include/painel-editar_torre.php';
+                    include 'include/modulos/tools-painel/torre/painel-relatorio_torre.php';
                 }
              ?>
 
-            </div>
-          </div>
         </div>
       </div>
     </div>
-  </div>
   <!--   Core JS Files   -->
   <script src="../js/core/jquery.min.js" type="text/javascript"></script>
   <script src="../js/core/popper.min.js" type="text/javascript"></script>
   <script src="../js/core/bootstrap-material-design.min.js" type="text/javascript"></script>
   <script src="../js/plugins/perfect-scrollbar.jquery.min.js"></script>
+  <script src="/extilos/js/material-dashboard.js?v=2.1.1" type="text/javascript"></script>
+  <script src="/extilos/js/core/bootstrap-material-design.min.js"></script>
+  <script src="/extilos/assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+  <!-- Plugin for the momentJs  -->
   <!--  Google Maps Plugin    -->
   <!-- Chartist JS 
   <script src="../js/plugins/chartist.min.js"></script>
   <script src="../js/material-dashboard.min.js?v=2.1.0" type="text/javascript"></script>
   <!--  Notifications Plugin    -->
   <script src="../js/plugins/bootstrap-notify.js"></script>
-  <script src="../js/painelUsuario.js"></script>
+  <script src="../js/js_ext/script_projeto.js"></script>
 
 </body>
 </html>

@@ -1,0 +1,1 @@
+Exibe as notificações para o usuário, assim como os comentários em fotos publicadas e promoções.

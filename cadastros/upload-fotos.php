@@ -1,33 +1,70 @@
 <?php
 ob_start();
 session_start();
+date_default_timezone_set('America/Sao_Paulo');
 //if(!isset($_SESSION['usuariolog']) && (!isset($_SESSION['senhalog']))){
     //header("Location: login.php?acao=negado"); exit;
 //} 
 include_once '../conn/init.php';
 include_once '../functions/functions.php';
 include_once '../functions/conexoes.php';
+include_once ('../include/lib/WideImage.php'); //Inclui classe WideImage à página
 //carrega informação da session
 $idUsuario = $_SESSION['idLogado'];
-$idTorre = isset($_SESSION['idTorre']) ? $_SESSION['idTorre'] : null;
+$idTorre = isset($_SESSION['idTorre']) ? $_SESSION['idTorre'] : '1';
 // informações do formulário
-$usuEstilo = 	    isset($_POST['usuEstilo']) 	? $_POST['usuEstilo']   : null;
-$usuTitulo= 	    isset($_POST['usuTitulo']) 	? $_POST['usuTitulo']   : null;
-$usuDesc =       isset($_POST['usuDesc'])   ? $_POST['usuDesc']    : null;
-$usuMarca = 	    isset($_POST['usuMarca']) 	? $_POST['usuMarca']    : null;
-$publicarTorre =  isset($_POST['torre'])      ? $_POST['torre']       : null;
-$nomeTorre =       isset($_POST['torreCidade'])? $_POST['torreCidade'] : null;
-$idPagina  =       isset($_POST['idPagina'])? $_POST['idPagina'] : null;
-$precPro =        isset($_POST['precPro'])    ? $_POST['precPro']     : null;
-$descPro =        isset($_POST['descPro'])    ? $_POST['descPro']     : null;
-$formaPro =       isset($_POST['formaPro'])   ? $_POST['formaPro']    : null;
-$infoPro =        isset($_POST['infoPro'])    ? $_POST['infoPro']     : null;
+$dataLocal      =       date('d/m/Y');
+$usuEstilo      = 	    isset($_POST['usuEstilo']) 	    ? $_POST['usuEstilo']      : null;
+$usuTitulo      = 	    isset($_POST['usuTitulo']) 	    ? $_POST['usuTitulo']      : null;
+$usuDesc        =       isset($_POST['usuDesc'])        ? $_POST['usuDesc']        : null;
+$usuMarca       = 	    isset($_POST['usuMarca']) 	    ? $_POST['usuMarca']       : null;
+$produto        =       isset($_POST['produto'])        ? $_POST['produto']        : '0';
+$torreCidade    =       isset($_POST['torreCidade'])    ? $_POST['torreCidade']    : null;
+$torreEstado    =       isset($_POST['torreEstado'])    ? $_POST['torreEstado']    : null;
+$torreExtilos   =       isset($_POST['torreExtilos'])   ? $_POST['torreExtilos']   : null;
+$idPagina       =       isset($_POST['idPagina'])       ? $_POST['idPagina']       : array(12);
+$idPaginaCheck  =       isset($_POST['idPaginaCheck'])  ? $_POST['idPaginaCheck']  : null;
+$idAlbumBlog    =       isset($_POST['albumBlog'])      ? $_POST['albumBlog']      : null;
+$feminino       =       isset($_POST['feminino'])       ? $_POST['feminino']       : '0';
+$masculino      =       isset($_POST['masculino'])      ? $_POST['masculino']      : '0';
+$alternativo    =       isset($_POST['alternativo'])    ? $_POST['alternativo']    : '0';
+$precPro        =       isset($_POST['precPro'])        ? $_POST['precPro']        : null;
+$descPro        =       isset($_POST['descPro'])        ? $_POST['descPro']        : null;
+$formaPro       =       isset($_POST['formaPro'])       ? $_POST['formaPro']       : null;
+$infoPro        =       isset($_POST['infoPro'])        ? $_POST['infoPro']        : null;
+$caminhoAtual   =       isset($_POST['caminho'])        ? $_POST['caminho']        : '/extilos/index';
+// PRODUTOS
+$codigoProduto  =       isset($_POST['codigoPro'])      ? $_POST['codigoPro']      : null;
+$nomeProduto    =       isset($_POST['nomePro'])      ? $_POST['nomePro']      : null;
+$precoNormal    =       isset($_POST['precoNormal'])      ? $_POST['precoNormal']      : null;
+$precoDesconto  =       isset($_POST['precoDesconto'])      ? $_POST['precoDesconto']      : null;
+$marcaProduto   =       isset($_POST['marcaProduto'])      ? $_POST['marcaProduto']      : null;
+$adicionaProduto =      isset($_POST['adicionaProduto'])      ? $_POST['adicionaProduto']      : null;
+$qtdeDisponivel =       isset($_POST['qtdeDisponivel'])      ? $_POST['qtdeDisponivel']      : null;
+$dinheiro       =       isset($_POST['dinheiro'])       ? $_POST['dinheiro']       : '0';
+$boleto         =       isset($_POST['boleto'])         ? $_POST['boleto']         : '0';
+$debito         =       isset($_POST['debito'])         ? $_POST['debito']         : '0';
+$credito        =       isset($_POST['credito'])        ? $_POST['credito']        : '0';
+
+
+//echo($idPagina);
+                       // print_r($idPaginaCheck);
+                        //print_r($precoNormal);
+                        //print_r($precoDesconto);
+                        //print_r($marcaProduto);
+                        //print_r($adicionaProduto);
+
+
+if($idPaginaCheck != null){
+$idPagina = array_merge($idPagina, $idPaginaCheck); //combinam as duas arrays de id do Blog
+}
+//print_r($idPagina);
+//exit;
 //limpa as strings passadas via post
 $usuEstilo =  sanitizeString($usuEstilo);
 $usuTitulo=   sanitizeString($usuTitulo);
 $usuDesc =   sanitizeStringTexto($usuDesc);
 $usuMarca =   sanitizeStringTexto($usuMarca);
-$publicarTorre =  sanitizeString($publicarTorre);
 $precPro = sanitizeStringTexto($precPro);
 $descPro = sanitizeStringTexto($descPro);
 $formaPro = sanitizeString($formaPro);
@@ -39,10 +76,23 @@ if (empty($usuEstilo) || empty($usuTitulo) )
 	exit;
 }
 
+//print_r($_FILES['imagemPro']);
+
+
+//$i = 0;
+//foreach ($idPagina as $pag) {
+      
+//      $result[]= $pag.'-'.$idAlbumBlog[$i];
+//      $i++;
+//  }
+//print_r($idPagina);
+//print_r($idPaginaCheck);
+//print_r($result);
+//exit;
 //print_r($_FILES['imagem']['error']);
 if(isset($_FILES['imagem']))
 {
-      require ('../include/lib/WideImage.php'); //Inclui classe WideImage à página
+     // require ('../include/lib/WideImage.php'); //Inclui classe WideImage à página
       date_default_timezone_set("Brazil/East");
       //$maxSize	= 1024 * 1024 * 10;
       	$name  = $_FILES['imagem']['name']; //Atribui uma array com os nomes dos arquivos à variável
@@ -65,10 +115,8 @@ if(isset($_FILES['imagem']))
          	if ($_FILES['imagem']['size'][$i] > 0 )
           {
            $new_name = date("YmdHis") .uniqid(). $ext;
-           $exif = exif_read_data($tmp_name[$i]);
+           @($exif = exif_read_data($tmp_name[$i]));
            $orientation = (isset($exif['Orientation'])) ? $exif['Orientation'] : null;
-
-
         		$image = WideImage::load($tmp_name[$i]); //Carrega a imagem utilizando a WideImage
 
             if($orientation == 6){
@@ -134,9 +182,95 @@ if(isset($_FILES['imagem']))
    $img3 =  isset($str[3]) 	? $str[3] : null;
    $img4 =  isset($str[4]) 	? $str[4] : null;
 
+//IMAGEM PRODUTO
+if(isset($_FILES['imagemPro'])) 
+{
+      
+      date_default_timezone_set("Brazil/East");
+      //$maxSize  = 1024 * 1024 * 10;
+        $nameP  = $_FILES['imagemPro']['name']; //Atribui uma array com os nomes dos arquivos à variável
+        $tmp_nameP = $_FILES['imagemPro']['tmp_name']; //Atribui uma array com os nomes temporários dos arquivos à variável
+        //$tamanho = $_FILES['imagem']['size'];
+        //$exif = exif_read_data($_FILES['imagem']['tmp_name']);
+//print_r($tmp_name);
+      $allowedExtsP = array(".gif", ".jpeg", ".jpg", ".png", ".bmp"); //Extensões permitidas
+      $miniP = '../imagem/produt/';
+      for($iP = 0; $iP < count($tmp_nameP); $iP++){ //passa por todos os arquivos
+       $extP = strtolower(substr($nameP[$iP],-4));
+       //faz o tratamento caso a extesão do arquivo seja jpeg, por causa da quantidade de caracteres
+       if ($extP == 'jpeg'){
+        $extP = ".jpeg";
+       }
+         if(in_array($extP, $allowedExtsP)) //Pergunta se a extensão do arquivo, está presente no array das extensões permitidas
+         {
+          if ($_FILES['imagemPro']['size'][$iP] > 0 )
+          {
+           $new_nameP = date("YmdHis") .uniqid(). $extP;
+           @($exifP = exif_read_data($tmp_nameP[$iP]));
+           $orientationP = (isset($exifP['Orientation'])) ? $exifP['Orientation'] : null;
+
+
+            $imageP = WideImage::load($tmp_nameP[$iP]); //Carrega a imagem utilizando a WideImage
+
+            if($orientationP == 6){
+              $imageP = $imageP->rotate(90,0);
+            }
+            if($orientationP == 3){
+              $imageP = $imageP->rotate(180,0);
+            }
+            if($orientationP == 8){
+              $imageP = $imageP->rotate(270,0);
+            }
+            list($larguraP, $alturaP) = getimagesize($tmp_nameP[$iP]);
+            /*/IMAGEM GRANDE
+            if($largura > $altura){
+              $largura = $largura / 2;
+              $imageGG = $image->crop('center', 'center', $largura, $altura);
+              $imageGG = $imageGG->resize(500, 700, 'outside');
+            }else{
+              $imageGG = $image->resize(500, 700, 'outside');
+            }
+            $imageGG->saveToFile($grande.$new_name); //Salva a imagem}
+
+            //IMAGEM MEDIA
+            if($largura > $altura){
+              $largura = $largura / 2;
+              $imageMM = $image->crop('center', 'center', $largura, $altura);
+              $imageMM = $imageMM->resize(300, 500, 'outside');
+            }else{
+              $imageMM = $image->resize(300, 500, 'outside');
+            }
+            $imageMM->saveToFile($media.$new_name); **/
+
+            //IMAGEM MINI
+            if($larguraP > $alturaP){
+              $larguraP = $larguraP / 2;
+              $imagePPP = $imageP->crop('center', 'center', $larguraP, $alturaP);
+              $imagePPP = $imagePPP->crop('center', 'center',280, 400);
+            }else{
+              $imagePPP = $imageP->resize(300, 420, 'outside');
+              $imagePPP = $imagePPP->crop('center', 'center',280, 400);
+            }
+            $imagePPP->saveToFile($miniP.$new_nameP);
+
+            //echo $image;
+            $strPro[] = $new_nameP;
+
+            $_SESSION['resposta'] = 'alb_publicado';
+
+          }
+          else
+          {
+           $_SESSION['resposta'] = 'alb_alerta';
+         }
+
+       }
+
+     }
+  }
 // insere no banco
                       $PDO = db_connect();
-                      $sql = "INSERT INTO img_usuarios(idUsuario, usuEstilo, usuTitulo, usuMarca, usuDesc, img, img1, img2, img3, img4, publicarTorre, nomeTorre, precPro, descPro, formaPro, infoPro) VALUES(:idUsuario, :usuEstilo, :usuTitulo, :usuMarca, :usuDesc, :img, :img1, :img2, :img3, :img4, :publicarTorre, :nomeTorre, :precPro, :descPro, :formaPro, :infoPro)";
+                      $sql = "INSERT INTO img_usuarios(idUsuario, usuEstilo, usuTitulo, usuMarca, usuDesc, img, img1, img2, img3, img4, produto, torreEstado, torreCidade, torreExtilos) VALUES(:idUsuario, :usuEstilo, :usuTitulo, :usuMarca, :usuDesc, :img, :img1, :img2, :img3, :img4, :produto,:torreEstado, :torreCidade, :torreExtilos)";
                       $stmt = $PDO->prepare($sql);
 
                       $stmt->bindParam(':idUsuario', $idUsuario);
@@ -149,12 +283,10 @@ if(isset($_FILES['imagem']))
                       $stmt->bindParam(':img2', $img2);
                       $stmt->bindParam(':img3', $img3);
                       $stmt->bindParam(':img4', $img4);
-                      $stmt->bindParam(':publicarTorre', $publicarTorre);
-                      $stmt->bindParam(':nomeTorre', $nomeTorre);
-                      $stmt->bindParam(':precPro', $precPro);
-                      $stmt->bindParam(':descPro', $descPro);
-                      $stmt->bindParam(':formaPro', $formaPro);
-                      $stmt->bindParam(':infoPro', $infoPro);
+                      $stmt->bindParam(':produto', $produto);
+                      $stmt->bindParam(':torreEstado', $torreEstado);
+                      $stmt->bindParam(':torreCidade', $torreCidade);
+                      $stmt->bindParam(':torreExtilos', $torreExtilos);
 
                       if ($stmt->execute())
                       {
@@ -236,29 +368,77 @@ if(isset($_FILES['imagem']))
                         $qtdeArrobas = isset($novaArroba) ? count($novaArroba) : 0 ; //verifica se exite
                         $qtdeComercial = isset($novoComercial) ? count($novoComercial) : 0 ; //verifica se exite
                         $qtdeLoja = isset($novoLoja) ? count($novoLoja) : 0 ; //verifica se exite
-
+        // Cadastra pontuação do post com 5 imagens
+                        if($img4 > null){
+                          $idPost = $ultimo;
+                          $idPaginaPts = '0';
+                          $idTorrePts = '0';
+                          $idUsuario = $idUsuario;
+                          $ptsCurtida = '0';
+                          $ptsSeguidores = '0';
+                          $ptsComentario = '0';
+                          $ptsFavoritos = '0';
+                          $ptsExtras = '0';
+                          $ptsVisitas = '0';
+                          $ptsLoja = '0';
+                          $ptsCompartilha = '0';
+                          $ptsBonus = '1';
+                          $ptsExtilos = '0';
+                          $local = 'PUBLICA';
+                          if($local == 'PUBLICA'){  $ptsPost = 75;}else{$ptsPost = 0;};
+                          $PDO = db_connect();
+                          $sql = "
+                          INSERT INTO ext_pts(idPost, idPagina, idTorre, idUsuario, ptsSeguidores, ptsCurtida, ptsComentario, ptsFavoritos, ptsExtras, ptsVisitas, ptsPost, ptsLoja, ptsCompartilha, ptsBonus, ptsExtilos) 
+                          VALUES(:idPost, :idPagina, :idTorre, :idUsuario, :ptsSeguidores, :ptsCurtida, :ptsComentario, :ptsFavoritos, :ptsExtras, :ptsVisitas, :ptsPost, :ptsLoja, :ptsCompartilha, :ptsBonus, :ptsExtilos)";
+                          $stmt = $PDO->prepare($sql);
+                          $stmt->bindParam(':idPost', $idPost);
+                          $stmt->bindParam(':idPagina', $idPaginaPts);
+                          $stmt->bindParam(':idTorre', $idTorrePts);
+                          $stmt->bindParam(':idUsuario', $idUsuario);
+                          $stmt->bindParam(':ptsCurtida', $ptsCurtida);
+                          $stmt->bindParam(':ptsSeguidores', $ptsSeguidores);
+                          $stmt->bindParam(':ptsComentario', $ptsComentario);
+                          $stmt->bindParam(':ptsFavoritos', $ptsFavoritos);
+                          $stmt->bindParam(':ptsExtras', $ptsExtras);
+                          $stmt->bindParam(':ptsVisitas', $ptsVisitas);
+                          $stmt->bindParam(':ptsPost', $ptsPost);
+                          $stmt->bindParam(':ptsLoja', $ptsLoja);
+                          $stmt->bindParam(':ptsCompartilha', $ptsCompartilha);
+                          $stmt->bindParam(':ptsBonus', $ptsBonus);
+                          $stmt->bindParam(':ptsExtilos', $ptsExtilos);
+                          if ($stmt->execute()){
+                           // return print_r($stmt->errorInfo());
+                          }else{
+                            return print_r($stmt->errorInfo());
+                          }
+                      }
         // Cadastra o relacionamento de Post | Pagina | Torre
                       //$usuarioPagina1 = usuario_pagina($idUsuario);
+                      $id_usuario = $idUsuario;
+                      $i = 0;
+                      //print_r($idPagina);
+                      //exit;
                       foreach ($idPagina as $pag) {
                             $paginaTorre = pagina_torre($pag);
                                 while ($torre = $paginaTorre->fetch(PDO::FETCH_ASSOC)): 
                                     $idPoste = $ultimo;
-                                    $idTor[] = $idPoste.','.$torre['idTorre'];
+                                    $id_usuario = $idUsuario;
+                                    $idTor[] = $idPoste.','.$torre['idTorre'].','.$pag.','.$id_usuario.','.$idAlbumBlog[$i].','.$usuEstilo.','.$produto.','.$feminino.','.$masculino;
                                 endwhile;
+                            $i++;
                             $idPag[] = $idPoste.','.$pag;
                       }
                       $PDO = db_connect();
 
-                       $sql = sprintf( 'INSERT INTO ext_post(id_postagem, id_torre) VALUES (%s);' , implode( '),(' , $idTor ) );
+                       $sql = sprintf( 'INSERT INTO ext_post(id_postagem, id_torre, id_pagina, id_usuario, id_album_blog, id_album_usuario, produto, feminino, masculino) VALUES (%s);' , implode( '),(' , $idTor ) );
                        $stmt = $PDO->prepare($sql);
                        if ($stmt->execute()){
                        }else{
                         $_SESSION['resposta'] = 'alb_erro_cTorre';
-                           //print_r($stmt->errorInfo());
+                           print_r($stmt->errorInfo());
                            // header('Location: ../album_fotos');
-                        exit;
+                       // exit;
                        }
-
                        $sql1 = sprintf( 'INSERT INTO ext_compartilha(id_post, id_pagina) VALUES (%s);' , implode( '),(' , $idPag ) );
                        $stmt1 = $PDO->prepare($sql1);
                        if ($stmt1->execute()){
@@ -266,8 +446,36 @@ if(isset($_FILES['imagem']))
                         print_r($stmt1->errorInfo());
                         exit;
                         $_SESSION['resposta'] = 'alb_erro_cPagina';
-                            header('Location: ../album_fotos');
+                            header('Location:'.$caminhoAtual);
                        }
+
+        //Cadastro de Produtos
+                       if($produto > 0){
+                        //print_r($codigoProduto);
+                        //exit;
+                        //print_r($nomeProduto);
+                        //print_r($precoNormal);
+                        //print_r($precoDesconto);
+                        //print_r($marcaProduto);
+                        //print_r($adicionaProduto);
+                       $pro = 0;
+                      foreach ($codigoProduto as $cod) {
+                        $produtos[] = '"'.$ultimo.'"'.','.'"'.$idUsuario.'"'.','.'"'.$cod.'"'.','.'"'.$nomeProduto[$pro].'"'.','.'"'.$precoNormal[$pro].'"'.','.'"'.$precoDesconto[$pro].'"'.','.'"'.$marcaProduto[$pro].'"'.','.'"'.$dinheiro.'"'.','.'"'.$boleto.'"'.','.'"'.$debito.'"'.','.'"'.$credito.'"'.','.'"'.$dataLocal.'"'.','.'"'.$strPro[$pro].'"'.','.'"'.$adicionaProduto[$pro].'"'.','.'"'.$masculino.'"'.','.'"'.$feminino.'"'.','.'"'.$alternativo.'"'.','.'"'.$qtdeDisponivel[$pro].'"';
+
+                        $pro++;
+                      }
+                      $PDO = db_connect();
+                       $sql2 = sprintf( 'INSERT INTO ext_produtos(idAlbum, idUsuario, codigoProduto, nomeProduto, valorNormal, valorDesconto, marcaProduto, dinheiro, boleto, debito, credito, dataProduto, img, infoAdicionais, masculino, feminino, alternativo, qtdeDisponivel) VALUES (%s);' , implode( '),(' , $produtos ) );
+                       print_r($sql2);
+                       $stmt2 = $PDO->prepare($sql2);
+                       if ($stmt2->execute()){
+                       }else{
+                        $_SESSION['resposta'] = 'alb_erro_Produto';
+                           print_r($stmt2->errorInfo());
+                           // header('Location: ../album_fotos');
+                        exit;
+                       }
+                     }
 
         //Cadastro de eComercial no banco de dados com Loop
                         for ($co=1 ; $co<=$qtdeComercial; $co++)
@@ -282,7 +490,7 @@ if(isset($_FILES['imagem']))
                           {
                           }else{
                             $_SESSION['resposta'] = 'alb_erro_eCom';
-                            header('Location: ../album_fotos');
+                            header('Location:'.$caminhoAtual);
                             exit;
                           }
                         }
@@ -299,7 +507,7 @@ if(isset($_FILES['imagem']))
                           {
                           }else{
                             $_SESSION['resposta'] = 'alb_erro_mLoja';
-                            header('Location: ../album_fotos');
+                            header('Location:'.$caminhoAtual);
                             exit;
                           }
                         }
@@ -316,7 +524,7 @@ if(isset($_FILES['imagem']))
                           {
                           }else{
                             $_SESSION['resposta'] = 'alb_erro_hash';
-                            header('Location: ../album_fotos');
+                            header('Location:'.$caminhoAtual);
                             exit;
                           }
                         }
@@ -334,11 +542,11 @@ if(isset($_FILES['imagem']))
                           {
                           }else{
                             $_SESSION['resposta'] = 'alb_erro_arroba';
-                            header('Location: ../album_fotos');
+                            header('Location:'.$caminhoAtual);
                             exit;
                           }
                         }
-                       header('Location: ../album_fotos');
+                       header('Location: '.$caminhoAtual);
                       }
                       else
                       {
@@ -347,3 +555,4 @@ if(isset($_FILES['imagem']))
                       print_r($stmt->errorInfo());
                        // header('Location: ../foto.php');
                      }
+    ?>

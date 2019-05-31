@@ -12,6 +12,9 @@ $date = date('d-m-Y H:i');
 if(isset($_POST['carrega'])){ 
 $idUsuario = $_POST['idUsuario'];
 $idPost = $_POST['carrega'];
+$tokenDia = $_POST['tokenDia'];
+$idPagina = $_POST['idPagina'];
+$idTorre = $_POST['idTorre'];
 $comentarios = comentarios($idPost,$idUsuario);
 ?>
 <div class="row">
@@ -26,8 +29,8 @@ $comentarios = comentarios($idPost,$idUsuario);
 <div class="row">
 	<div class="col-sm-12 text-right">
 		<button class="btn btn-primary" onclick="
-		comentarPost('<?php echo $idPost ?>', '<?php echo $idUsuario ?>'); 
-		pontos('COMENTARIO','<?php echo $idPost ?>','<?php echo $idUsuario ?>','<?php echo $tokenDia ?>','<?php echo $idTorre ?>')" id="btnComent")><i class="fa fa-comment-o"></i> Postar</button>
+		comentarPost('<?php echo $idPost ?>', '<?php echo $idUsuario ?>','<?php echo $tokenDia ?>','<?php echo $idPagina ?>','<?php echo $idTorre ?>'); 
+		pontos('COMENTARIO','<?php echo $idPost ?>','<?php echo $idUsuario ?>','<?php echo $tokenDia ?>','<?php echo $idTorre ?>','<?php echo $idPagina ?>')" id="btnComent")><i class="fa fa-comment-o"></i> Postar</button>
 	</div>
 </div>
 <div id="<?php echo 'postagem'.$idPost ?>"></div> <!-- RETORNO DO PRIMEIRO COMENTARIO -->
@@ -71,7 +74,7 @@ while ($postagens = $comentarios->fetch(PDO::FETCH_ASSOC)):
 				<button class="btn btn-default" onclick="Mudarestado('<?php echo 'acao'.$postagens['idPost'].$postagens['idComentario'] ?>') ; Mudarestado1('<?php echo 're'.$postagens['idPost'].$postagens['idComentario'] ?>' )" id="btnComent")></i> Cancelar</button>
 
 				<button class="btn btn-success" 
-				onclick="atualizarPost('<?php echo $postagens['idPost'] ?>','<?php echo $postagens['idComentario'] ?>','<?php echo $postagens['idUsuario'] ?>') ; 
+				onclick="atualizarPost('<?php echo $postagens['idPost'] ?>','<?php echo $postagens['idComentario'] ?>','<?php echo $postagens['idUsuario'] ?>','<?php echo $tokenDia ?>','<?php echo $idPagina ?>','<?php echo $idTorre ?>') ; 
 							Mudarestado('<?php echo 'acao'.$postagens['idPost'].$postagens['idComentario'] ?>') ; 
 							Mudarestado1('<?php echo 're'.$postagens['idPost'].$postagens['idComentario'] ?>' )" 
 				id="btnComent")><i class="fa fa-refresh"></i> Atualizar</button>
@@ -93,19 +96,27 @@ if(isset($_POST['comment'])){
 	$idUsuario = $_POST['idUsuario'];
 	$idPost = $_POST['idPost'];
 	$comentario = $_POST['comment'];
+	$tokenDia = $_POST['tokenDia'];
+	$idPagina = $_POST['idPagina'];
+	$idTorre = $_POST['idTorre'];
+	$idUser = $_POST['idUser'];
 	$data = $date;
 	$respUsu = 1;
 	$respPost = 0;
 
 	$PDO = db_connect();
-	$sql = "INSERT INTO ext_comentario(idUsuario, idPost, comentario, data, respUsu, respPost) VALUES(:idUsuario, :idPost, :comentario, :data, :respUsu, :respPost)";
+	$sql = "INSERT INTO ext_comentario(idUsuario,idPagina, idTorre, idUser, idPost, comentario, data, respUsu, respPost, tokenDia) VALUES(:idUsuario, :idPagina, :idTorre, :idUser ,:idPost, :comentario, :data, :respUsu, :respPost, :tokenDia)";
 	$stmt = $PDO->prepare($sql);
 	$stmt->bindParam(':idUsuario', $idUsuario);
+	$stmt->bindParam(':idPagina', $idPagina);
+	$stmt->bindParam(':idTorre', $idTorre);
 	$stmt->bindParam(':idPost', $idPost);
+	$stmt->bindParam(':idUser', $idUser);
 	$stmt->bindParam(':comentario', $comentario);
 	$stmt->bindParam(':data', $data);
 	$stmt->bindParam(':respUsu', $respUsu);
 	$stmt->bindParam(':respPost', $respPost);
+	$stmt->bindParam(':tokenDia', $tokenDia);
 
 
 	if ($stmt->execute())
@@ -152,7 +163,7 @@ if(isset($_POST['comment'])){
 							<button class="btn btn-default" onclick="Mudarestado('<?php echo 'acao'.$idPost.$ultimo ?>') ; Mudarestado1('<?php echo 'resposta'.$idPost.$ultimo ?>' )" id="btnComent")> Cancelar</button>
 
 							<button class="btn btn-primary" 
-							onclick="atualizarPost('<?php echo $idPost ?>','<?php echo $ultimo ?>','<?php echo $idUsuario ?>') ; Mudarestado('<?php echo 'acao'.$idPost.$ultimo ?>') ; 
+							onclick="atualizarPost('<?php echo $idPost ?>','<?php echo $ultimo ?>','<?php echo $idUsuario ?>','<?php echo $tokenDia ?>','<?php echo $idPagina ?>','<?php echo $idTorre ?>') ; Mudarestado('<?php echo 'acao'.$idPost.$ultimo ?>') ; 
 								Mudarestado1('<?php echo 'resposta'.$idPost.$ultimo ?>' )" 
 							id="btnComent")><i class="fa fa-refresh"></i> Atualizar</button>
 						</div>
@@ -177,6 +188,9 @@ if(isset($_POST['comment'])){
 if(isset($_POST['atualiza'])){
 	$idComentario = $_POST['idComentario'];
 	$idUsuario = $_POST['idUsuario'];
+	$tokenDia = $_POST['tokenDia'];
+	$idPagina = $_POST['idPagina'];
+	$idTorre = $_POST['idTorre'];
 	$idPost = $_POST['idPost'];
 	$comentario = $_POST['atualiza'];
 	$data = $date.'-Atualizado';
@@ -184,15 +198,18 @@ if(isset($_POST['atualiza'])){
 	$respPost = 0;
 
 	$PDO = db_connect();
-	$sql = "UPDATE ext_comentario SET idUsuario = :idUsuario, idPost = :idPost, comentario = :comentario, data = :data, respUsu = :respUsu, respPost = :respPost WHERE idComentario = :idComentario";
+	$sql = "UPDATE ext_comentario SET idUsuario = :idUsuario, idPagina = :idPagina, idTorre = :idTorre, idPost = :idPost, comentario = :comentario, data = :data, respUsu = :respUsu, respPost = :respPost, tokenDia = :tokenDia WHERE idComentario = :idComentario";
 	$stmt = $PDO->prepare($sql);
 	$stmt->bindParam(':idComentario', $idComentario);
 	$stmt->bindParam(':idUsuario', $idUsuario);
+	$stmt->bindParam(':idPagina', $idPagina);
+	$stmt->bindParam(':idTorre', $idTorre);
 	$stmt->bindParam(':idPost', $idPost);
 	$stmt->bindParam(':comentario', $comentario);
 	$stmt->bindParam(':data', $data);
 	$stmt->bindParam(':respUsu', $respUsu);
 	$stmt->bindParam(':respPost', $respPost);
+	$stmt->bindParam(':tokenDia', $tokenDia);
 	if ($stmt->execute()){
 	?>
 	<div class="row comment">
@@ -219,7 +236,7 @@ if(isset($_POST['excluir'])){
 	$stmt = $PDO->prepare($sql);
 	$stmt->bindParam(':idComentario', $idComentario);
 	if ($stmt->execute()){
-		echo 'excluido com sucesso!';
+		echo 'Postagem excluída';
 }else
 	{
 		echo "Erro ao tentar excluir";

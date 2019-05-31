@@ -7,39 +7,93 @@ require_once '../functions/conexoes.php';
 require_once '../include/lib/WideImage.php';
 //ATUALIZA A APRESETAÇÃO DA EMPRESA
 if(isset($_POST['descritivo'])){
+  $idTorre = $_POST['idTorre'];
 	$idUsuario = $_SESSION['idLogado'];
 	$idPagina = $_POST['idPagina'];
 	$conteudo = $_POST['apresenta'];
+  $telPagina = $_POST['telefone'];
+  $celPagina = $_POST['celular'];
+  $enderecoPagina = $_POST['endereco'];
+  $emailPagina = $_POST['email'];
+  $sitePagina = $_POST['site'];
 	$conteudo = sanitizeStringTexto($conteudo);
 	// fazer a verificação se usuário tem autorização para alterar conteúdo da página
-	$PDO = db_connect();
-			$sql = "UPDATE ext_paginas SET descPagina = :conteudo WHERE idPagina=:idPagina";
-			$stmt= $PDO->prepare($sql);
-			$stmt->bindParam(':idPagina', $idPagina);
-			$stmt->bindParam(':conteudo', $conteudo);
+              //DADOS DO BLOG
+                    if($_POST['local'] == 'blog'){
+                      $PDO = db_connect();
+                      $sql = "UPDATE ext_paginas SET descPagina = :conteudo WHERE idPagina=:idPagina";
+                      $stmt= $PDO->prepare($sql);
+                      $stmt->bindParam(':idPagina', $idPagina);
+                      $stmt->bindParam(':conteudo', $conteudo);
+                    if ($stmt->execute()){
+                      $vericia = dados_extra($idPagina,'blog');
+                      
+                      $PDO = db_connect();
+                      if($vericia == null){
+                      $sqli = "INSERT INTO ext_dados_extra(idPagina, telefone, celular, endereco, email, site) VALUES(:idPagina, :telefone, :celular, :endereco, :email, :site)";
+                      }else{
+                        $sqli = "UPDATE ext_dados_extra SET telefone=:telefone, celular=:celular, endereco=:endereco, email=:email, site=:site WHERE idPagina=:idPagina";
+                      }
+                      $stmt = $PDO->prepare($sqli);
+                      $stmt->bindParam(':idPagina', $idPagina);
+                      $stmt->bindParam(':telefone', $telPagina);
+                      $stmt->bindParam(':celular', $celPagina);
+                      $stmt->bindParam(':endereco', $enderecoPagina);
+                      $stmt->bindParam(':email', $emailPagina);
+                      $stmt->bindParam(':site', $sitePagina);
+                      $stmt->execute();
+                    	?>
+                    	<h5 for="apresenta">Atualizando</h5>
+                    	<img src="../imagem/sistema/loading.gif" class="img-responsive" >
+                    	<?php
+                    }else{
+                    	?>
+                    	<textarea type="textarea" class="form-control"><?php echo $conteudo ?></textarea><small>Ocorreu um erro ao tentar atualizar!</small>;
+                    	<?php
+                    }
+                  }
+                  if($_POST['local'] == 'torre'){
+                      $PDO = db_connect();
+                      $sql = "UPDATE ext_torre SET descTorre = :conteudo WHERE idTorre=:idTorre";
+                      $stmt= $PDO->prepare($sql);
+                      $stmt->bindParam(':idTorre', $idTorre);
+                      $stmt->bindParam(':conteudo', $conteudo);
+                    if ($stmt->execute()){
+                      $vericia = dados_extra($idTorre,'torre');
+                      $PDO = db_connect();
+                      if($vericia == null){
+                      $sqli = "INSERT INTO ext_dados_extra(idTorre, telefone, celular, endereco, email, site) VALUES(:idTorre, :telefone, :celular, :endereco, :email, :site)";
+                      }else{
+                        $sqli = "UPDATE ext_dados_extra SET telefone=:telefone, celular=:celular, endereco=:endereco, email=:email, site=:site WHERE idTorre=:idTorre";
+                      }
+                      $stmt = $PDO->prepare($sqli);
+                      $stmt->bindParam(':idTorre', $idTorre);
+                      $stmt->bindParam(':telefone', $telPagina);
+                      $stmt->bindParam(':celular', $celPagina);
+                      $stmt->bindParam(':endereco', $enderecoPagina);
+                      $stmt->bindParam(':email', $emailPagina);
+                      $stmt->bindParam(':site', $sitePagina);
+                      $stmt->execute();
+                      ?>
+                      <h5 for="apresenta">Atualizando</h5>
+                      <img src="../imagem/sistema/loading.gif" class="img-responsive" >
+                      <?php
+                    }else{
+                      ?>
+                      <textarea type="textarea" class="form-control"><?php echo $conteudo ?></textarea><small>Ocorreu um erro ao tentar atualizar!</small>;
+                      <?php
+                    }
+                  }
 
-if ($stmt->execute()){
-	?>
-	<h5 for="apresenta">Apresentação do blog</h5>
-	<textarea type="textarea" class="form-control" disabled><?php echo $conteudo ?></textarea>
-  <input class="btn btn-sm btn-block btn-success upload" value="Atualizar página" onclick="return RefreshWindow();"/>
-	<?php
-  echo '<div class="alert">
-                    <button type="button" class="close" data-dismiss="alert">×</button>
-                      <p class="text-muted" ><b><font color="0da314">Atualizado!</b></font></p>
-                  </div>';
-}else{
-	?>
-	<textarea type="textarea" class="form-control"><?php echo $conteudo ?></textarea><small>Ocorreu um erro ao tentar atualizar!</small>;
-	<?php
-}
 }
 //ATUALIZA A CAPA DA EMPRESA
 if(isset($_FILES['files'])){
 	//$idUsuario = $_SESSION['idLogado'];
-	$idPagina = $_POST['idPagina'];
-	$name = $_FILES['files']['name'][0];
-	$tmp_name = $_FILES['files']['tmp_name'][0]; //Atribui uma array com os nomes temporários dos arquivos à variável
+	 $idPagina = $_POST['idPagina'];
+   $idUsuario = $_POST['idUsuario'];
+   $idTorre = $_POST['idTorre'];
+	 $name = $_FILES['files']['name'][0];
+	 $tmp_name = $_FILES['files']['tmp_name'][0]; //Atribui uma array com os nomes temporários dos arquivos à variável
     $allowedExts = array(".gif", ".jpeg", ".jpg", ".png", ".bmp"); //Extensões permitidas
     $temp = '../imagem/capa/temp/';
     $grande = '../imagem/capa/grande/';
@@ -65,35 +119,70 @@ if(isset($_FILES['files'])){
               $image = $image->rotate(270,0);
             }
             $pgCapa = $new_name;
-			$PDO = db_connect();
-        	$sql = "UPDATE ext_paginas SET pgCapa = :pgCapa WHERE idPagina = :idPagina";
-        	$stmt = $PDO->prepare($sql);
-        	$stmt->bindParam(':pgCapa', $pgCapa);
-        	$stmt->bindParam(':idPagina', $idPagina);
 
-        	if ($stmt->execute()){ //se salvar no banco, gravar as imagens nas pastas
-            
-            //IMAGEM GRANDE
-            $fundoG = $image->crop("center","middle",1200,500);
-            $fundoG = $fundoG->addNoise('50', 'color');
-        	$imageG = $image->resize(1200, 500, 'inside'); //Redimensiona a imagem para 170 de largura e 180 de altura
-        	$imageG = $fundoG->merge($imageG,"center","middle");
-        	//$imageG = $image->crop("center","center",1200,500);
-        	$imageG->saveToFile($grande.$new_name); //Salva a imagem
-            //IMAGEM MÉDIA
-            $fundoM = $image->crop("center","middle",600,250);
-            $fundoM = $fundoM->addNoise('50', 'color');
-            $imageM = $image->resize(600, 350, 'inside'); //Redimensiona a imagem 
-            //$imageM = $fundoM->merge($imageM,"center","middle");
-            //$imageM = $image->crop('center', 'center', 400, 250); //Corta a imagem do centro, forçando sua altura e largura
-            $imageM->saveToFile($media.$new_name); //Salva a imagem
+            if($_POST['local'] == 'blog'){
 
-            echo '<div class="alert">
-    			<button type="button" class="close" data-dismiss="alert">×</button>
-          		<p class="text-muted" ><b><font color="0da314">Atualizado!</b></font></p>
-              <input class="btn btn-sm btn-block btn-success upload" value="Atualizar página" onclick="return RefreshWindow();"/>
-      			</div>';
-        	}
+                $PDO = db_connect();
+                $sql = "UPDATE ext_paginas SET pgCapa = :pgCapa WHERE idPagina = :idPagina";
+                $stmt = $PDO->prepare($sql);
+                $stmt->bindParam(':pgCapa', $pgCapa);
+                $stmt->bindParam(':idPagina', $idPagina);
+                if ($stmt->execute()){ //se salvar no banco, gravar as imagens nas pastas
+                  //IMAGEM GRANDE
+                  $fundoG = $image->crop("center","middle",1900,350);
+                  $fundoG = $fundoG->addNoise('50', 'color');
+                //$imageG = $image->resize(1900, 350, 'fill'); //Redimensiona a imagem para 170 de largura e 180 de altura
+                $imageG = $image->crop("center","middle",1900,350);
+                $imageG = $fundoG->merge($imageG,"center","middle");
+                
+                $imageG->saveToFile($grande.$new_name); //Salva a imagem
+                  //IMAGEM MÉDIA
+                  //$fundoM = $image->crop("center","middle",600,250);
+                  //$fundoM = $fundoM->addNoise('50', 'color');
+                  $imageM = $image->resize(600, 350, 'fill'); //Redimensiona a imagem 
+                  //$imageM = $fundoM->merge($imageM,"center","middle");
+                  //$imageM = $image->crop('center', 'center', 400, 250); //Corta a imagem do centro, forçando sua altura e largura
+                  $imageM->saveToFile($media.$new_name); //Salva a imagem
+
+                  echo '<div class="alert">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                    <p class="text-muted" ><b><font color="0da314">Atualizado!</b></font></p>
+                    <input class="btn btn-sm btn-block btn-success upload" value="Atualizar página" onclick="return RefreshWindow();"/>
+                  </div>';
+                }
+            }
+            if($_POST['local'] == 'torre'){
+              
+                $PDO = db_connect();
+                $sql = "UPDATE ext_torre SET torreImg = :pgCapa WHERE idTorre = :idTorre";
+                $stmt = $PDO->prepare($sql);
+                $stmt->bindParam(':pgCapa', $pgCapa);
+                $stmt->bindParam(':idTorre', $idTorre);
+                if ($stmt->execute()){ //se salvar no banco, gravar as imagens nas pastas
+                  //IMAGEM GRANDE
+                  $fundoG = $image->crop("center","middle",1900,350);
+                  $fundoG = $fundoG->addNoise('50', 'color');
+                //$imageG = $image->resize(1900, 350, 'fill'); //Redimensiona a imagem para 170 de largura e 180 de altura
+                $imageG = $image->crop("center","middle",1900,350);
+                $imageG = $fundoG->merge($imageG,"center","middle");
+                
+                $imageG->saveToFile($grande.$new_name); //Salva a imagem
+                  //IMAGEM MÉDIA
+                  //$fundoM = $image->crop("center","middle",600,250);
+                  //$fundoM = $fundoM->addNoise('50', 'color');
+                  $imageM = $image->resize(600, 350, 'fill'); //Redimensiona a imagem 
+                  //$imageM = $fundoM->merge($imageM,"center","middle");
+                  //$imageM = $image->crop('center', 'center', 400, 250); //Corta a imagem do centro, forçando sua altura e largura
+                  $imageM->saveToFile($media.$new_name); //Salva a imagem
+
+                  echo '<div class="alert">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                    <p class="text-muted" ><b><font color="0da314">Atualizado!</b></font></p>
+                    <input class="btn btn-sm btn-block btn-success upload" value="Atualizar página" onclick="return RefreshWindow();"/>
+                  </div>';
+                }
+            }
+			   
        		}
        		
 

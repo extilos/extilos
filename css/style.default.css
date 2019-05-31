@@ -19,8 +19,18 @@ h1 {
   font-size: 40px;
 }
 #top {
-  background: #555555;
-  padding: 10px 0;
+  background: #FFF;
+  padding: 5px 0;
+}
+#toptop .offer {
+  color: #fff;
+}
+#toptop .offer .btn {
+  text-transform: uppercase;
+}
+#toptop {
+  background: #FFF;
+  padding: 0px 0;
 }
 #top .offer {
   color: #fff;
@@ -28,9 +38,19 @@ h1 {
 #top .offer .btn {
   text-transform: uppercase;
 }
+#topmenu {
+  background: #555555;
+  padding: 0px 0;
+}
+#topmenu .offer {
+  color: #fff;
+}
+#topmenu .offer .btn {
+  text-transform: uppercase;
+}
 @media (max-width: 991px) {
   #top .offer {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 }
 @media (max-width: 991px) {
@@ -39,8 +59,20 @@ h1 {
     text-align: center;
   }
 }
+@media (max-width: 991px) {
+  #toptop {
+    font-size: 12px;
+    text-align: center;
+  }
+}
 #top a {
-  color: #fff;
+  color: #555555;
+}
+#toptop a {
+  color: #555555;
+}
+#top img {
+  margin-top: 5px;
 }
 #top ul.menu {
   padding-top: 5px;
@@ -51,6 +83,11 @@ h1 {
 }
 @media (max-width: 991px) {
   #top ul.menu {
+    text-align: center;
+  }
+}
+@media (max-width: 991px) {
+  #toptop ul.menu {
     text-align: center;
   }
 }
@@ -320,6 +357,58 @@ h1 {
   color: #fff;
   background-color: #4fbfa8;
   text-shadow: 0px 1px 2px #bbb;
+}
+.promocao {
+  position: absolute;
+  top: 100px;
+  padding-left: 0px;
+  z-index: 0;
+  text-align: center;
+}
+.promocao .ribbon-background {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.promocao .theribbon {
+  position: relative;
+  width: 110px;
+  padding: 6px 0px 6px 10px;
+  margin: 10px 10px 10px 0px;
+  color: #fff;
+  background-color: #4fbfa8;
+  text-shadow: 0px 1px 2px #bbb;
+}
+.promocao p{
+  margin: 0px 0px 0px -20px;
+}
+.promocao .theribbon:before,
+.promocao .theribbon:after {
+  content: ' ';
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+.promocao.titulo {
+  top: 0px;
+}
+.promocao.titulo .theribbon {
+  background-color: #e87b37;
+  text-shadow: 0px 1px 2px #1a1c1a; */
+}
+.promocao.prof {
+  top: 0px;
+}
+.promocao.prof .theribbon {
+  background-color: #4087a5;
+  text-shadow: 0px 1px 2px #1a1c1a; */
+}
+.promocao.destaque {
+  top: 0px;
+}
+.promocao.destaque .theribbon {
+  background-color: #595959;
+  text-shadow: 0px 1px 2px #1a1c1a; */
 }
 .anuncio p{
   margin: 0px 0px 0px -20px;
@@ -1093,8 +1182,8 @@ h1 {
 }
 /* navbar */
 .navbar {
-  font-family: "Roboto", Helvetica, Arial, sans-serif;
-  min-height: 70px;
+  font-family: "Roboto", Helvetica, Verdana, sans-serif;
+  min-height: 40px;
   margin-bottom: 30px;
   border: none;
   border-bottom: 1px solid transparent;
@@ -1160,7 +1249,7 @@ h1 {
   padding: 10px 15px;
   font-size: 18px;
   line-height: 20px;
-  height: 70px;
+  height: 40px;
 }
 .navbar-brand:hover,
 .navbar-brand:focus {
